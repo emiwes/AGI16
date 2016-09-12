@@ -7,11 +7,11 @@ public class handController : MonoBehaviour {
 	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
 	private SteamVR_TrackedObject trackedObj;
-	private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input( (int)trackedObj.index); } }
+	private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input ((int) trackedObj.index);} }
 
 	// Use this for initialization
 	void Start () {
-		trackedObj.GetComponent<SteamVR_TrackedObject> ();
+		trackedObj = GetComponent<SteamVR_TrackedObject> ();
 	}
 	
 	// Update is called once per frame
