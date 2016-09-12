@@ -13,12 +13,18 @@ public class Spawner : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (!isServer)
+			return;
+
 		if (Input.GetKeyUp (KeyCode.Q)) {
-			Spawn ();
+			RpcSpawn ();
 		}
 	}
 
-	void Spawn() {
+	[ClientRpc]
+	void RpcSpawn() {
 		Debug.Log ("Spawn");
+		GameObject testObject = (GameObject)Instantiate (testObjectPrefab, transform.position, transform.rotation);
+		NetworkServer.Spawn (testObject);
 	}
 }
