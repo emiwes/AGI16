@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using TouchScript.InputSources;
 
 public class BulletSpawner : NetworkBehaviour {
 
