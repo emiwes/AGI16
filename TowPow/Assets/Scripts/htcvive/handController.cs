@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class handController : MonoBehaviour {
+public class HandController : MonoBehaviour {
 	private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
 	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
@@ -10,10 +10,10 @@ public class handController : MonoBehaviour {
 	private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input ((int) trackedObj.index);} }
 
 
-	HashSet<interactableItem> objectsHoveringOver = new HashSet<interactableItem>();
+	HashSet<InteractableItem> objectsHoveringOver = new HashSet<InteractableItem>();
 
-	private interactableItem closestItem;
-	private interactableItem interactingItem;
+	private InteractableItem closestItem;
+	private InteractableItem interactingItem;
 
 	// Use this for initialization
 	void Start () {
@@ -32,7 +32,7 @@ public class handController : MonoBehaviour {
 			float minDistance = float.MaxValue;
 			float distance;
 
-			foreach(interactableItem item in objectsHoveringOver){
+			foreach(InteractableItem item in objectsHoveringOver){
 				distance = (item.transform.position - transform.position).sqrMagnitude;
 				if(distance < minDistance){
 					minDistance = distance;
@@ -41,6 +41,7 @@ public class handController : MonoBehaviour {
 			}
 
 			interactingItem = closestItem;
+
 			closestItem = null;
 
 			// check if item is interacting when switching hands.
@@ -61,7 +62,12 @@ public class handController : MonoBehaviour {
 
 		if (controller.GetPressDown(triggerButton)) {
 			Debug.Log ("trigger down!");
-		}
+            Weapon weapon;
+            if (weapon = interactingItem.GetComponent<Weapon>()) {
+                Debug.Log("Weapon");
+                weapon.Fire();
+            }
+        }
 		if (controller.GetPressUp(triggerButton)) {
 			Debug.Log ("trigger up!");
 		}
@@ -69,7 +75,7 @@ public class handController : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider collider){
 		Debug.Log ("Trigger entered!");
-		interactableItem collidedItem = collider.GetComponent<interactableItem> ();
+		InteractableItem collidedItem = collider.GetComponent<InteractableItem> ();
 		if (collidedItem) {
 			objectsHoveringOver.Add(collidedItem);
 		}
@@ -77,7 +83,7 @@ public class handController : MonoBehaviour {
 
 	private void OnTriggerExit(Collider collider){
 		Debug.Log ("Trigger exited!");
-		interactableItem collidedItem = collider.GetComponent<interactableItem> ();
+		InteractableItem collidedItem = collider.GetComponent<InteractableItem> ();
 		if (collidedItem) {
 			objectsHoveringOver.Remove(collidedItem);
 		}

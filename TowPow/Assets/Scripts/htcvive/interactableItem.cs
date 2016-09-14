@@ -1,12 +1,12 @@
 ﻿ using UnityEngine;
 using System.Collections;
 
-public class interactableItem : MonoBehaviour {
+public class InteractableItem : MonoBehaviour {
 
 	public Rigidbody rigidbody;
 
 	private bool currentlyInteracting;
-	private handController attachedHand;
+	private HandController attachedHand;
 	private Transform interactionPoint;
 
 	private Vector3 positionDelta;
@@ -45,7 +45,7 @@ public class interactableItem : MonoBehaviour {
 	
 	}
 
-	public void BeginInteraction(handController hand){
+	public void BeginInteraction(HandController hand){
 		attachedHand = hand;
 		interactionPoint.transform.position = hand.transform.position;
 		interactionPoint.transform.rotation = hand.transform.rotation;
@@ -55,7 +55,7 @@ public class interactableItem : MonoBehaviour {
 
 	}
 
-	public void EndInteraction(handController hand){
+	public void EndInteraction(HandController hand){
 		if(hand == attachedHand){
 			attachedHand = null;
 			currentlyInteracting = false;
