@@ -19,10 +19,10 @@ public class bulletType : MonoBehaviour {
     void OnCollisionEnter(Collision col)
     {
         //Debug.Log(col.gameObject.name);
-        if (col.gameObject.GetComponent<HealthScript>() != null)
+        if (col.gameObject.tag == "enemy" && col.gameObject.GetComponent<LifeManager>())
         {
-            HealthScript otherScript = GetComponent<HealthScript>();
-            otherScript.TakeDamage(Damage);
+            LifeManager lm = col.gameObject.GetComponent<LifeManager>();
+            lm.TakeDamage(Damage);
             Destroy(gameObject);
         }
 
