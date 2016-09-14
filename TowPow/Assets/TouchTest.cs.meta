@@ -1,10 +1,20 @@
 fileFormatVersion: 2
 guid: 5738bdbc69fc7f041b0a15ad6382f0f5
-timeCreated: 1473773796
+timeCreated: 1473876668
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - RedPrefab: {fileID: 1000012927956310, guid: bb7aa3176f096408aa3f4343e7e11d1e,
+      type: 2}
+  - WhitePrefab: {fileID: 1000012927956310, guid: c378a8736070d664397091acaf6fcebb,
+      type: 2}
+  - BluePrefab: {fileID: 1000012927956310, guid: 2aa8eef0e29862f40b9b2fb597f4011a,
+      type: 2}
+  - BlackPrefab: {fileID: 1000012927956310, guid: 0a3e1304e33eafa4bb2d7605258e659b,
+      type: 2}
+  - BulletPrefab: {fileID: 1000014176008044, guid: 782cb29dd04c94df98d1d096446d0525,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
