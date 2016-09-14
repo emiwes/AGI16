@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Hit : MonoBehaviour
+public class HealthScript : MonoBehaviour
 {
 
     // Use this for initialization
@@ -14,7 +14,8 @@ public class Hit : MonoBehaviour
 
     public int startHealthPoints;
     int currentHealthPoints;
-    float speed = 1f;
+    //float speed = 1f;
+   
 
     void Awake()
     {
@@ -32,11 +33,6 @@ public class Hit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("space")) {
-            Debug.Log("space key was pressed");
-            Debug.Log("Kills gameobj:  " + gameObject.name);
-            Destroy(gameObject);
-        }
 
 
     }
@@ -60,5 +56,14 @@ public class Hit : MonoBehaviour
         
 
         
+    }
+
+    public void TakeDamage (int Damage)
+    {// To be called if a bullet collides with a creep
+        currentHealthPoints -= Damage;
+        if (currentHealthPoints <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
