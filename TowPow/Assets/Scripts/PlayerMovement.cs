@@ -1,25 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.Networking;
 
-public class PlayerMovement : NetworkBehaviour {
+public class PlayerMovement : MonoBehaviour {
+	public float speed = 100.0f;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
 	void Update () {
-		if (!isLocalPlayer)
-			return;
-		
-		var x = Input.GetAxis ("Horizontal") * 0.1f;
-		var z = Input.GetAxis ("Vertical") * 0.1f;
-
-		transform.Translate (x, 0, z);
-
+		var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+		var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+		transform.Translate(x, 0, z);
 	}
-
-
 }
