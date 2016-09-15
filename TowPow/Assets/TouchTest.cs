@@ -12,6 +12,7 @@ namespace TouchScript
 		public GameObject BluePrefab;
 		public GameObject BlackPrefab;
 		public GameObject BulletPrefab;
+		public Camera topCamera;
 		ArrayList towerTypes = new ArrayList ();
 
 		private List<string> activeTowers;
@@ -48,7 +49,7 @@ namespace TouchScript
 //				Debug.Log ("pointHit: " + point.Hit);
 //				Debug.Log ("pointID: " + point.Id);
 //				Debug.Log ("pointSource: " + point.InputSource);
-//				Debug.Log ("pointProps: " + point.Properties.Keys);
+				Debug.Log ("pointProps: " + point.Properties.Keys);
 //				Debug.Log ("pointTags: " + point.Tags.HasTag("blue"));
 //				Debug.Log ("pointTarget: " + point.Target);
 //				Debug.Log ("sender: " + sender);
@@ -77,33 +78,35 @@ namespace TouchScript
 			//NetworkServer.Spawn (testObject);
 
 			GameObject obj = null;
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 8));
+			Quaternion spawnRotation = transform.rotation;
 
 			if (tags.HasTag ("blue")) {
-				obj = Instantiate (BluePrefab) as GameObject;
+				obj = Instantiate (BluePrefab, spawnPosition, spawnRotation) as GameObject;
 				if (!isActiveTower ("blue")) {
 					Debug.Log ("Spawnar blue");
 				}
 			} else if (tags.HasTag ("white")) {
-				obj = Instantiate (WhitePrefab) as GameObject;
+				obj = Instantiate (WhitePrefab, spawnPosition, spawnRotation) as GameObject;
 				if (!isActiveTower ("white")) {
 					Debug.Log ("Spawnar white");
 				}
 			} else if (tags.HasTag ("red")) {
-				obj = Instantiate (RedPrefab) as GameObject;
+				obj = Instantiate (RedPrefab, spawnPosition, spawnRotation) as GameObject;
 				if (!isActiveTower ("red")) {
 					Debug.Log ("Spawnar red");
 				}
 			} else if (tags.HasTag ("black")) {
-				obj = Instantiate (BlackPrefab) as GameObject;
+				obj = Instantiate (BlackPrefab, spawnPosition, spawnRotation) as GameObject;
 				if (!isActiveTower ("black")) {
 					Debug.Log ("Spawnar black");
 				}
 			} else {
-				obj = Instantiate (BulletPrefab) as GameObject;
+				obj = Instantiate (BulletPrefab, spawnPosition, spawnRotation) as GameObject;
 			}
 
 			if (obj) {
-				obj.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 10));
+//				obj.transform.position = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 5));
 				obj.transform.rotation = transform.rotation;
 				NetworkServer.Spawn (obj);
 			}

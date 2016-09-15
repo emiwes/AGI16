@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5738bdbc69fc7f041b0a15ad6382f0f5
-timeCreated: 1473876668
+timeCreated: 1473956524
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -13,8 +13,9 @@ MonoImporter:
       type: 2}
   - BlackPrefab: {fileID: 1000012927956310, guid: 0a3e1304e33eafa4bb2d7605258e659b,
       type: 2}
-  - BulletPrefab: {fileID: 1000014176008044, guid: 782cb29dd04c94df98d1d096446d0525,
+  - BulletPrefab: {fileID: 1000010222061832, guid: 2c095e2950a8edb4682447c59e22c8b3,
       type: 2}
+  - topCamera: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
