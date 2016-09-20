@@ -12,16 +12,34 @@ namespace TouchScript
 		public GameObject BluePrefab;
 		public GameObject BlackPrefab;
 		public GameObject BulletPrefab;
-		public Camera topCamera;
-		ArrayList towerTypes = new ArrayList ();
 
-		private List<string> activeTowers;
+		public float distanceThreshold;
+
+		private TowerSpawn blueTower;
+		private TowerSpawn redTower;
+		private TowerSpawn whiteTower;
+		private TowerSpawn blackTower;
+
+		public Camera topCamera;
+
+		public List<GameObject> towers;
+		public List<GameObject> towerTypes;
 
 		void Start(){
-			towerTypes.Add("red");
-			towerTypes.Add("blue");
-			towerTypes.Add("white");
-			towerTypes.Add("black");
+			if (isServer) {
+				towerTypes.Add(RedPrefab);
+				towerTypes.Add(WhitePrefab);
+				towerTypes.Add(BluePrefab);
+				towerTypes.Add(BlackPrefab);
+
+				var i = 0;
+				foreach (GameObject tower in towerTypes) {
+					GameObject t = (GameObject) Instantiate(tower, new Vector3(i, 0, 0), Quaternion.identity);
+					NetworkServer.Spawn (t);
+					towers.Add (t);
+					i += 2;
+				}
+			}
 		}
 
 		private void OnEnable()
@@ -58,22 +76,23 @@ namespace TouchScript
 			}
 		}
 
-		bool isActiveTower(string towerName){
-			if (!activeTowers.Contains (towerName)) {
-				activeTowers.Add (towerName);
-				return false;
-			} else {
-				return true;
-			}
-		}
+//		bool isActiveTower(GameObject tower){
+//			if (!activeTowers.Contains (tower)) {
+//				activeTowers.Add (tower);
+//				return false;
+//			} else {
+//				return true;
+//			}
+//		}
 
-		void activateTower (string tower){
-			activeTowers.Add (tower);
-		}
+//		void activateTower (string tower){
+//			activeTowers.Add (tower);
+//		}
 
 		//[ClientRpc]
 		void Spawn(Vector2 position, Tags tags)
 		{
+			Debug.Log ("tags: " + tags.ToString());
 			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
 			//NetworkServer.Spawn (testObject);
 
@@ -81,37 +100,15 @@ namespace TouchScript
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 8));
 			Quaternion spawnRotation = transform.rotation;
 
-			if (tags.HasTag ("blue")) {
-				obj = Instantiate (BluePrefab, spawnPosition, spawnRotation) as GameObject;
-				if (!isActiveTower ("blue")) {
-					Debug.Log ("Spawnar blue");
+			foreach (GameObject tower in towers) {
+				if(tags.HasTag(tower.tag)){
+					if (Vector3.Distance (tower.transform.position, spawnPosition) > distanceThreshold) {
+						Debug.Log("ska spawnas");
+						tower.GetComponent<TowerSpawn>().SpawnAt (spawnPosition);
+					}
 				}
-			} else if (tags.HasTag ("white")) {
-				obj = Instantiate (WhitePrefab, spawnPosition, spawnRotation) as GameObject;
-				if (!isActiveTower ("white")) {
-					Debug.Log ("Spawnar white");
-				}
-			} else if (tags.HasTag ("red")) {
-				obj = Instantiate (RedPrefab, spawnPosition, spawnRotation) as GameObject;
-				if (!isActiveTower ("red")) {
-					Debug.Log ("Spawnar red");
-				}
-			} else if (tags.HasTag ("black")) {
-				obj = Instantiate (BlackPrefab, spawnPosition, spawnRotation) as GameObject;
-				if (!isActiveTower ("black")) {
-					Debug.Log ("Spawnar black");
-				}
-			} else {
-				obj = Instantiate (BulletPrefab, spawnPosition, spawnRotation) as GameObject;
 			}
 
-			if (obj) {
-//				obj.transform.position = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 5));
-				obj.transform.rotation = transform.rotation;
-				NetworkServer.Spawn (obj);
-			}
 		}
-
-
 	}
 }
