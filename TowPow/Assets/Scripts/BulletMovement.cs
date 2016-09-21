@@ -8,7 +8,11 @@ public class BulletMovement : MonoBehaviour {
 
 	void Update () {
 		float step = speed * Time.deltaTime;
-		transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
+		if (target != null) {
+			transform.position = Vector3.MoveTowards (transform.position, target.transform.position, step);
+		} else {
+			Destroy (gameObject);
+		}
 	}
 
 	void OnTriggerEnter(Collider other) {
