@@ -44,10 +44,10 @@ public class ArrowManager : MonoBehaviour {
 	private void PullString (){
 		if (isAttached) {
 			float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
-			if (dist <= 5.7f) {
-				//If distance greater than a certain value
+			if (dist <= 0.5f) {
+				//If distance not greater than a certain value
 				//Possibly have new Vector3 (5f*dist, 0f, dist);
-				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (5f * dist, dist, dist);
+				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
 				//Fix rotation of arrow
 				if (dist * 100 % 57 == 0) {
 					//Possibly use an interval in which there is a vibration
@@ -56,10 +56,15 @@ public class ArrowManager : MonoBehaviour {
 			}
 			var device = SteamVR_Controller.Input ((int)trackedObj.index);
 			if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-				if (dist >= 1f)
-					Fire ();
-				else
-					isAttached = false;
+                if (dist >= 0.3f)
+                    Fire();
+                else
+                {
+                    Destroy(currentArrow);
+                    currentArrow = null;
+                    stringAttachPoint.transform.position = stringStartPoint.transform.position;
+                    isAttached = false;
+                }
 			}
 		}
 			
@@ -67,8 +72,9 @@ public class ArrowManager : MonoBehaviour {
 
 	private void Fire(){
 		float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
+        Debug.Log(dist);
 
-		currentArrow.transform.parent = null;
+        currentArrow.transform.parent = null;
 		currentArrow.GetComponent<Arrow> ().Fired ();
 
 		Rigidbody r = currentArrow.GetComponent<Rigidbody> ();
@@ -102,6 +108,9 @@ public class ArrowManager : MonoBehaviour {
 	public void AttachBowToArrow() {
 		currentArrow.transform.parent = stringAttachPoint.transform;
 		currentArrow.transform.localPosition = arrowStartPoint.transform.localPosition;
+        Vector3 localPos = currentArrow.transform.localPosition;
+        localPos.x = 3.3f;
+        currentArrow.transform.localPosition = localPos;
 		currentArrow.transform.rotation = arrowStartPoint.transform.rotation;
 
 		isAttached = true;
