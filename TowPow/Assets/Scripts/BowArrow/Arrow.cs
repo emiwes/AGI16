@@ -16,13 +16,14 @@ public class Arrow : MonoBehaviour {
 	}
 
 	void Update() {
-		if (isFired) {
+		if (isFired && transform.GetComponent<Rigidbody>().velocity.magnitude > 1f) {
 			transform.LookAt (transform.position + transform.GetComponent<Rigidbody>().velocity);
 		}
 	}
 
 	public void Fired() {
 		isFired = true;
+		Destroy (this, 10f);
 	}
 
 	private void AttachArrow(){

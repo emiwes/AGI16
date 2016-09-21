@@ -13,12 +13,19 @@ public class ArrowManager : MonoBehaviour {
 	public GameObject arrowStartPoint;
 	public GameObject stringStartPoint;
 
+	public AudioClip shootSound;
+
     public GameObject Arrow;
 
 	private bool isAttached = false;
 
+	private AudioSource source;
+	private float volLowRange = .5f;
+	private float volHighRange = 1.0f;
+
 	// Use this for initialization
 	void Awake () {
+		source = GetComponent<AudioSource>();
 		if (Instance == null)
 			Instance = this;
 	}
@@ -37,12 +44,23 @@ public class ArrowManager : MonoBehaviour {
 	private void PullString (){
 		if (isAttached) {
 			float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
-			stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (5f*dist, 0f, dist);
-		}
-
-		var device = SteamVR_Controller.Input ((int)trackedObj.index);
-		if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-			Fire ();
+			if (dist <= 5.7f) {
+				//If distance greater than a certain value
+				//Possibly have new Vector3 (5f*dist, 0f, dist);
+				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (5f * dist, dist, dist);
+				//Fix rotation of arrow
+				if (dist * 100 % 57 == 0) {
+					//Possibly use an interval in which there is a vibration
+					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(250);
+				}
+			}
+			var device = SteamVR_Controller.Input ((int)trackedObj.index);
+			if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
+				if (dist >= 1f)
+					Fire ();
+				else
+					isAttached = false;
+			}
 		}
 			
 	}
@@ -57,11 +75,16 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 25f * dist;
 		r.useGravity = true;
 
-		//currentArrow.GetComponent<Collider> ().isTrigger = false;
+		currentArrow.GetComponent<Collider> ().isTrigger = false;
 
 		stringAttachPoint.transform.position = stringStartPoint.transform.position;
 		currentArrow = null;
+		//Play sound
+		float vol = Random.Range (volLowRange, volHighRange);
+		source.PlayOneShot(shootSound,vol);
+
 		isAttached = false;
+	
 	}
 
     public void AttachArrow()
