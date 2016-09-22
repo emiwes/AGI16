@@ -31,14 +31,6 @@ namespace TouchScript
 				towerTypes.Add(WhitePrefab);
 				towerTypes.Add(BluePrefab);
 				towerTypes.Add(BlackPrefab);
-
-				var i = 0;
-				foreach (GameObject tower in towerTypes) {
-					GameObject t = (GameObject) Instantiate(tower, new Vector3(i, -3f, 0), Quaternion.identity);
-					NetworkServer.Spawn (t);
-					towers.Add (t);
-					i += 2;
-				}
 			}
 		}
 
@@ -73,57 +65,107 @@ namespace TouchScript
 //				Debug.Log ("pointTarget: " + point.Target);
 //				Debug.Log ("sender: " + sender);
 //				Debug.Log ("e: " + e);
-				Spawn(point.Position, point.Tags);
+				TouchBegin(point.Position, point.Tags);
 			}
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
 			Debug.Log ("End handler");
 			foreach (var point in e.Touches) {
-				Despawn (point.Position, point.Tags);
+				TouchEnd (point.Position, point.Tags);
 			}
 		}
 
-//		bool isActiveTower(GameObject tower){
-//			if (!activeTowers.Contains (tower)) {
-//				activeTowers.Add (tower);
-//				return false;
-//			} else {
-//				return true;
-//			}
-//		}
-
-//		void activateTower (string tower){
-//			activeTowers.Add (tower);
-//		}
-
 		//[ClientRpc]
-		void Spawn(Vector2 position, Tags tags) {
+		void TouchBegin(Vector2 position, Tags tags) {
 			//Debug.Log ("tags: " + tags.ToString());
 			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
 			//NetworkServer.Spawn (testObject);
 
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
 			spawnPosition.y = 0f;
-			Quaternion spawnRotation = transform.rotation;
 
-			foreach (GameObject tower in towers) {
-				if(tags.HasTag(tower.tag)){
-					if (Vector3.Distance (tower.transform.position, spawnPosition) > distanceThreshold) {
-						Debug.Log("ska spawnas");
-						tower.GetComponent<TowerSpawn>().Spawn (spawnPosition);
-					}
+			// Figure out what towertype we are dealing with
+			GameObject towerPrefab = null;
+			foreach(GameObject tp in towerTypes) {
+				if(tags.HasTag(tp.tag)) {
+					towerPrefab = tp;
+					break;
+				}
+			}
+			if(towerPrefab == null) {
+				Debug.Log("The fiducial does not represent a tower");
+				return;
+			}
+			
+			// Check if the tower is already placed and get the reference.
+			GameObject activeTower = null;
+			foreach(GameObject tower in towers) {
+				if(tags.HasTag(tower.tag)) {
+					activeTower = tower;
+				}
+			}
+			// Check if we found anything
+			if(activeTower == null) {
+				// The tower is not placed
+				// Create and spawn the tower
+				InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+			} else {
+				// The tower is placed
+				// Check if it's close to the last position
+				if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
+					// It's close
+					activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
+				} else {
+					// It's a new position
+					activeTower.GetComponent<TowerSpawn>().Despawn();
+					towers.Remove(activeTower);
+					InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
 				}
 			}
 		}
 
-		void Despawn(Vector2 position, Tags tags) {
+		void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("Despawn");
-			foreach (GameObject tower in towers) {
-				if(tags.HasTag(tower.tag)){
-					tower.GetComponent<TowerSpawn>().Despawn ();
+
+			// Get the tower reference
+			GameObject activeTower = null;
+			foreach(GameObject tower in towers) {
+				if(tags.HasTag(tower.tag)) {
+					activeTower = tower;
 				}
 			}
+
+			if(activeTower == null) {
+				Debug.Log("The tower that you tried to remove doesn't exist");
+				return;
+			}
+
+			// Start despawntimer
+			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();
+		}
+
+		void InstantiateTower(GameObject prefab, Vector3 position, Quaternion rotation) {
+			GameObject t = (GameObject)Instantiate(prefab, position, rotation);
+			t.GetComponent<TowerSpawn> ().AddTowerController (this);
+			towers.Add(t);
+			NetworkServer.Spawn(t);
+		}
+
+		public void DestroyMe(GameObject go, float time) {
+			if(!towers.Remove(go)) {
+				Debug.Log("The tower could not be removed");
+				return;
+			}
+
+			StartCoroutine (DestroyTowerInSeconds (go, time));
+		}
+
+		IEnumerator DestroyTowerInSeconds(GameObject go, float time) {
+			// Find reference in towers
+
+			yield return new WaitForSeconds (time);
+			NetworkServer.Destroy (go);
 		}
 	}
 }
