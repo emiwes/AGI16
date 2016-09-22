@@ -69,9 +69,10 @@ public class TowerCombat : MonoBehaviour {
 		GameObject bullet = (GameObject)Instantiate (bulletPrefab, shootingModule.transform.position, shootingModule.transform.rotation);
 
 		BulletMovement bulletMovement = bullet.GetComponent<BulletMovement> ();
+		ProjectileDamage projectileDamage = bullet.GetComponent<ProjectileDamage> ();
 		bulletMovement.target = closestEnemy;
 		bulletMovement.speed = 30.0f;
-		bulletMovement.damage = towerDamage;
+		projectileDamage.damage = towerDamage;
 	}
 
 	void checkForDead() {
