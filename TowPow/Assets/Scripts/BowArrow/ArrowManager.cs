@@ -83,7 +83,7 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 40f * dist;
 		r.useGravity = true;
 
-		currentArrow.GetComponent<Collider> ().isTrigger = false;
+		// currentArrow.GetComponent<Collider> ().isTrigger = false;
 
 		stringAttachPoint.transform.position = stringStartPoint.transform.position;
 		currentArrow = null;

@@ -15,9 +15,11 @@ public class TowerCombat : MonoBehaviour {
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
+        Debug.Log(nearbyEnemies.Count);
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
+        Debug.Log("Adding nearby enemy "+enemy.name);
 		nearbyEnemies.Add (enemy);
 	}
 
@@ -33,6 +35,7 @@ public class TowerCombat : MonoBehaviour {
 	public void updateClosestEnemy(){
 		// Check if any enemies have been killed since last iteration, remove null references. 
 		checkForDead ();
+        if (nearbyEnemies.Count == 0) return;
 
 		float minDist = Vector3.Distance(transform.position, nearbyEnemies[0].transform.position);
 		GameObject closestInList = nearbyEnemies[0];
