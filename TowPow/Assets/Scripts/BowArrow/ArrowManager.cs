@@ -37,20 +37,23 @@ public class ArrowManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        AttachArrow();
+        AttachArrowToHand();
 		PullString ();
 	}
 
 	private void PullString (){
 		if (isAttached) {
-			float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
-			if (dist <= 0.5f) {
-				//If distance not greater than a certain value
-				//Possibly have new Vector3 (5f*dist, 0f, dist);
-				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
+
+            Vector3 direction = stringStartPoint.transform.position - trackedObj.transform.position;
+            float dist = direction.magnitude;
+
+			if (dist <= 0.5f ) {
+                //If distance not greater than a certain value
+                //Possibly have new Vector3 (5f*dist, 0f, dist);
+                stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (7f * dist, 0f, 0f);
                 //Fix rotation of arrow
                 //Debug.Log(dist * 100 % 5);
-			float hapticStep = dist * 100 % 5;
+			    float hapticStep = dist * 100 % 5;
 				if (hapticStep <= 0.7 && hapticStep >= 0) {
                     Debug.Log("FEEDBACK");
 					//Possibly use an interval in which there is a vibration
@@ -83,7 +86,7 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 40f * dist;
 		r.useGravity = true;
 
-		// currentArrow.GetComponent<Collider> ().isTrigger = false;
+		currentArrow.GetComponent<Collider> ().isTrigger = true;
 
 		stringAttachPoint.transform.position = stringStartPoint.transform.position;
 		currentArrow = null;
@@ -95,10 +98,8 @@ public class ArrowManager : MonoBehaviour {
 	
 	}
 
-    public void AttachArrow()
-    {
-        if(currentArrow == null)
-        {
+    public void AttachArrowToHand() {
+        if(currentArrow == null) {
             currentArrow = Instantiate(Arrow);
             currentArrow.transform.parent = trackedObj.transform;
             currentArrow.transform.localPosition = new Vector3(0f, 0f, .342f);
@@ -118,4 +119,19 @@ public class ArrowManager : MonoBehaviour {
 		isAttached = true;
 	}
 
+    void OnTriggerEnter(Collider col) {
+        Debug.Log("Enter collider");
+        currentArrow.GetComponent<Arrow>().inCollider = true;
+        currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+    }
+
+    void OnTriggerStay(Collider col) {
+        currentArrow.GetComponent<Arrow>().inCollider = true;
+        currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+    }
+
+    void OnTriggerExit(Collider col){
+        Debug.Log("Exit Collider");
+        currentArrow.GetComponent<Arrow>().inCollider = false;
+    }
 }

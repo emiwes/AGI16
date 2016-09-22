@@ -4,15 +4,17 @@ using System.Collections;
 public class Arrow : MonoBehaviour {
 
 	private bool isAttached = false;
+    private bool isFired = false;
+    public bool inCollider = false;
 
-	private bool isFired = false;
 
-	void OnTriggerEnter() {
-		AttachArrow ();
+    void OnTriggerEnter() {
+        //Debug.Log("Arrow Trigger Enter");
+		//AttachArrowToBow();
 	}
 
 	void OnTriggerStay() {
-		AttachArrow ();
+		//AttachArrowToBow();
 	}
 
 	void Update() {
@@ -26,9 +28,9 @@ public class Arrow : MonoBehaviour {
 		Destroy (gameObject, 8f);
 	}
 
-	private void AttachArrow(){
+	public void AttachArrowToBow(){
 		var device = SteamVR_Controller.Input ((int)ArrowManager.Instance.trackedObj.index);
-		if (!isAttached && device.GetTouch (SteamVR_Controller.ButtonMask.Trigger)) {
+		if (inCollider && !isAttached && device.GetTouch (SteamVR_Controller.ButtonMask.Trigger)) {
 			ArrowManager.Instance.AttachBowToArrow();
 			isAttached = true;
 		}
