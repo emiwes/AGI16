@@ -49,7 +49,7 @@ public class ArrowManager : MonoBehaviour {
 				//Possibly have new Vector3 (5f*dist, 0f, dist);
 				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
 				//Fix rotation of arrow
-				if (dist * 100 % 57 == 0) {
+				if (dist * 100 % 5 == 0) {
 					//Possibly use an interval in which there is a vibration
 					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(250);
 				}
