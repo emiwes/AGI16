@@ -22,7 +22,7 @@ public class LifeManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if ((endPosition.magnitude <= 0) && (this.GetComponent<SplineController>().SplineRoot != null))
+        /*if ((endPosition.magnitude <= 0) && (this.GetComponent<SplineController>().SplineRoot != null))
         {
             SplineController h = this.GetComponent<SplineController>();
             GameObject sr = h.SplineRoot;
@@ -40,7 +40,7 @@ public class LifeManager : MonoBehaviour {
             Debug.Log("reached end");
             //TODO; action when creep reaches goal
             Kill();
-        }
+        }*/
 
     }
 

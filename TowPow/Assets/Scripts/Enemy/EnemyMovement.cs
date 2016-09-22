@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyMovement : MonoBehaviour {
-
-	public float speed;
+public class enemyMovement : MonoBehaviour {
+    [HideInInspector]
+    public Transform target;
+    NavMeshAgent agent;
 
 	// Use this for initialization
 	void Start () {
-	
+        agent = GetComponent<NavMeshAgent>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	}
-
-	void FixedUpdate() {
-		transform.Translate (0, 0, speed * 0.01f);
+        agent.SetDestination(target.position);
+	
 	}
 }
