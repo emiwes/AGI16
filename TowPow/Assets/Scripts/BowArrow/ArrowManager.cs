@@ -48,10 +48,13 @@ public class ArrowManager : MonoBehaviour {
 				//If distance not greater than a certain value
 				//Possibly have new Vector3 (5f*dist, 0f, dist);
 				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
-				//Fix rotation of arrow
-				if (dist * 100 % 5 == 0) {
+                //Fix rotation of arrow
+                //Debug.Log(dist * 100 % 5);
+			float hapticStep = dist * 100 % 5;
+				if (hapticStep <= 0.7 && hapticStep >= 0) {
+                    Debug.Log("FEEDBACK");
 					//Possibly use an interval in which there is a vibration
-					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(250);
+					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(3000);
 				}
 			}
 			var device = SteamVR_Controller.Input ((int)trackedObj.index);
@@ -72,13 +75,12 @@ public class ArrowManager : MonoBehaviour {
 
 	private void Fire(){
 		float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
-        Debug.Log(dist);
 
         currentArrow.transform.parent = null;
 		currentArrow.GetComponent<Arrow> ().Fired ();
 
 		Rigidbody r = currentArrow.GetComponent<Rigidbody> ();
-		r.velocity = currentArrow.transform.forward * 25f * dist;
+		r.velocity = currentArrow.transform.forward * 40f * dist;
 		r.useGravity = true;
 
 		currentArrow.GetComponent<Collider> ().isTrigger = false;

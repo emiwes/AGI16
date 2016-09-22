@@ -23,7 +23,7 @@ public class Arrow : MonoBehaviour {
 
 	public void Fired() {
 		isFired = true;
-		Destroy (this, 10f);
+		Destroy (gameObject, 8f);
 	}
 
 	private void AttachArrow(){
