@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class spawnCreeps : MonoBehaviour {
@@ -10,9 +10,7 @@ public class spawnCreeps : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-
-    }
+		}
 	
 	// Update is called once per frame
 	void Update () {
