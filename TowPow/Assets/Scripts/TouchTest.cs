@@ -83,7 +83,7 @@ namespace TouchScript
 			//NetworkServer.Spawn (testObject);
 
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
-			spawnPosition.y = 0f;
+			spawnPosition.y = 6f;
 
 			// Figure out what towertype we are dealing with
 			GameObject towerPrefab = null;
