@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class enemyMovement : MonoBehaviour {
+public class EnemyMovement : MonoBehaviour {
     [HideInInspector]
     public Transform target;
     NavMeshAgent agent;

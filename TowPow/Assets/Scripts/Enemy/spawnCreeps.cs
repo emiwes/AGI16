@@ -39,7 +39,7 @@ public class spawnCreeps : MonoBehaviour {
         //Instatiate Creep
         GameObject temp_enemy = Instantiate(enemyPrefab, this.transform.position, Quaternion.identity) as GameObject;
         //set path as a child to spawner Gameobject.
-        temp_enemy.GetComponent<enemyMovement>().target = target;
+        temp_enemy.GetComponent<EnemyMovement>().target = target;
         temp_enemy.transform.SetParent(this.transform);
 
         
