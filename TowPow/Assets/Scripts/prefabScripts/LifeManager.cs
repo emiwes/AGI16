@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LifeManager : MonoBehaviour {
 
-    public GameObject endPosition;
+    Vector3 endPosition;
     public int startHealthPoints;
     int currentHealthPoints;
 
@@ -11,6 +11,9 @@ public class LifeManager : MonoBehaviour {
     void Awake()
     {
         currentHealthPoints = startHealthPoints;
+
+        
+        
     }
     // Use this for initialization
     void Start () {
@@ -19,14 +22,25 @@ public class LifeManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        /*if ((endPosition.magnitude <= 0) && (this.GetComponent<SplineController>().SplineRoot != null))
+        {
+            SplineController h = this.GetComponent<SplineController>();
+            GameObject sr = h.SplineRoot;
 
-        if (transform.position == endPosition.transform.position)
+            int nrOfEndP = sr.transform.childCount;
+
+
+            //Debug.Log(nrOfEndP);
+            endPosition = this.GetComponent<SplineController>().SplineRoot.transform.GetChild(nrOfEndP - 1).transform.position;
+        }
+
+        if ((transform.position-endPosition).magnitude <= 1)
         {
             //reached goal!
-            //Debug.Log("reached end");
+            Debug.Log("reached end");
             //TODO; action when creep reaches goal
             Kill();
-        }
+        }*/
 
     }
 

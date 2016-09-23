@@ -3,18 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TowerCombat : MonoBehaviour {
-	private float towerDamage = 10;
 	public List<GameObject> nearbyEnemies = new List<GameObject>();
 	GameObject closestEnemy = null;
 
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
+	public float towerDamage;
+	public float shootingSpeed;
+	private GameObject shootingModule;
 
 	void Start() {
-		InvokeRepeating ("fireAtClosestEnemy", 0.5f, 1.0f);
+		shootingModule = transform.Find ("ShootingModule").gameObject;
+		InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
+        Debug.Log(nearbyEnemies.Count);
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
+        Debug.Log("Adding nearby enemy "+enemy.name);
 		nearbyEnemies.Add (enemy);
 	}
 
@@ -24,12 +29,13 @@ public class TowerCombat : MonoBehaviour {
 
 	public void towerLookAt (Vector3 pos) {
 		pos.y = 0;
-		transform.LookAt (pos);
+		shootingModule.transform.LookAt (pos);
 	}
 		
 	public void updateClosestEnemy(){
 		// Check if any enemies have been killed since last iteration, remove null references. 
 		checkForDead ();
+        if (nearbyEnemies.Count == 0) return;
 
 		float minDist = Vector3.Distance(transform.position, nearbyEnemies[0].transform.position);
 		GameObject closestInList = nearbyEnemies[0];
@@ -63,13 +69,13 @@ public class TowerCombat : MonoBehaviour {
 		if (closestEnemy == null)
 			return;
 
-		GameObject towerObject = GameObject.Find ("TowerObject");
-		GameObject bullet = (GameObject)Instantiate (bulletPrefab, towerObject.transform.position, towerObject.transform.rotation);
+		GameObject bullet = (GameObject)Instantiate (bulletPrefab, shootingModule.transform.position, shootingModule.transform.rotation);
 
 		BulletMovement bulletMovement = bullet.GetComponent<BulletMovement> ();
+		ProjectileDamage projectileDamage = bullet.GetComponent<ProjectileDamage> ();
 		bulletMovement.target = closestEnemy;
 		bulletMovement.speed = 30.0f;
-		bulletMovement.damage = towerDamage;
+		projectileDamage.damage = towerDamage;
 	}
 
 	void checkForDead() {

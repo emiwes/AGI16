@@ -12,8 +12,12 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
-		if ((!towerCombat.nearbyEnemies.Contains (other.gameObject)) && (other.gameObject.tag == "Enemy"))
-			towerCombat.addNearbyEnemy (other.gameObject);
+		Debug.Log (other.gameObject.name+ " entered shooting radius of "+tower.name);
+        if ((!towerCombat.nearbyEnemies.Contains(other.gameObject)) && (other.gameObject.tag == "Enemy"))
+        {
+            Debug.Log(other.gameObject.name + " has the tag Enemy and is not in the nearby enemies list");
+            towerCombat.addNearbyEnemy(other.gameObject);
+        }
 	}
 
 	void OnTriggerStay(Collider other) {

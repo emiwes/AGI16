@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MonitorHP : MonoBehaviour {
 	void Start () {
-		GetComponent<TextMesh>().text = "Hello World";
+		GetComponent<TextMesh>().text = "";
 	}
 
 	void Update() {
