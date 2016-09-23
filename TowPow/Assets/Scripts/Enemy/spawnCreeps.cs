@@ -25,7 +25,7 @@ public class spawnCreeps : MonoBehaviour {
 
     }
 
-    void spawnZombie()
+    public void spawnZombie()
     {
         
         //Debug.Log("spwn!!");

@@ -11,6 +11,7 @@ public class OnEnemyReachGoal : MonoBehaviour {
 		if (other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject.transform.parent.gameObject);
 			if (HealthSlider.value == 0) {
+				GameObject.Find ("GameHandler").gameObject.GetComponent<GameScript>().GameOver = true;
 				Debug.Log ("GAME OVER");
 			} 
 			else {
