@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameScript : MonoBehaviour {
+
+	public Text WaveNrText;
 
 	public int creepsPerWave;
 
@@ -28,6 +31,7 @@ public class GameScript : MonoBehaviour {
 		if (!waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
+			WaveNrText.text = waveNr.ToString();
 			//Spawn more creatures based on waveNr
 			int nrOfCreeps = creepsPerWave * waveNr;
 			waveIsRunning = true;
