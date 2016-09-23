@@ -37,11 +37,22 @@ public class DeterminePlayerType : MonoBehaviour {
 		if (type == "PixelSense") {
 			pixelSenseComponents.SetActive (true);
 			viveComponents.SetActive (false);
-		} else if (type == "Vive") {
+            setHostInGameScript(false);
+
+        }
+        else if (type == "Vive") {
 			viveComponents.SetActive (true);
 			pixelSenseComponents.SetActive (false);
-		} else {
+            setHostInGameScript(true);
+
+        } else {
 			Debug.LogError ("Invalid client type: "+type);
 		}
 	}
+
+    void setHostInGameScript(bool isHost)
+    {
+        Debug.Log("sets host to: " + isHost);
+        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = isHost;
+    }
 }

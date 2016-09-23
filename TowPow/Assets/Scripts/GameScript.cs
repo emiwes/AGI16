@@ -13,14 +13,17 @@ public class GameScript : MonoBehaviour {
 	public float spawnWaitTime;
 
 	private bool waveIsRunning = false;
-
 	public bool GameOver = false;
 
+    //public bool GameStarted = false;
+    public bool isHost = false;
 
-	IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
-		spawnCreeps creepSpawner = GameObject.Find ("spawner").GetComponent<spawnCreeps> ();
+
+    IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
+		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
+        Debug.Log("run wave!!");
 		for (int i = 0; i < nrOfCreeps; i++) {
-			creepSpawner.spawnZombie ();
+			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
 		}
 		yield return true;
@@ -28,7 +31,13 @@ public class GameScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!waveIsRunning && !GameOver) {
+        /*describing the if
+         * if host - only the host should spawn
+         * if a wave is not running spawn
+         * and not gameOver
+         */
+        
+		if (isHost && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
 			WaveNrText.text = waveNr.ToString();
@@ -37,11 +46,6 @@ public class GameScript : MonoBehaviour {
 			waveIsRunning = true;
 
 			StartCoroutine (RunWaves(spawnWaitTime, nrOfCreeps));
-
-			//spawnCreeps creepSpawner = GameObject.Find ("spawner").GetComponent<spawnCreeps> ();
-			//for (int i = 0; i < nrOfCreeps; i++) {
-			//	creepSpawner.spawnZombie ();
-			//}
 
 		} else {
 			if (GameOver || GameObject.FindWithTag ("Enemy") == null) {
