@@ -22,8 +22,20 @@ public class DeterminePlayerType : MonoBehaviour {
 	void Update() {
 		if (Input.GetKeyUp (KeyCode.U)) {
 			toggleUiDisplay ();
-		}
-	}
+		} else if (Input.GetKeyUp(KeyCode.P))
+        {
+            pixelSenseComponents.SetActive(true);
+            viveComponents.SetActive(false);
+            setHostInGameScript();
+
+        }
+        else if (Input.GetKeyUp(KeyCode.V))
+        {
+            viveComponents.SetActive(true);
+            pixelSenseComponents.SetActive(false);
+            setHostInGameScript();
+        }
+    }
 
 	void toggleUiDisplay() {
 		showUI = !showUI;
@@ -37,22 +49,23 @@ public class DeterminePlayerType : MonoBehaviour {
 		if (type == "PixelSense") {
 			pixelSenseComponents.SetActive (true);
 			viveComponents.SetActive (false);
-            setHostInGameScript(false);
+            setHostInGameScript();
 
         }
         else if (type == "Vive") {
 			viveComponents.SetActive (true);
 			pixelSenseComponents.SetActive (false);
-            setHostInGameScript(true);
+            setHostInGameScript();
 
         } else {
 			Debug.LogError ("Invalid client type: "+type);
 		}
 	}
 
-    void setHostInGameScript(bool isHost)
+    void setHostInGameScript()
     {
-        Debug.Log("sets host to: " + isHost);
-        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = isHost;
+        //NetworkServer.active is a state that determines if it is a server running on this client
+        // isServer dosen't work on objects without networkIdentity like where this script is placed.
+        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = NetworkServer.active;
     }
 }

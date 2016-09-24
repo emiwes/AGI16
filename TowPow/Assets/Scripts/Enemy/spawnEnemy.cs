@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class spawnEnemy : MonoBehaviour {
+public class spawnEnemy : NetworkBehaviour
+{
 
     public GameObject enemyPrefab;
     [HideInInspector]
@@ -33,6 +35,8 @@ public class spawnEnemy : MonoBehaviour {
         //set path as a child to spawner Gameobject.
         temp_enemy.GetComponent<EnemyMovement>().target = target;
         temp_enemy.transform.SetParent(this.transform);
+        //to spawn on all clients.
+        NetworkServer.Spawn(temp_enemy);
 
     }
 }
