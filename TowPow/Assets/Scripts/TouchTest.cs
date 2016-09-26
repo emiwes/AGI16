@@ -150,7 +150,7 @@ namespace TouchScript
 			GameObject t = (GameObject)Instantiate(prefab, position, rotation);
 			t.GetComponent<TowerSpawn> ().AddTowerController (this);
 			towers.Add(t);
-			NetworkServer.SpawnWithClientAuthority(t, connectionToClient);
+			NetworkServer.Spawn(t);
 		}
 
 		public void DestroyMe(GameObject go, float time) {
