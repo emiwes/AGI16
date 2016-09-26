@@ -41,6 +41,7 @@ public class TowerSpawn : MonoBehaviour {
 	public void Despawn() {
 		Debug.Log("Ready to despawn");
 		Debug.Log(gameObject);
+		Debug.Log (touchTest);
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 1f);
 	}
 

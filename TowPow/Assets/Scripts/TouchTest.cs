@@ -203,13 +203,13 @@ namespace TouchScript
 		}
 
 		//[Command]
-		public void DestroyMe(GameObject go, float time) {
+		public void DestroyMe(NetworkInstanceId id, float time) {
 			/*if(!towers.Remove(go)) {
 				Debug.Log("The tower could not be removed");
 				return;
 			}*/
 
-			StartCoroutine (DestroyTowerInSeconds (go, time));
+			StartCoroutine (DestroyTowerInSeconds (id, time));
 		}
 
 		IEnumerator DestroyTowerInSeconds(NetworkInstanceId goId, float time) {
@@ -219,7 +219,7 @@ namespace TouchScript
 			//NetworkServer.Destroy (go);
 			Debug.Log("Ready to destroy");
 
-			if (goId) {
+			if (!goId.IsEmpty()) {
 				CmdDestroyTowerByNetId (goId);
 			}
 		}
