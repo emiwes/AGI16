@@ -109,7 +109,7 @@ namespace TouchScript
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+				CmdInstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
 				// Check if it's close to the last position
@@ -120,7 +120,7 @@ namespace TouchScript
 					// It's a new position
 					activeTower.GetComponent<TowerSpawn>().Despawn();
 					towers.Remove(activeTower);
-					InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+					CmdInstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
 				}
 			}
 		}
@@ -145,11 +145,12 @@ namespace TouchScript
 			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();
 		}
 
-		void InstantiateTower(GameObject prefab, Vector3 position, Quaternion rotation) {
+		[Command]
+		void CmdInstantiateTower(GameObject prefab, Vector3 position, Quaternion rotation) {
 			GameObject t = (GameObject)Instantiate(prefab, position, rotation);
 			t.GetComponent<TowerSpawn> ().AddTowerController (this);
 			towers.Add(t);
-			NetworkServer.Spawn(t);
+			NetworkServer.SpawnWithClientAuthority(t, connectionToClient);
 		}
 
 		public void DestroyMe(GameObject go, float time) {
