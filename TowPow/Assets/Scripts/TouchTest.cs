@@ -191,17 +191,14 @@ namespace TouchScript
 
 			yield return new WaitForSeconds (time);
 			//NetworkServer.Destroy (go);
-			CmdDestroyTowerByTag(go.tag);
+			Debug.Log("Ready to destroy");
+
+			CmdDestroyTowerByNetId(go.GetComponent<NetworkIdentity>().netId);
 		}
 
 		[Command]
-		void CmdDestroyTowerByTag(string tag) {
-			foreach(GameObject tp in towerTypes) {
-				if(tp.tag == tag) {
-					NetworkServer.Destroy (tp);
-					break;
-				}
-			}
+		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
+			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
 		}
 	}
 }
