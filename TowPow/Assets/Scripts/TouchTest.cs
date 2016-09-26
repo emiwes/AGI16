@@ -85,18 +85,18 @@ namespace TouchScript
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
 			spawnPosition.y = 6f;
 
-			// // Figure out what towertype we are dealing with
-			// GameObject towerPrefab = null;
-			// foreach(GameObject tp in towerTypes) {
-			// 	if(tags.HasTag(tp.tag)) {
-			// 		towerPrefab = tp;
-			// 		break;
-			// 	}
-			// }
-			// if(towerPrefab == null) {
-			// 	Debug.Log("The fiducial does not represent a tower");
-			// 	return;
-			// }
+			// Figure out what towertype we are dealing with
+			string towerTag = null;
+			foreach(GameObject tp in towerTypes) {
+				if(tags.HasTag(tp.tag)) {
+					towerTag = tp.tag;
+					break;
+				}
+			}
+			if(towerTag == null) {
+				Debug.Log("The fiducial does not represent a tower");
+				return;
+			}
 			
 			// Check if the tower is already placed and get the reference.
 			GameObject activeTower = null;
@@ -116,7 +116,7 @@ namespace TouchScript
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				CmdInstantiateTower(tags, spawnPosition, Quaternion.identity);
+				CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
 				// Check if it's close to the last position
@@ -127,7 +127,7 @@ namespace TouchScript
 					// It's a new position
 					activeTower.GetComponent<TowerSpawn>().Despawn();
 					towers.Remove(activeTower);
-					CmdInstantiateTower(tags, spawnPosition, Quaternion.identity);
+					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
 			}
 		}
@@ -153,11 +153,13 @@ namespace TouchScript
 		}
 
 		[Command]
-		void CmdInstantiateTower(Tags tags, Vector3 position, Quaternion rotation) {
+		void CmdInstantiateTower(string tag, Vector3 position, Quaternion rotation) {
 			// Figure out what towertype we are dealing with
 			GameObject towerPrefab = null;
+
+			
 			foreach(GameObject tp in towerTypes) {
-				if(tags.HasTag(tp.tag)) {
+				if(tp.tag == tag) {
 					towerPrefab = tp;
 					break;
 				}
