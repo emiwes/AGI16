@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class TowerSpawn : MonoBehaviour {
 
@@ -40,7 +41,7 @@ public class TowerSpawn : MonoBehaviour {
 	public void Despawn() {
 		Debug.Log("Ready to despawn");
 		Debug.Log(gameObject);
-		touchTest.DestroyMe (this.gameObject, 1f);
+		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 1f);
 	}
 
 	IEnumerator SpawnTimer() {

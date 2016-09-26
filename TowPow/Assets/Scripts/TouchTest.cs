@@ -212,15 +212,15 @@ namespace TouchScript
 			StartCoroutine (DestroyTowerInSeconds (go, time));
 		}
 
-		IEnumerator DestroyTowerInSeconds(GameObject go, float time) {
+		IEnumerator DestroyTowerInSeconds(NetworkInstanceId goId, float time) {
 			// Find reference in towers
 
 			yield return new WaitForSeconds (time);
 			//NetworkServer.Destroy (go);
 			Debug.Log("Ready to destroy");
 
-			if (go) {
-				CmdDestroyTowerByNetId (go.GetComponent<NetworkIdentity> ().netId);
+			if (goId) {
+				CmdDestroyTowerByNetId (goId);
 			}
 		}
 
