@@ -22,8 +22,9 @@ namespace TouchScript
 
 		public Camera topCamera;
 
-		public List<GameObject> towers;
+		//public List<NetworkInstanceId> towerIds;
 		public List<GameObject> towerTypes;
+		public List<GameObject> towers;
 
 		void Start(){
 			// if (isServer) {
@@ -138,6 +139,7 @@ namespace TouchScript
 			// Get the tower reference
 			GameObject activeTower = null;
 			foreach(GameObject tower in towers) {
+				Debug.Log ("tower in towers is: " + tower.tag);
 				if(tags.HasTag(tower.tag)) {
 					activeTower = tower;
 				}
@@ -171,9 +173,11 @@ namespace TouchScript
 			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
 			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 			t.GetComponent<TowerSpawn> ().AddTowerController (this);
+			NetworkInstanceId netId = t.GetComponent<NetworkIdentity> ().netId;
 			towers.Add(t);
 			Debug.Log("Ska spawna torn på server");
 			NetworkServer.Spawn(t);
+			RpcAddTowersToClients (netId);
 		}
 
 		//[Command]
@@ -199,6 +203,17 @@ namespace TouchScript
 		[Command]
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+			RpcRemoveTowersToClients (networkId);
+		}
+
+		[ClientRpc]
+		void RpcAddTowersToClients(NetworkInstanceId netId) {
+			towers.Add (NetworkServer.FindLocalObject (netId));
+		}
+
+		[ClientRpc]
+		void RpcRemoveTowersToClients(NetworkInstanceId netId) {
+			towers.Remove (NetworkServer.FindLocalObject (netId));
 		}
 	}
 }
