@@ -196,7 +196,7 @@ namespace TouchScript
 			}
 			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
 			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-			t.GetComponent<TowerSpawn> ().AddTowerController (this);
+			//t.GetComponent<TowerSpawn> ().AddTowerController (this);
 
 			Debug.Log("Ska spawna torn på server");
 			NetworkServer.Spawn(t);

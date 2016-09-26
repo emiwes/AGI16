@@ -16,6 +16,7 @@ public class TowerSpawn : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		isActive = false;
+		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
 	}
 	
 	// Update is called once per frame
