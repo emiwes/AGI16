@@ -105,6 +105,11 @@ namespace TouchScript
 					activeTower = tower;
 				}
 			}
+
+			if (!isLocalPlayer){
+            	return;
+			}
+			
 			// Check if we found anything
 			if(activeTower == null) {
 				// The tower is not placed
