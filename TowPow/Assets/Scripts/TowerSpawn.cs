@@ -6,7 +6,7 @@ public class TowerSpawn : MonoBehaviour {
 	public bool isActive;
 	public float spawnDuration = 2f;
 
-	private bool despawning = false;
+	public bool despawning = false;
 	private float despawnTimer;
 	private float despawnTime = 1f;
 
@@ -39,7 +39,8 @@ public class TowerSpawn : MonoBehaviour {
 
 	public void Despawn() {
 		Debug.Log("Ready to despawn");
-		touchTest.DestroyMe (gameObject, 1);
+		Debug.Log(gameObject);
+		touchTest.DestroyMe (this.gameObject, 1f);
 	}
 
 	IEnumerator SpawnTimer() {
