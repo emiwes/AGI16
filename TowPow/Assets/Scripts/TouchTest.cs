@@ -26,12 +26,12 @@ namespace TouchScript
 		public List<GameObject> towerTypes;
 
 		void Start(){
-			if (isServer) {
+			// if (isServer) {
 				towerTypes.Add(RedPrefab);
 				towerTypes.Add(WhitePrefab);
 				towerTypes.Add(BluePrefab);
 				towerTypes.Add(BlackPrefab);
-			}
+			// }
 		}
 
 		private void OnEnable()
@@ -85,18 +85,18 @@ namespace TouchScript
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
 			spawnPosition.y = 6f;
 
-			// Figure out what towertype we are dealing with
-			GameObject towerPrefab = null;
-			foreach(GameObject tp in towerTypes) {
-				if(tags.HasTag(tp.tag)) {
-					towerPrefab = tp;
-					break;
-				}
-			}
-			if(towerPrefab == null) {
-				Debug.Log("The fiducial does not represent a tower");
-				return;
-			}
+			// // Figure out what towertype we are dealing with
+			// GameObject towerPrefab = null;
+			// foreach(GameObject tp in towerTypes) {
+			// 	if(tags.HasTag(tp.tag)) {
+			// 		towerPrefab = tp;
+			// 		break;
+			// 	}
+			// }
+			// if(towerPrefab == null) {
+			// 	Debug.Log("The fiducial does not represent a tower");
+			// 	return;
+			// }
 			
 			// Check if the tower is already placed and get the reference.
 			GameObject activeTower = null;
@@ -109,12 +109,14 @@ namespace TouchScript
 			if (!isLocalPlayer){
             	return;
 			}
+
+			// Debug.Log("Towerprefab: " + towerPrefab.ToString());
 			
 			// Check if we found anything
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				CmdInstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+				CmdInstantiateTower(tags, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
 				// Check if it's close to the last position
@@ -125,7 +127,7 @@ namespace TouchScript
 					// It's a new position
 					activeTower.GetComponent<TowerSpawn>().Despawn();
 					towers.Remove(activeTower);
-					CmdInstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+					CmdInstantiateTower(tags, spawnPosition, Quaternion.identity);
 				}
 			}
 		}
@@ -151,11 +153,25 @@ namespace TouchScript
 		}
 
 		[Command]
-		void CmdInstantiateTower(GameObject prefab, Vector3 position, Quaternion rotation) {
-			GameObject t = (GameObject)Instantiate(prefab, position, rotation);
+		void CmdInstantiateTower(Tags tags, Vector3 position, Quaternion rotation) {
+			// Figure out what towertype we are dealing with
+			GameObject towerPrefab = null;
+			foreach(GameObject tp in towerTypes) {
+				if(tags.HasTag(tp.tag)) {
+					towerPrefab = tp;
+					break;
+				}
+			}
+			if(towerPrefab == null) {
+				Debug.Log("The fiducial does not represent a tower");
+				return;
+			}
+			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
+			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 			t.GetComponent<TowerSpawn> ().AddTowerController (this);
 			towers.Add(t);
-			NetworkServer.SpawnWithClientAuthority(t, connectionToClient);
+			Debug.Log("Ska spawna torn på server");
+			NetworkServer.Spawn(t);
 		}
 
 		public void DestroyMe(GameObject go, float time) {
