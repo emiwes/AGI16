@@ -173,10 +173,10 @@ namespace TouchScript
 			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
 			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 			t.GetComponent<TowerSpawn> ().AddTowerController (this);
-			NetworkInstanceId netId = t.GetComponent<NetworkIdentity> ().netId;
 			towers.Add(t);
 			Debug.Log("Ska spawna torn på server");
 			NetworkServer.Spawn(t);
+			NetworkInstanceId netId = t.GetComponent<NetworkIdentity> ().netId;
 			RpcAddTowersToClients (netId);
 		}
 
@@ -208,11 +208,17 @@ namespace TouchScript
 
 		[ClientRpc]
 		void RpcAddTowersToClients(NetworkInstanceId netId) {
-			towers.Add (NetworkServer.FindLocalObject (netId));
+			if(netId.IsEmpty()){
+				Debug.Log("Tornet vi ska lägga till är null");
+			} else{
+				Debug.Log("Lägger till torn i towers: " + NetworkServer.FindLocalObject (netId).ToString());
+				towers.Add (NetworkServer.FindLocalObject (netId));
+			}
 		}
 
 		[ClientRpc]
 		void RpcRemoveTowersToClients(NetworkInstanceId netId) {
+			Debug.Log("Tar bort torn i towers: " + NetworkServer.FindLocalObject (netId).ToString());			
 			towers.Remove (NetworkServer.FindLocalObject (netId));
 		}
 	}
