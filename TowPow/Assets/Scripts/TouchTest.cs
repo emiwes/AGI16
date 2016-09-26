@@ -176,6 +176,7 @@ namespace TouchScript
 			NetworkServer.Spawn(t);
 		}
 
+		//[Command]
 		public void DestroyMe(GameObject go, float time) {
 			if(!towers.Remove(go)) {
 				Debug.Log("The tower could not be removed");
@@ -189,7 +190,18 @@ namespace TouchScript
 			// Find reference in towers
 
 			yield return new WaitForSeconds (time);
-			NetworkServer.Destroy (go);
+			//NetworkServer.Destroy (go);
+			CmdDestroyTowerByTag(go.tag);
+		}
+
+		[Command]
+		void CmdDestroyTowerByTag(string tag) {
+			foreach(GameObject tp in towerTypes) {
+				if(tp.tag == tag) {
+					NetworkServer.Destroy (tp);
+					break;
+				}
+			}
 		}
 	}
 }
