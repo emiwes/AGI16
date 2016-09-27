@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class TowerSpawn : MonoBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
 
-	private bool despawning = false;
+	public bool despawning = false;
 	private float despawnTimer;
 	private float despawnTime = 1f;
 
@@ -15,6 +16,8 @@ public class TowerSpawn : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		isActive = false;
+		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
+		Spawn ();
 	}
 	
 	// Update is called once per frame
@@ -38,11 +41,32 @@ public class TowerSpawn : MonoBehaviour {
 	}
 
 	public void Despawn() {
-		touchTest.DestroyMe (gameObject, 1);
+		Debug.Log("Ready to despawn");
+		Debug.Log(gameObject);
+		Debug.Log (touchTest);
+		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 1f);
+	}
+
+	void Spawn() {
+		Vector3 endPoint = transform.position;
+		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
 	}
 
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
+		isActive = true;
+	}
+
+	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
+		float elapsedTime = 0;
+		Vector3 startingPos = transform.position;
+		while (elapsedTime < time) {
+			transform.position = Vector3.Lerp (startingPos, endPoint, (elapsedTime / time));
+			elapsedTime += Time.deltaTime;
+			yield return new WaitForEndOfFrame ();
+		}
+		transform.position = endPoint;
 		isActive = true;
 	}
 
