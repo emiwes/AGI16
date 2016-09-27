@@ -9,13 +9,25 @@ public class TowerCombat : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
 	public float towerDamage;
-	public float shootingSpeed;
+	public float shootingSpeed, timeSinceLastShot = float.MaxValue;
 	private GameObject shootingModule;
+	private TowerSpawn towerSpawn;
 
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
-		InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
+		//InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
         Debug.Log(nearbyEnemies.Count);
+		towerSpawn = GetComponent<TowerSpawn> ();
+	}
+
+	void Update() {
+		if (towerSpawn.isActive) {
+			if (timeSinceLastShot > shootingSpeed) {
+				fireAtClosestEnemy ();
+				timeSinceLastShot = 0f;
+			}
+			timeSinceLastShot += Time.deltaTime;
+		}
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
