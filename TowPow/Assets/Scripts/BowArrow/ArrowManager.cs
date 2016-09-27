@@ -50,12 +50,11 @@ public class ArrowManager : MonoBehaviour {
 			if (dist <= 0.5f ) {
                 //If distance not greater than a certain value
                 //Possibly have new Vector3 (5f*dist, 0f, dist);
-                stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (7f * dist, 0f, 0f);
+                stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
                 //Fix rotation of arrow
                 //Debug.Log(dist * 100 % 5);
 			    float hapticStep = dist * 100 % 5;
 				if (hapticStep <= 0.7 && hapticStep >= 0) {
-                    Debug.Log("FEEDBACK");
 					//Possibly use an interval in which there is a vibration
 					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(3000);
 				}
@@ -86,9 +85,11 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 40f * dist;
 		r.useGravity = true;
 
-		currentArrow.GetComponent<Collider> ().isTrigger = true;
+		currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
+        currentArrow.GetComponent<Rigidbody>().isKinematic = false;
 
-		stringAttachPoint.transform.position = stringStartPoint.transform.position;
+
+        stringAttachPoint.transform.position = stringStartPoint.transform.position;
 		currentArrow = null;
 		//Play sound
 		float vol = Random.Range (volLowRange, volHighRange);
@@ -120,18 +121,14 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
-        Debug.Log("Enter collider");
-        currentArrow.GetComponent<Arrow>().inCollider = true;
-        currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+        if (currentArrow != null) {
+            currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+        }
     }
 
     void OnTriggerStay(Collider col) {
-        currentArrow.GetComponent<Arrow>().inCollider = true;
-        currentArrow.GetComponent<Arrow>().AttachArrowToBow();
-    }
-
-    void OnTriggerExit(Collider col){
-        Debug.Log("Exit Collider");
-        currentArrow.GetComponent<Arrow>().inCollider = false;
+        if (currentArrow != null) {
+            currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+        }
     }
 }
