@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 
 public class EnemyMovement : MonoBehaviour {
-    [HideInInspector]
+    // [HideInInspector]
     public Transform target;
     NavMeshAgent agent;
 

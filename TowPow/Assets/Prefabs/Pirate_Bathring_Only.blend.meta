@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e990618cd0f8740f08e0a3949164c073
-timeCreated: 1474917501
+guid: c844ae2bfb2141c419bc61ff9817490b
+timeCreated: 1474931975
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -95,9 +95,12 @@ ModelImporter:
     3300000: Bathring
     4300000: Bathring
     4300002: Pirate
-    7400000: Row
+    7400000: T-Pose
     7400002: ArmatureAction
     7400004: PoseLib
+    7400006: Paddle
+    7400008: Die
+    7400010: Spawn
     9500000: //RootNode
     13700000: Pirate
   materials:
@@ -122,10 +125,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Row
+      name: Paddle
       takeName: Default Take
-      firstFrame: 224
-      lastFrame: 251
+      firstFrame: 15
+      lastFrame: 42
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -234,12 +237,12 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 224
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: ArmatureAction
-      takeName: ArmatureAction
-      firstFrame: -1
-      lastFrame: 251
+      name: Die
+      takeName: Default Take
+      firstFrame: 42
+      lastFrame: 67
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -258,7 +261,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9985569
+        functionName: Died
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -350,10 +360,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: PoseLib
-      takeName: PoseLib
-      firstFrame: 0
-      lastFrame: 1
+      name: Spawn
+      takeName: Default Take
+      firstFrame: 73
+      lastFrame: 99
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

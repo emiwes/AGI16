@@ -15,7 +15,6 @@ public class TowerCombat : MonoBehaviour {
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
-        Debug.Log(nearbyEnemies.Count);
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
