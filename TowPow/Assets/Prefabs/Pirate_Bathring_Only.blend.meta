@@ -1,0 +1,518 @@
+fileFormatVersion: 2
+guid: c844ae2bfb2141c419bc61ff9817490b
+timeCreated: 1474931975
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bathring
+    100004: Clavicle_L
+    100006: Clavicle_R
+    100008: Foot_L
+    100010: Foot_L_IK
+    100012: GhostFoot
+    100014: Hand_L
+    100016: Head
+    100018: Hook_R
+    100020: Index1_L
+    100022: Index2_L
+    100024: Index3_L
+    100026: Knee_L_LookAt
+    100028: Knee_R_LookAt
+    100030: Lower_Arm_L
+    100032: Lower_Arm_R
+    100034: Mid1_L
+    100036: Mid2_L
+    100038: Mid3_L
+    100040: Neck
+    100042: Pinkey1_L
+    100044: Pinkey2_L
+    100046: Pinkey3_L
+    100048: Pirate
+    100050: //RootNode
+    100052: Ring1_L
+    100054: Ring2_L
+    100056: Ring3_L
+    100058: Root
+    100060: Shin_L
+    100062: Shin_R
+    100064: Spine_lower
+    100066: Spine_top
+    100068: SpineCtrl
+    100070: Thigh_L
+    100072: Thigh_R
+    100074: Thumb1_L
+    100076: Thumb2_L
+    100078: Thumb3_L
+    100080: Upper_Arm_L
+    100082: Upper_Arm_R
+    100084: WoodenLeg_R_IK
+    400000: Armature
+    400002: Bathring
+    400004: Clavicle_L
+    400006: Clavicle_R
+    400008: Foot_L
+    400010: Foot_L_IK
+    400012: GhostFoot
+    400014: Hand_L
+    400016: Head
+    400018: Hook_R
+    400020: Index1_L
+    400022: Index2_L
+    400024: Index3_L
+    400026: Knee_L_LookAt
+    400028: Knee_R_LookAt
+    400030: Lower_Arm_L
+    400032: Lower_Arm_R
+    400034: Mid1_L
+    400036: Mid2_L
+    400038: Mid3_L
+    400040: Neck
+    400042: Pinkey1_L
+    400044: Pinkey2_L
+    400046: Pinkey3_L
+    400048: Pirate
+    400050: //RootNode
+    400052: Ring1_L
+    400054: Ring2_L
+    400056: Ring3_L
+    400058: Root
+    400060: Shin_L
+    400062: Shin_R
+    400064: Spine_lower
+    400066: Spine_top
+    400068: SpineCtrl
+    400070: Thigh_L
+    400072: Thigh_R
+    400074: Thumb1_L
+    400076: Thumb2_L
+    400078: Thumb3_L
+    400080: Upper_Arm_L
+    400082: Upper_Arm_R
+    400084: WoodenLeg_R_IK
+    2300000: Bathring
+    3300000: Bathring
+    4300000: Bathring
+    4300002: Pirate
+    7400000: T-Pose
+    7400002: ArmatureAction
+    7400004: PoseLib
+    7400006: Paddle
+    7400008: Die
+    7400010: Spawn
+    9500000: //RootNode
+    13700000: Pirate
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Paddle
+      takeName: Default Take
+      firstFrame: 15
+      lastFrame: 42
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Foot_L_IK
+        weight: 1
+      - path: Armature/Knee_L_LookAt
+        weight: 1
+      - path: Armature/Knee_R_LookAt
+        weight: 1
+      - path: Armature/SpineCtrl
+        weight: 1
+      - path: Armature/SpineCtrl/Root
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L/Index3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L/Mid3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L/Pinkey3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L/Ring3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L/Thumb3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R/Hook_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck/Head
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L/Foot_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R/GhostFoot
+        weight: 1
+      - path: Armature/WoodenLeg_R_IK
+        weight: 1
+      - path: Bathring
+        weight: 1
+      - path: Pirate
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Die
+      takeName: Default Take
+      firstFrame: 42
+      lastFrame: 67
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.9985569
+        functionName: Died
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Foot_L_IK
+        weight: 1
+      - path: Armature/Knee_L_LookAt
+        weight: 1
+      - path: Armature/Knee_R_LookAt
+        weight: 1
+      - path: Armature/SpineCtrl
+        weight: 1
+      - path: Armature/SpineCtrl/Root
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L/Index3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L/Mid3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L/Pinkey3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L/Ring3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L/Thumb3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R/Hook_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck/Head
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L/Foot_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R/GhostFoot
+        weight: 1
+      - path: Armature/WoodenLeg_R_IK
+        weight: 1
+      - path: Bathring
+        weight: 1
+      - path: Pirate
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Spawn
+      takeName: Default Take
+      firstFrame: 73
+      lastFrame: 99
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Foot_L_IK
+        weight: 1
+      - path: Armature/Knee_L_LookAt
+        weight: 1
+      - path: Armature/Knee_R_LookAt
+        weight: 1
+      - path: Armature/SpineCtrl
+        weight: 1
+      - path: Armature/SpineCtrl/Root
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Index1_L/Index2_L/Index3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Mid1_L/Mid2_L/Mid3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Pinkey1_L/Pinkey2_L/Pinkey3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Ring1_L/Ring2_L/Ring3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_L/Upper_Arm_L/Lower_Arm_L/Hand_L/Thumb1_L/Thumb2_L/Thumb3_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Clavicle_R/Upper_Arm_R/Lower_Arm_R/Hook_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Spine_lower/Spine_top/Neck/Head
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_L/Shin_L/Foot_L
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R
+        weight: 1
+      - path: Armature/SpineCtrl/Root/Thigh_R/Shin_R/GhostFoot
+        weight: 1
+      - path: Armature/WoodenLeg_R_IK
+        weight: 1
+      - path: Bathring
+        weight: 1
+      - path: Pirate
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
