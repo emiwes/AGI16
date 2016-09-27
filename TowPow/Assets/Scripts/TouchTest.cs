@@ -20,19 +20,19 @@ namespace TouchScript
 		private TowerSpawn whiteTower;
 		private TowerSpawn blackTower;
 
-		public Camera topCamera;
+		private Camera topCamera;
 
 		//public List<NetworkInstanceId> towerIds;
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
 
 		void Start(){
-			// if (isServer) {
-				towerTypes.Add(RedPrefab);
-				towerTypes.Add(WhitePrefab);
-				towerTypes.Add(BluePrefab);
-				towerTypes.Add(BlackPrefab);
-			// }
+			towerTypes.Add(RedPrefab);
+			towerTypes.Add(WhitePrefab);
+			towerTypes.Add(BluePrefab);
+			towerTypes.Add (BlackPrefab);
+
+			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
 		}
 
 		private void OnEnable()
@@ -84,7 +84,7 @@ namespace TouchScript
 			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
 			//NetworkServer.Spawn (testObject);
 
-			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
 			spawnPosition.y = 6f;
 
 			// Figure out what towertype we are dealing with
