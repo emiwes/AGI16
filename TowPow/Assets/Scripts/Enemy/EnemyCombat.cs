@@ -13,8 +13,8 @@ public class EnemyCombat : MonoBehaviour {
 
 	void die(){
 		Animator animator = gameObject.GetComponent<Animator> ();
-		animator.SetBool ("Die", true);
-		// Debug.Log (animator.GetCurrentAnimatorStateInfo (0).length);
+//		animator.SetBool ("Die", true);
+		animator.Play ("Die");
 		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 	}
 
