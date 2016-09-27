@@ -3,9 +3,7 @@ using System.Collections;
 
 public class Arrow : MonoBehaviour {
 
-    public SteamVR_TrackedObject trackedObj;
-
-    private bool isAttached = false;
+	private bool isAttached = false;
     private bool isFired = false;
 
 	void Update() {
