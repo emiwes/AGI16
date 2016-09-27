@@ -144,7 +144,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     motionNodeName: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -306,7 +306,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Die
       takeName: Armature|ArmatureAction
-      firstFrame: 42
+      firstFrame: 45
       lastFrame: 67
       wrapMode: 0
       orientationOffsetY: 0
@@ -775,7 +775,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: 
+    rootMotionBoneName: Armature
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
