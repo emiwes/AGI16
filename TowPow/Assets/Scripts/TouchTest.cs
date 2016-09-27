@@ -20,18 +20,19 @@ namespace TouchScript
 		private TowerSpawn whiteTower;
 		private TowerSpawn blackTower;
 
-		public Camera topCamera;
+		private Camera topCamera;
 
-		public List<GameObject> towers;
+		//public List<NetworkInstanceId> towerIds;
 		public List<GameObject> towerTypes;
+		public List<GameObject> towers;
 
 		void Start(){
-			if (isServer) {
-				towerTypes.Add(RedPrefab);
-				towerTypes.Add(WhitePrefab);
-				towerTypes.Add(BluePrefab);
-				towerTypes.Add(BlackPrefab);
-			}
+			towerTypes.Add(RedPrefab);
+			towerTypes.Add(WhitePrefab);
+			towerTypes.Add(BluePrefab);
+			towerTypes.Add (BlackPrefab);
+
+			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
 		}
 
 		private void OnEnable()
@@ -78,38 +79,52 @@ namespace TouchScript
 
 		//[ClientRpc]
 		void TouchBegin(Vector2 position, Tags tags) {
+			Debug.Log ("Touch Start");
 			//Debug.Log ("tags: " + tags.ToString());
 			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
 			//NetworkServer.Spawn (testObject);
 
-			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
-			spawnPosition.y = 6f;
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
+			spawnPosition.y = 10f;
 
 			// Figure out what towertype we are dealing with
-			GameObject towerPrefab = null;
+			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
+				Debug.Log (tp.tag);
 				if(tags.HasTag(tp.tag)) {
-					towerPrefab = tp;
+					towerTag = tp.tag;
 					break;
 				}
 			}
-			if(towerPrefab == null) {
+			if(towerTag == null) {
 				Debug.Log("The fiducial does not represent a tower");
 				return;
 			}
 			
 			// Check if the tower is already placed and get the reference.
+			// Get first active tower sorted by tags.
+			GameObject[] activeTowers = GameObject.FindGameObjectsWithTag (towerTag);
 			GameObject activeTower = null;
-			foreach(GameObject tower in towers) {
+
+			if (activeTowers.Length > 0) {
+				activeTower = activeTowers [0];
+			}
+				
+			/*foreach(GameObject tower in towers) {
 				if(tags.HasTag(tower.tag)) {
 					activeTower = tower;
 				}
-			}
+			}*/
+
+
+			// Debug.Log("Towerprefab: " + towerPrefab.ToString());
+			
 			// Check if we found anything
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+				Debug.Log("instantiating tower to CMD");
+				CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
 				// Check if it's close to the last position
@@ -118,54 +133,116 @@ namespace TouchScript
 					activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
 				} else {
 					// It's a new position
+					Debug.Log(activeTower);
 					activeTower.GetComponent<TowerSpawn>().Despawn();
-					towers.Remove(activeTower);
-					InstantiateTower(towerPrefab, spawnPosition, Quaternion.identity);
+					//towers.Remove(activeTower);
+					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
 			}
 		}
 
 		void TouchEnd(Vector2 position, Tags tags) {
-			Debug.Log ("Despawn");
+			Debug.Log ("TouchEnd");
 
 			// Get the tower reference
-			GameObject activeTower = null;
+			/*GameObject activeTower = null;
 			foreach(GameObject tower in towers) {
+				Debug.Log ("tower in towers is: " + tower.tag);
 				if(tags.HasTag(tower.tag)) {
 					activeTower = tower;
 				}
+			}*/
+
+			string towerTag = null;
+			foreach(GameObject tp in towerTypes) {
+				if(tags.HasTag(tp.tag)) {
+					towerTag = tp.tag;
+					break;
+				}
 			}
 
-			if(activeTower == null) {
+			if (towerTag != null) {
+				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
+					if (!tower.GetComponent<TowerSpawn> ().despawning) {
+						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+					}
+				}
+			}
+
+			/*if(activeTower == null) {
 				Debug.Log("The tower that you tried to remove doesn't exist");
 				return;
 			}
 
 			// Start despawntimer
-			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();
+			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();*/
 		}
 
-		void InstantiateTower(GameObject prefab, Vector3 position, Quaternion rotation) {
-			GameObject t = (GameObject)Instantiate(prefab, position, rotation);
-			t.GetComponent<TowerSpawn> ().AddTowerController (this);
-			towers.Add(t);
+		[Command]
+		void CmdInstantiateTower(string tag, Vector3 position, Quaternion rotation) {
+			// Figure out what towertype we are dealing with
+			GameObject towerPrefab = null;
+
+			
+			foreach(GameObject tp in towerTypes) {
+				if(tp.tag == tag) {
+					towerPrefab = tp;
+					break;
+				}
+			}
+			if(towerPrefab == null) {
+				Debug.Log("The fiducial does not represent a tower");
+				return;
+			}
+			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
+			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
+			//t.GetComponent<TowerSpawn> ().AddTowerController (this);
+
+			Debug.Log("Ska spawna torn på server");
 			NetworkServer.Spawn(t);
 		}
 
-		public void DestroyMe(GameObject go, float time) {
-			if(!towers.Remove(go)) {
+		//[Command]
+		public void DestroyMe(NetworkInstanceId id, float time) {
+			/*if(!towers.Remove(go)) {
 				Debug.Log("The tower could not be removed");
 				return;
-			}
+			}*/
 
-			StartCoroutine (DestroyTowerInSeconds (go, time));
+			StartCoroutine (DestroyTowerInSeconds (id, time));
 		}
 
-		IEnumerator DestroyTowerInSeconds(GameObject go, float time) {
+		IEnumerator DestroyTowerInSeconds(NetworkInstanceId goId, float time) {
 			// Find reference in towers
 
 			yield return new WaitForSeconds (time);
-			NetworkServer.Destroy (go);
+			//NetworkServer.Destroy (go);
+			Debug.Log("Ready to destroy");
+
+			if (!goId.IsEmpty()) {
+				CmdDestroyTowerByNetId (goId);
+			}
 		}
+
+		[Command]
+		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
+			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+		}
+
+		/*[ClientRpc]
+		void RpcAddTowersToClients(NetworkInstanceId netId) {
+			if(netId.IsEmpty()){
+				Debug.Log("Tornet vi ska lägga till är null");
+			} else{
+				Debug.Log("Lägger till torn i towers: " + ClientScene.FindLocalObject (netId).ToString());
+				towers.Add (ClientScene.FindLocalObject (netId));
+			}
+		}
+
+		[ClientRpc]
+		void RpcRemoveTowersToClients(NetworkInstanceId netId) {
+			Debug.Log("Tar bort torn i towers: " + NetworkServer.FindLocalObject (netId).ToString());			
+			towers.Remove (ClientScene.FindLocalObject (netId));
+		}*/
 	}
 }

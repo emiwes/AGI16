@@ -48,7 +48,9 @@ public class DeterminePlayerType : MonoBehaviour {
 	public void SetDeviceEnvironment(string type){
 		if (type == "PixelSense") {
 			pixelSenseComponents.SetActive (true);
-			viveComponents.SetActive (false);
+            pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
+
+            viveComponents.SetActive (false);
             setHostInGameScript();
 
         }
