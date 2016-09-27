@@ -89,10 +89,11 @@ public class ArrowManager : MonoBehaviour {
 		currentArrow.GetComponent<Arrow> ().Fired ();
 
 		Rigidbody r = currentArrow.GetComponent<Rigidbody> ();
-		r.velocity = currentArrow.transform.forward * 60f * dist;
+		r.velocity = currentArrow.transform.forward * 80f * dist;
 		r.useGravity = true;
 
-		currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
+        //currentArrow.GetComponent<BoxCollider>().enabled = true;
+        currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
         currentArrow.GetComponent<Rigidbody>().isKinematic = false;
         currentArrow.GetComponent<TrailRenderer>().enabled = true;
 
@@ -128,12 +129,14 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
+        Debug.Log(col.gameObject.name);
         if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
 
     void OnTriggerStay(Collider col) {
+        Debug.Log(col.gameObject.name);
         if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
