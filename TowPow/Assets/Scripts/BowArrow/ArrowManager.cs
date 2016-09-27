@@ -78,6 +78,8 @@ public class ArrowManager : MonoBehaviour {
 	private void Fire(){
 		float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
 
+        SteamVR_Controller.Input((int)gameObject.GetComponent<SteamVR_TrackedObject>().index).TriggerHapticPulse(3000);
+
         currentArrow.transform.parent = null;
 		currentArrow.GetComponent<Arrow> ().Fired ();
 
@@ -88,7 +90,6 @@ public class ArrowManager : MonoBehaviour {
 		currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
         currentArrow.GetComponent<Rigidbody>().isKinematic = false;
         currentArrow.GetComponent<TrailRenderer>().enabled = true;
-
 
         stringAttachPoint.transform.position = stringStartPoint.transform.position;
 		currentArrow = null;
