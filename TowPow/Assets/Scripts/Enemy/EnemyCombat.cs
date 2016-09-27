@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class EnemyCombat : MonoBehaviour {
 	public float health = 100;
-	public GameObject textObject;
-
-	TextMesh textMesh; 
 
 	public void takeDamage (float damage) {
 		health -= damage;
@@ -15,6 +12,10 @@ public class EnemyCombat : MonoBehaviour {
 	}
 
 	void die(){
-		Destroy (gameObject.transform.parent.gameObject);
+		Animator animator = gameObject.GetComponent<Animator> ();
+		animator.SetBool ("Die", true);
+		// Debug.Log (animator.GetCurrentAnimatorStateInfo (0).length);
+		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 	}
+
 }

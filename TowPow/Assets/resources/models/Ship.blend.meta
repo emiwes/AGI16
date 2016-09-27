@@ -1,0 +1,150 @@
+fileFormatVersion: 2
+guid: b3a2735d08bb74e47bbcccfa82df9f83
+timeCreated: 1474882879
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Boat
+    100002: Cannons_Left
+    100004: Cannons_Right
+    100006: Circle
+    100008: Cube
+    100010: Cylinder
+    100012: Door
+    100014: HandRail
+    100016: Handrail_Back
+    100018: Handrail_Front
+    100020: Handrail_Left
+    100022: HandrailRight
+    100024: RailCaps
+    100026: //RootNode
+    100028: Windows_Back
+    100030: Windows_Front
+    400000: Boat
+    400002: Cannons_Left
+    400004: Cannons_Right
+    400006: Circle
+    400008: Cube
+    400010: Cylinder
+    400012: Door
+    400014: HandRail
+    400016: Handrail_Back
+    400018: Handrail_Front
+    400020: Handrail_Left
+    400022: HandrailRight
+    400024: RailCaps
+    400026: //RootNode
+    400028: Windows_Back
+    400030: Windows_Front
+    2300000: Boat
+    2300002: Cannons_Left
+    2300004: Cannons_Right
+    2300006: Circle
+    2300008: Cube
+    2300010: Cylinder
+    2300012: Door
+    2300014: HandRail
+    2300016: Handrail_Back
+    2300018: Handrail_Front
+    2300020: Handrail_Left
+    2300022: HandrailRight
+    2300024: RailCaps
+    2300026: Windows_Back
+    2300028: Windows_Front
+    3300000: Boat
+    3300002: Cannons_Left
+    3300004: Cannons_Right
+    3300006: Circle
+    3300008: Cube
+    3300010: Cylinder
+    3300012: Door
+    3300014: HandRail
+    3300016: Handrail_Back
+    3300018: Handrail_Front
+    3300020: Handrail_Left
+    3300022: HandrailRight
+    3300024: RailCaps
+    3300026: Windows_Back
+    3300028: Windows_Front
+    4300000: RailCaps
+    4300002: Cannons_Right
+    4300004: Door
+    4300006: Windows_Front
+    4300008: Cube
+    4300010: Cannons_Left
+    4300012: HandRail
+    4300014: Cylinder
+    4300016: Circle
+    4300018: Handrail_Back
+    4300020: HandrailRight
+    4300022: Handrail_Left
+    4300024: Handrail_Front
+    4300026: Boat
+    4300028: Windows_Back
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
