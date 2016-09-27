@@ -87,6 +87,7 @@ public class ArrowManager : MonoBehaviour {
 
 		currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
         currentArrow.GetComponent<Rigidbody>().isKinematic = false;
+        currentArrow.GetComponent<TrailRenderer>().enabled = true;
 
 
         stringAttachPoint.transform.position = stringStartPoint.transform.position;
