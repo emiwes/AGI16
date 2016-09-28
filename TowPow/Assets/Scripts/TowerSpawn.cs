@@ -6,10 +6,14 @@ public class TowerSpawn : MonoBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
+	public GameObject circleProgressPrefab;
 
 	public bool despawning = false;
 	private float despawnTimer;
 	private float despawnTime = 1f;
+
+	private GameObject buildProgress;
+	private bool isBuildingTower = false;
 
 	private TouchScript.TouchTest touchTest;
 
@@ -45,12 +49,19 @@ public class TowerSpawn : MonoBehaviour {
 		Debug.Log(gameObject);
 		Debug.Log (touchTest);
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 1f);
+		//Destroy buildProgress
+		Destroy(buildProgress);
 	}
 
 	void Spawn() {
 		Vector3 endPoint = transform.position;
 		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
+		//SPAWN THE TOWER WITH PROGRESS
+		isBuildingTower = true;
+		buildProgress = GameObject.Instantiate(circleProgressPrefab);
+		buildProgress.transform.SetParent (GameObject.Find ("PSCanvas").transform);
+		buildProgress.transform.position = endPoint;
 	}
 
 	IEnumerator SpawnTimer() {
@@ -72,5 +83,9 @@ public class TowerSpawn : MonoBehaviour {
 
 	public void AddTowerController(TouchScript.TouchTest tt) {
 		touchTest = tt;
+	}
+
+	private void updateBuildProgress() {
+		
 	}
 }
