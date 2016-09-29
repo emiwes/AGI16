@@ -28,7 +28,9 @@ public class TowerSpawn : MonoBehaviour {
 	void Start () {
 		isActive = false;
 		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
-		topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+        if (!NetworkServer.active){
+            topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
+        }
 		Spawn ();
 	}
 	
@@ -59,11 +61,16 @@ public class TowerSpawn : MonoBehaviour {
 		if(isBuildingTower) {
 			isBuildingTower = false;
 			StopCoroutine (buildTowerOverTimeEnumerator);
-			StopCoroutine (fillBuildProgressEnumerator);
+            if (!NetworkServer.active){
+                StopCoroutine(fillBuildProgressEnumerator);
+            }
 		}
 		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
-		StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
+        if (!NetworkServer.active)
+        {
+            StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
+        }
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
 		//Destroy buildProgress
 		Destroy(buildProgress, serverDespawnTime);
@@ -76,11 +83,19 @@ public class TowerSpawn : MonoBehaviour {
 		StartCoroutine(buildTowerOverTimeEnumerator);
 		//SPAWN THE TOWER WITH PROGRESS
 		isBuildingTower = true;
-		buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
-		buildProgress.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
-		//buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
-		fillBuildProgressEnumerator = FillBuildProgress(spawnDuration, Color.red, Color.green, 0f, 1f);
-		StartCoroutine(fillBuildProgressEnumerator);
+		
+        if (!NetworkServer.active){
+            buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
+            buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+        }
+
+        //buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
+        if (!NetworkServer.active)
+        {
+            fillBuildProgressEnumerator = FillBuildProgress(spawnDuration, Color.red, Color.green, 0f, 1f);
+            StartCoroutine(fillBuildProgressEnumerator);
+        }
+
 	}
 
 	IEnumerator SpawnTimer() {
