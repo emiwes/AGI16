@@ -92,7 +92,7 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 80f * dist;
 		r.useGravity = true;
 
-        //currentArrow.GetComponent<BoxCollider>().enabled = true;
+        currentArrow.GetComponent<BoxCollider>().enabled = true;
         currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
         currentArrow.GetComponent<Rigidbody>().isKinematic = false;
         currentArrow.GetComponent<TrailRenderer>().enabled = true;
