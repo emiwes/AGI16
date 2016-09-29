@@ -1,24 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class OnEnemyReachGoal : MonoBehaviour {
+public class OnEnemyReachGoal : NetworkBehaviour {
 
 	public Slider HealthSlider;
 	public Text HealthText;
+	[SyncVar (hook = "OnChangeHealth")]
+	public int HealthSliderValue = 10;
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.tag == "Enemy") {
+		if (isServer && other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject);
-
-			HealthSlider.value -= 1;
-			HealthText.text = HealthSlider.value.ToString();
-			if (HealthSlider.value <= 0) {
+			if (HealthSliderValue == 0) {
 				GameObject.Find ("GameHandler").gameObject.GetComponent<GameScript>().GameOver = true;
-				HealthText.text = "Game Over! :(";
-				// Debug.Log ("GAME OVER");
+				Debug.Log ("GAME OVER");
 			} 
-			
+			else {
+				HealthSliderValue -= 1;
+			}
 		}
+	}
+	void OnChangeHealth(int health) {
+		HealthSlider.value = health;
+		HealthText.text = health.ToString();
 	}
 }

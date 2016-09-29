@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class GameScript : MonoBehaviour {
+public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
 
 	public int creepsPerWave;
-
-	private int waveNr = 0;
+	[SyncVar (hook = "OnWaveChange")]
+	public int waveNr = 0;
 
 	public float spawnWaitTime;
 
@@ -53,7 +54,7 @@ public class GameScript : MonoBehaviour {
         if (isHost && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
-			WaveNrText.text = waveNr.ToString();
+
 			//Spawn more creatures based on waveNr
 			int nrOfCreeps = creepsPerWave * waveNr;
 			waveIsRunning = true;
@@ -66,5 +67,9 @@ public class GameScript : MonoBehaviour {
 				waveIsRunning = false;
 			}
 		}
+	}
+
+	void OnWaveChange(int wave){
+		WaveNrText.text = wave.ToString();
 	}
 }
