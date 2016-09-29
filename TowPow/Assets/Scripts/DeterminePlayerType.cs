@@ -9,6 +9,7 @@ public class DeterminePlayerType : MonoBehaviour {
 	GameObject viveComponents;
 	GameObject pixelSenseButton;
 	GameObject viveButton;
+	GameObject hudCanvas;
 
 	bool showUI = true;
 
@@ -17,6 +18,7 @@ public class DeterminePlayerType : MonoBehaviour {
 		viveComponents = GameObject.Find ("ViveComponents");
 		viveButton = GameObject.Find ("ViveButton");
 		pixelSenseButton = GameObject.Find ("PixelSenseButton");
+		hudCanvas = GameObject.Find ("HUDCanvas");
 	}
 
 	void Update() {
@@ -25,15 +27,19 @@ public class DeterminePlayerType : MonoBehaviour {
 		} else if (Input.GetKeyUp(KeyCode.P))
         {
             pixelSenseComponents.SetActive(true);
+			pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
             viveComponents.SetActive(false);
+			hudCanvas.SetActive(true);
             setHostInGameScript();
 
         }
         else if (Input.GetKeyUp(KeyCode.V))
         {
             viveComponents.SetActive(true);
+			hudCanvas.SetActive(false);
             pixelSenseComponents.SetActive(false);
             setHostInGameScript();
+
         }
     }
 
