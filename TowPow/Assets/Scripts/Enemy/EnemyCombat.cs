@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class EnemyCombat : MonoBehaviour {
+public class EnemyCombat : NetworkBehaviour {
 	public float health = 100;
 
 	public void takeDamage (float damage) {
 		health -= damage;
 		if (health <= 0)
-			die ();
+			CmdDie ();
 	}
-
-	void die(){
+	[Command]
+	void CmdDie(){
 		Animator animator = gameObject.GetComponent<Animator> ();
 //		animator.SetBool ("Die", true);
 		animator.Play ("Die");
