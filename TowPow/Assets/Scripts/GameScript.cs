@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class GameScript : MonoBehaviour {
+public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
 
 	public int creepsPerWave;
-
-	private int waveNr = 0;
+	[SyncVar]
+	public int waveNr = 0;
 
 	public float spawnWaitTime;
 
