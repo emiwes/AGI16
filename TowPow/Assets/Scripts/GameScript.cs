@@ -8,7 +8,7 @@ public class GameScript : NetworkBehaviour {
 	public Text WaveNrText;
 
 	public int creepsPerWave;
-	[SyncVar]
+	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
 
 	public float spawnWaitTime;
@@ -54,7 +54,7 @@ public class GameScript : NetworkBehaviour {
         if (isHost && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
-			WaveNrText.text = waveNr.ToString();
+
 			//Spawn more creatures based on waveNr
 			int nrOfCreeps = creepsPerWave * waveNr;
 			waveIsRunning = true;
@@ -67,5 +67,9 @@ public class GameScript : NetworkBehaviour {
 				waveIsRunning = false;
 			}
 		}
+	}
+
+	void OnWaveChange(int wave){
+		WaveNrText.text = wave.ToString();
 	}
 }
