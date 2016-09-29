@@ -9,15 +9,16 @@ public class OnEnemyReachGoal : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
-			Destroy(other.gameObject.transform.parent.gameObject);
-			if (HealthSlider.value == 0) {
+			Destroy(other.gameObject);
+
+			HealthSlider.value -= 1;
+			HealthText.text = HealthSlider.value.ToString();
+			if (HealthSlider.value <= 0) {
 				GameObject.Find ("GameHandler").gameObject.GetComponent<GameScript>().GameOver = true;
-				Debug.Log ("GAME OVER");
+				HealthText.text = "Game Over! :(";
+				// Debug.Log ("GAME OVER");
 			} 
-			else {
-				HealthSlider.value -= 1;
-				HealthText.text = HealthSlider.value.ToString();
-			}
+			
 		}
 	}
 }
