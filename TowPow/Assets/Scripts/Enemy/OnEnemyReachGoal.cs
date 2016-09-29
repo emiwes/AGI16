@@ -7,21 +7,23 @@ public class OnEnemyReachGoal : NetworkBehaviour {
 
 	public Slider HealthSlider;
 	public Text HealthText;
-	[SyncVar]
+	[SyncVar (hook = "OnChangeHealth")]
 	public int HealthSliderValue = 10;
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.tag == "Enemy") {
-			Destroy(other.gameObject.transform.parent.gameObject);
+		if (isServer && other.gameObject.tag == "Enemy") {
+			Destroy(other.gameObject);
 			if (HealthSliderValue == 0) {
 				GameObject.Find ("GameHandler").gameObject.GetComponent<GameScript>().GameOver = true;
 				Debug.Log ("GAME OVER");
 			} 
 			else {
 				HealthSliderValue -= 1;
-				HealthSlider.value = HealthSliderValue;
-				HealthText.text = HealthSliderValue.ToString();
 			}
 		}
+	}
+	void OnChangeHealth(int health) {
+		HealthSlider.value = health;
+		HealthText.text = health.ToString();
 	}
 }
