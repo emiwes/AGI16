@@ -8,8 +8,11 @@ public class EnemyCombat : NetworkBehaviour {
 
 	public void takeDamage (float damage) {
 		health -= damage;
-		if (health <= 0)
+		if (health <= 0) {
+			GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
 			CmdDie ();
+		}
+			
 	}
 	[Command]
 	void CmdDie(){
