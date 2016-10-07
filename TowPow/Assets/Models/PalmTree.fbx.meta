@@ -15,6 +15,9 @@ ModelImporter:
     100014: leave6
     100016: leave7
     100018: leave8
+    100020: coconut
+    100022: coconut1
+    100024: coconut2
     400000: leave
     400002: leave1
     400004: leave2
@@ -25,6 +28,9 @@ ModelImporter:
     400014: leave6
     400016: leave7
     400018: leave8
+    400020: coconut
+    400022: coconut1
+    400024: coconut2
     2300000: leave
     2300002: leave1
     2300004: leave2
@@ -35,6 +41,9 @@ ModelImporter:
     2300014: leave6
     2300016: leave7
     2300018: leave8
+    2300020: coconut
+    2300022: coconut1
+    2300024: coconut2
     3300000: leave
     3300002: leave1
     3300004: leave2
@@ -45,6 +54,9 @@ ModelImporter:
     3300014: leave6
     3300016: leave7
     3300018: leave8
+    3300020: coconut
+    3300022: coconut1
+    3300024: coconut2
     4300000: trunk
     4300002: leave
     4300004: leave1
@@ -55,6 +67,10 @@ ModelImporter:
     4300014: leave8
     4300016: leave6
     4300018: leave7
+    4300020: tree1
+    4300022: coconut
+    4300024: coconut1
+    4300026: coconut2
     9500000: //RootNode
   materials:
     importMaterials: 0
