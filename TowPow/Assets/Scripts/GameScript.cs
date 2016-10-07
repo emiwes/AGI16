@@ -6,11 +6,15 @@ using UnityEngine.Networking;
 public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
+	public Text MoneyText;
+	public Text KillText;
 
 	public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
+	[SyncVar (hook = "OnKillChange")]
 	public int killCounter = 0;
+	[SyncVar (hook = "OnMoneyChange")]
 	public int moneyCounter = 0;
 
 	public float spawnWaitTime;
@@ -24,7 +28,6 @@ public class GameScript : NetworkBehaviour {
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
-        Debug.Log("run wave!!");
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
@@ -91,5 +94,11 @@ public class GameScript : NetworkBehaviour {
 
 	void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
+	}
+	void OnKillChange(int kills){
+		KillText.text = kills.ToString();
+	}
+	void OnMoneyChange(int money){
+		MoneyText.text = money.ToString();
 	}
 }
