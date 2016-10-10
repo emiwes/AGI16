@@ -6,10 +6,16 @@ using UnityEngine.Networking;
 public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
+	public Text MoneyText;
+	public Text KillText;
 
 	public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
+	[SyncVar (hook = "OnKillChange")]
+	public int killCounter = 0;
+	[SyncVar (hook = "OnMoneyChange")]
+	public int moneyCounter = 0;
 
 	public float spawnWaitTime;
 
@@ -22,7 +28,6 @@ public class GameScript : NetworkBehaviour {
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
-        Debug.Log("run wave!!");
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
@@ -41,8 +46,26 @@ public class GameScript : NetworkBehaviour {
         {
             GameStarted = true;
         }
-
-        /*TODO: Add to reset game*/
+		else if (isHost && Input.GetKeyUp(KeyCode.M))
+		{
+			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
+				if (enemy.gameObject.name != "target") {
+					//Destroy all child pirates
+					Destroy (enemy.gameObject);
+				}
+			}
+			foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile")) {
+				//Destroy all bullets as well
+				Destroy (bullet);
+			}
+			//Reset game values
+			GameStarted = false;
+			waveNr = 0;
+			waveIsRunning = false;
+			GameOver = false;
+			killCounter = 0;
+			moneyCounter = 0;
+		}
 
         /*describing the if
        * if host - only the host should spawn
@@ -71,5 +94,11 @@ public class GameScript : NetworkBehaviour {
 
 	void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
+	}
+	void OnKillChange(int kills){
+		KillText.text = kills.ToString();
+	}
+	void OnMoneyChange(int money){
+		MoneyText.text = money.ToString();
 	}
 }
