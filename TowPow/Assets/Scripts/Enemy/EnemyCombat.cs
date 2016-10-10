@@ -5,13 +5,20 @@ using UnityEngine.Networking;
 
 public class EnemyCombat : NetworkBehaviour {
 	public float health = 100;
+	public Slider HPSlider;
 	private bool dead = false;
+
+	void Start () {
+		HPSlider.maxValue = health;
+	}
 
 	public void takeDamage (float damage) {
 		health -= damage;
+		HPSlider.value = health;
 		if (health <= 0 && !dead) {
 			//Only kill object once
 			dead = true;
+			Destroy (HPSlider.transform.GetChild(1).gameObject);
 			CmdDie ();
 		}
 			
