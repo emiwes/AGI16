@@ -19,6 +19,7 @@ public class spawnEnemy : NetworkBehaviour
         target = this.transform.Find("target");
 		isHost = false;
 		VRPosition = GameObject.Find ("[CameraRig]").transform;
+        Debug.Log(VRPosition);
 	}
 
 	public void updateHostStatus (bool hostStatus) {
@@ -58,7 +59,8 @@ public class spawnEnemy : NetworkBehaviour
 		if (!isHost) { //If not VR-player, set hp inactive
 			temp_enemy.transform.Find ("EnemyHPCanvas").gameObject.SetActive (false);
 		} else {
-			temp_enemy.transform.Find ("EnemyHPCanvas").GetComponent<CameraFacingBillboard> ().target = VRPosition;
+            temp_enemy.transform.Find("EnemyHPCanvas").gameObject.SetActive(true);
+            temp_enemy.transform.Find ("EnemyHPCanvas").GetComponent<CameraFacingBillboard> ().target = VRPosition;
 		}
         NetworkServer.Spawn(temp_enemy);
 
