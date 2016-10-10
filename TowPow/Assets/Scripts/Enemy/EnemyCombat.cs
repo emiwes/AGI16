@@ -23,15 +23,21 @@ public class EnemyCombat : NetworkBehaviour {
 //		animator.SetBool ("Die", true);
 
 		animator.Play ("Die");
-		spawnCoin();
 		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 	}
 
 	void spawnCoin (){
-
-		GameObject coin = Instantiate ( coinPrefab, this.transform.position, coinPrefab.transform.rotation ) as GameObject;
+		Vector3 coinSpawnPosition = this.transform.position;
+		coinSpawnPosition.y = 20;
+		GameObject coin = Instantiate ( coinPrefab, coinSpawnPosition, coinPrefab.transform.rotation ) as GameObject;
 		NetworkServer.Spawn (coin);
 
 	}
 
+	void OnDestroy(){
+		Debug.Log ("On Destroy is CALLEEEEED");
+		if (GameObject.Find ("PixelSenseComponents").activeSelf) {
+			spawnCoin ();
+		}
+	}
 }

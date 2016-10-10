@@ -85,7 +85,7 @@ namespace TouchScript
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
-				Debug.Log (tp.tag);
+				//Debug.Log (tp.tag);
 				if(tags.HasTag(tp.tag)) {
 					towerTag = tp.tag;
 					break;
@@ -93,6 +93,22 @@ namespace TouchScript
 			}
 			if(towerTag == null) {
 				Debug.Log("The fiducial does not represent a tower");
+				// CHECK FOR TOUCH INPUT
+				if(tags.HasTag("Touch")){
+					Vector3 down = new Vector3(0, -1, 0);
+
+					RaycastHit hit;
+					spawnPosition.y = 22f;
+					Debug.DrawRay (spawnPosition, down);
+					if(Physics.Raycast(spawnPosition, down, out hit, 10)) {
+						Debug.Log (hit.transform.name + " was hit!");
+						if (hit.transform.tag == "coin") {
+							Destroy (hit.transform.gameObject);
+						}
+					}
+				}
+
+
 				return;
 			}
 			
@@ -123,15 +139,6 @@ namespace TouchScript
 					Debug.Log(activeTower);
 					activeTower.GetComponent<TowerSpawn>().Despawn();
 					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
-				}
-			}
-
-
-			// CHECK FOR TOUCH INPUT
-			if(tags.HasTag("Touch")){
-				Vector3 down = Vector3(0, 0, 1);
-				if(Physics.Raycast(spawnPosition, down, 10)) {
-					Debug.Log ("Something was hit!");
 				}
 			}
 		}
