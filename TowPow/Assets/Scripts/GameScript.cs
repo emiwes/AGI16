@@ -17,6 +17,10 @@ public class GameScript : NetworkBehaviour {
 	[SyncVar (hook = "OnMoneyChange")]
 	public int moneyCounter = 0;
 
+	public int PlayerStartingHealth = 10;
+	[HideInInspector]
+	public int PlayerHealth = 0;
+
 	public float spawnWaitTime;
 
 	private bool waveIsRunning = false;
@@ -33,6 +37,10 @@ public class GameScript : NetworkBehaviour {
 			yield return new WaitForSeconds (spawnWaitTime);
 		}
 		yield return true;
+	}
+
+	void Awake() {
+		PlayerHealth = PlayerStartingHealth;
 	}
 	
 	// Update is called once per frame
@@ -65,6 +73,9 @@ public class GameScript : NetworkBehaviour {
 			GameOver = false;
 			killCounter = 0;
 			moneyCounter = 0;
+			PlayerHealth = PlayerStartingHealth;
+			//Update GUI as well
+			GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
 		}
 
         /*describing the if
