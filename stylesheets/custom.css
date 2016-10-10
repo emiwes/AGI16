@@ -1,0 +1,20 @@
+.page-header {
+	background-image: url('../img/header-dark.jpg');
+	background-size:cover;
+	background-position: 50%;
+}
+
+#theTeam {
+	text-align: center;
+}
+
+#theTeam .member {
+	display: inline-block;
+	vertical-align: top;
+	margin:auto;
+	width:15%;
+}
+
+.center {
+	text-align: center;
+}
