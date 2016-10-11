@@ -22,6 +22,6 @@ public class VRFOV : MonoBehaviour {
 		//Get new transform for VR Headset
 		Transform VRHead = GameObject.Find("Camera (eye)").transform;
 		//Get transform.eulerAngles.y (for world position)
-		transform.eulerAngles = new Vector3(0f, 0f, VRHead.eulerAngles.y);
+		transform.eulerAngles = new Vector3(0f, 0f, -VRHead.eulerAngles.y);
 	}
 }
