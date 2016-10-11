@@ -8,6 +8,7 @@ public class TowerCombat : MonoBehaviour {
 
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
+	public GameObject shootingRangeIndicator;
 	public float towerDamage;
 	public float shootingSpeed, timeSinceLastShot = float.MaxValue;
 	private GameObject shootingModule;
@@ -16,7 +17,8 @@ public class TowerCombat : MonoBehaviour {
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		//InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
-		transform.Find("ShootingRadiusIndicator").gameObject.SetActive(true);
+		shootingRangeIndicator.SetActive(true);
+		// transform.Find("ShootingRadiusIndicator").gameObject.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
 	}
 
