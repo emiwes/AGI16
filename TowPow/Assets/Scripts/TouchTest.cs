@@ -93,7 +93,16 @@ namespace TouchScript
 			}
 			if(towerTag == null) {
 				Debug.Log("The fiducial does not represent a tower");
-				return;
+
+				// CHECK FOR TOUCH INPUT
+				if (tags.HasTag ("Touch")) {
+					Vector3 down = new Vector3 (0, -1, 0);
+					if (Physics.Raycast (spawnPosition, down, 10)) {
+						Debug.Log ("Something was hit!");
+					}
+				} else {
+					return;
+				}
 			}
 			
 			// Check if the tower is already placed and get the reference.
@@ -125,15 +134,7 @@ namespace TouchScript
 					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
 			}
-
-
-			// CHECK FOR TOUCH INPUT
-			if(tags.HasTag("Touch")){
-				Vector3 down = Vector3(0, 0, 1);
-				if(Physics.Raycast(spawnPosition, down, 10)) {
-					Debug.Log ("Something was hit!");
-				}
-			}
+				
 		}
 
 		void TouchEnd(Vector2 position, Tags tags) {
