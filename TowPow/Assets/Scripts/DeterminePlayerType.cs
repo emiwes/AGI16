@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class DeterminePlayerType : MonoBehaviour {
+public class DeterminePlayerType : NetworkBehaviour {
 
 	GameObject pixelSenseComponents;
 	GameObject viveComponents;
@@ -28,8 +28,12 @@ public class DeterminePlayerType : MonoBehaviour {
         {
             pixelSenseComponents.SetActive(true);
 			pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
-            viveComponents.SetActive(false);
-			hudCanvas.SetActive(true);
+            //viveComponents.SetActive(false);
+            //viveComponents.SetActive(true);
+            //viveComponents.transform.Find("Camera (eye)").gameObject.SetActive(true);
+            //viveComponents.transform.Find("Controller (left)").gameObject.SetActive(false);
+            //viveComponents.transform.Find("Controller (right)").gameObject.SetActive(false);
+            hudCanvas.SetActive(true);
             setHostInGameScript();
 
         }
@@ -56,7 +60,9 @@ public class DeterminePlayerType : MonoBehaviour {
 			pixelSenseComponents.SetActive (true);
             pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
 
-            viveComponents.SetActive (false);
+            //viveComponents.SetActive (false);
+            viveComponents.SetActive(true);
+            viveComponents.transform.Find("Camera (eye)").gameObject.SetActive(true);
             setHostInGameScript();
 
         }
