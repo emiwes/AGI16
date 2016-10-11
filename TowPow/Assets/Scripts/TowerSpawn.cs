@@ -30,6 +30,7 @@ public class TowerSpawn : MonoBehaviour {
 		isActive = false;
 		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
         if (!NetworkServer.active){
+			// Vi fick ett fel här
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
 		Spawn ();

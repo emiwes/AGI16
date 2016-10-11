@@ -5,45 +5,36 @@ using UnityEngine.UI;
 
 public class DeterminePlayerType : NetworkBehaviour {
 
-	GameObject pixelSenseComponents;
-	GameObject viveComponents;
-	GameObject pixelSenseButton;
-	GameObject viveButton;
-	GameObject hudCanvas;
+	public GameObject pixelSenseComponents;
+	public GameObject viveComponents;
+	public GameObject pixelSenseButton;
+	public GameObject viveButton;
+	public GameObject hudCanvas;
+
+	public GameObject topCamera;
+
+	public GameObject ViveCamera;
+	public GameObject ViveController_Left;
+	public GameObject ViveController_Right;
+
+	public static bool isVive;
 
 	bool showUI = true;
 
 	void Start() {
-		pixelSenseComponents = GameObject.Find ("PixelSenseComponents");
-		viveComponents = GameObject.Find ("ViveComponents");
-		viveButton = GameObject.Find ("ViveButton");
-		pixelSenseButton = GameObject.Find ("PixelSenseButton");
-		hudCanvas = GameObject.Find ("HUDCanvas");
+		topCamera.SetActive (true);
+		viveComponents.SetActive (false);
 	}
 
 	void Update() {
 		if (Input.GetKeyUp (KeyCode.U)) {
 			toggleUiDisplay ();
-		} else if (Input.GetKeyUp(KeyCode.P))
-        {
-            pixelSenseComponents.SetActive(true);
-			pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
-            //viveComponents.SetActive(false);
-            //viveComponents.SetActive(true);
-            //viveComponents.transform.Find("Camera (eye)").gameObject.SetActive(true);
-            //viveComponents.transform.Find("Controller (left)").gameObject.SetActive(false);
-            //viveComponents.transform.Find("Controller (right)").gameObject.SetActive(false);
-            hudCanvas.SetActive(true);
-            setHostInGameScript();
-
-        }
-        else if (Input.GetKeyUp(KeyCode.V))
-        {
-            viveComponents.SetActive(true);
-			hudCanvas.SetActive(false);
-            pixelSenseComponents.SetActive(false);
-            setHostInGameScript();
-
+		} 
+		else if (Input.GetKeyUp(KeyCode.P)){
+			SetDeviceEnvironment ("PixelSense");
+        } 
+		else if (Input.GetKeyUp(KeyCode.V)){
+			SetDeviceEnvironment ("Vive");
         }
     }
 
@@ -57,19 +48,19 @@ public class DeterminePlayerType : NetworkBehaviour {
 
 	public void SetDeviceEnvironment(string type){
 		if (type == "PixelSense") {
+			isVive = false;
+			viveComponents.SetActive(false);
 			pixelSenseComponents.SetActive (true);
-            pixelSenseComponents.transform.Find("TopCamera").gameObject.SetActive(true);
-
-            //viveComponents.SetActive (false);
-            viveComponents.SetActive(true);
-            viveComponents.transform.Find("Camera (eye)").gameObject.SetActive(true);
+			hudCanvas.SetActive(true);
             setHostInGameScript();
 
         }
         else if (type == "Vive") {
-			viveComponents.SetActive (true);
-			pixelSenseComponents.SetActive (false);
-            setHostInGameScript();
+			isVive = true;
+			viveComponents.SetActive(true);
+			hudCanvas.SetActive(false);
+			pixelSenseComponents.SetActive(false);
+			setHostInGameScript();
 
         } else {
 			Debug.LogError ("Invalid client type: "+type);
