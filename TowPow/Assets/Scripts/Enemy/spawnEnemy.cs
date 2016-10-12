@@ -32,7 +32,7 @@ public class spawnEnemy : NetworkBehaviour
 		VRPosition = playerPos;
 		foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
 			//Update target lookat for all current enemies
-			enemy.transform.Find ("EnemyHPCanvas").GetComponent<CameraFacingBillboard> ().target = playerPos;
+			enemy.transform.Find ("PirateHPCanvas").GetComponent<CameraFacingBillboard> ().target = playerPos;
 		}
 	}
 	
@@ -57,10 +57,10 @@ public class spawnEnemy : NetworkBehaviour
         //to spawn on all clients.
 		//----without slider
 		if (!isHost) { //If not VR-player, set hp inactive
-			temp_enemy.transform.Find ("EnemyHPCanvas").gameObject.SetActive (false);
+			temp_enemy.transform.Find ("PirateHPCanvas").gameObject.SetActive (false);
 		} else {
-            temp_enemy.transform.Find("EnemyHPCanvas").gameObject.SetActive(true);
-            temp_enemy.transform.Find ("EnemyHPCanvas").GetComponent<CameraFacingBillboard> ().target = VRPosition;
+			temp_enemy.transform.Find("PirateHPCanvas").gameObject.SetActive(true);
+			temp_enemy.transform.Find ("PirateHPCanvas").GetComponent<CameraFacingBillboard> ().target = VRPosition;
 		}
         NetworkServer.Spawn(temp_enemy);
 
