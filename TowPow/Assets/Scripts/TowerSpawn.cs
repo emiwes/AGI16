@@ -7,6 +7,7 @@ public class TowerSpawn : MonoBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
+	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
 	private Camera topCamera;
 
@@ -29,6 +30,7 @@ public class TowerSpawn : MonoBehaviour {
 		isActive = false;
 		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
         if (!NetworkServer.active){
+			// Vi fick ett fel här
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
 		Spawn ();
@@ -83,7 +85,12 @@ public class TowerSpawn : MonoBehaviour {
 		StartCoroutine(buildTowerOverTimeEnumerator);
 		//SPAWN THE TOWER WITH PROGRESS
 		isBuildingTower = true;
-		
+
+		Vector3 pos = gameObject.transform.position;
+		pos.y = pos.y + 1.5f;
+		// GameObject indicator = (GameObject)Instantiate(shootingRadiusIndicator, pos, Quaternion.identity);
+		// indicator.transform.parent = gameObject.transform;
+
         if (!NetworkServer.active){
             buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
             buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
