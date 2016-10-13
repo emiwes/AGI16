@@ -6,7 +6,17 @@ public class ProjectileDamage : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
 			other.gameObject.GetComponent<EnemyCombat> ().takeDamage(damage);
-			Destroy (gameObject);
+            if (gameObject.transform.FindChild("movingSmoke"))
+            {
+                Transform smoke = gameObject.transform.FindChild("movingSmoke");
+                smoke.parent = null;
+                smoke.GetComponent<ParticleSystem>().Stop(true);
+
+                Destroy(smoke.gameObject, 2.0f);
+            }
+          
+
+            Destroy(gameObject);
 		}
 	}
 }
