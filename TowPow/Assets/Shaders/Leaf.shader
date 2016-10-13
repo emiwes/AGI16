@@ -1,4 +1,4 @@
-﻿Shader "Custom/Leaves" {
+﻿Shader "Custom/Leaf" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_Cutoff ("Cutoff", Range(0,1)) = 0.5
@@ -7,7 +7,10 @@
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 		_DisMul ("Displacement Multiplier", Range(0,1)) = 0.5
-		_Wind ("Wind", Vector) = (0,0,0)
+		_DefaultWind ("Default Wind", Vector) = (0,0,0,0)
+		_WindOffset ("Wind Offset", Vector) = (0,0,0,0)
+		_DefaultWindForce ("Wind Force", Range(0,1)) = 0.1
+		_WindForceOffset ("Wind Force Offset", Float) = 0
 		_Speed ("Speed", Range(0,10)) = 1
 		_Offset ("Offset", Range(0,10)) = 1
 	}
@@ -34,7 +37,10 @@
 		half _Metallic;
 		fixed4 _Color;
 		float _DisMul;
-		float4 _Wind;
+		float4 _DefaultWind;
+		float _DefaultWindForce;
+		float4 _WindOffset;
+		float _WindForceOffset;
 		float _Speed;
 		float _Offset;
 
@@ -43,7 +49,9 @@
         	float time = _Time[3] * _Speed + _Offset;
 			float sinTime = sin(time);
 			float4 disTex = tex2Dlod(_DisplacementTex, v.texcoord);
-			v.vertex.xyz += disTex.xyz * _DisMul * sinTime * _Wind.xyz;
+			float3 defaultWind = _DefaultWind.xyz * _DefaultWindForce;
+			float3 windOffset = _WindOffset;// * _WindForceOffset;
+			v.vertex.xyz += disTex.xyz * _DisMul * sinTime * defaultWind + disTex.xyz * windOffset;
         	//o.customColor = abs(v.normal);
         	//UNITY_INITIALIZE_OUTPUT(Input,o);
       	}
