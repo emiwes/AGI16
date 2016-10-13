@@ -12,11 +12,21 @@ public class EnemyCombat : NetworkBehaviour {
 	public Slider HPSlider;
 	private bool dead = false;
 
+	public AudioClip[] deathSoundArray;
+
+	private AudioSource source;
+	private float volLowRange = .5f;
+	private float volHighRange = 1.0f;
+
 	void Start () {
 		HPSlider.maxValue = health;
 		if (!NetworkServer.active) {
 			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 		}
+	}
+
+	void Awake() {
+		source = GetComponent<AudioSource>();
 	}
 
 	public void takeDamage (float damage) {
@@ -36,6 +46,9 @@ public class EnemyCombat : NetworkBehaviour {
 //		animator.SetBool ("Die", true);
 
 		animator.Play ("Die");
+		//Play death sound
+		float vol = Random.Range (volLowRange, volHighRange);
+		source.PlayOneShot(deathSoundArray[Random.Range(0, deathSoundArray.Length)],vol);
 		//Also change kill counter on all clients
 		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 		GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
