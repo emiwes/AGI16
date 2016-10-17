@@ -7,7 +7,7 @@ public class EnemyCombat : NetworkBehaviour {
 	[SyncVar (hook = "OnTakeDamage")]
 	public float health = 100;
 	public GameObject coinPrefab;
-	private Camera topCamera;
+	public Camera topCamera;
 
 	public Slider HPSlider;
 	private bool dead = false;
@@ -21,7 +21,7 @@ public class EnemyCombat : NetworkBehaviour {
 	void Start () {
 		HPSlider.maxValue = health;
 		if (!NetworkServer.active) {
-			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
+//			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 		}
 	}
 
@@ -41,7 +41,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 	[Command]
 	void CmdDie(){
-		
+		Debug.Log ("DYING...");
 		Animator animator = gameObject.GetComponent<Animator> ();
 //		animator.SetBool ("Die", true);
 
@@ -60,14 +60,16 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	void OnDestroy(){
-		if (!NetworkServer.active) {
-			spawnCoin ();
-		}
+//		if (!NetworkServer.active) {
+			CmdSpawnCoin ();
+//		}
 	}
 
-	void spawnCoin (){
+	[Command]
+	void CmdSpawnCoin (){
 		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
 		coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+		NetworkServer.Spawn (coin);
 	}
 
 }

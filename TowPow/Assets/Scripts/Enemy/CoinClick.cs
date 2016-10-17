@@ -6,14 +6,24 @@ public class CoinClick : NetworkBehaviour {
 
 	public void DestroyCoin(){
 		Debug.Log ("Coin was clicked");
-		Destroy (this.transform.gameObject);
-		CmdIncrementMoney ();
+		CmdDestroyCoin ();
+//		CmdIncrementMoney ();
 
 	}
 
+
 	[Command]
-	void CmdIncrementMoney(){
+	void CmdDestroyCoin(){
+		Debug.Log ("Destroying coin");
+		Destroy (this.transform.gameObject);
+
 		Debug.Log ("Money is being incremented");
 		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter += 10;
 	}
+
+//	[Command]
+//	void CmdIncrementMoney(){
+//		Debug.Log ("Money is being incremented");
+//		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter += 10;
+//	}
 }
