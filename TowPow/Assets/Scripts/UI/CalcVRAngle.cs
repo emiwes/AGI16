@@ -17,17 +17,14 @@ public class CalcVRAngle : MonoBehaviour {
 		//Transform VRHead = GameObject.Find("Camera (eye)").transform;
 		//transform.position = topCamera.WorldToScreenPoint(VRHead.position);
 
-		FOV.GetComponent<VRFOV> ().VRposition = transform;
+		FOV.GetComponent<VRFOV> ().VRposition = transform.position;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		setFOVPosition ();
-		//Get new transform for VR Headset
-		Transform VRHead = GameObject.Find("Camera (eye)").transform;
 		//Get transform.eulerAngles.y (for world position)
-		yAngle = -VRHead.eulerAngles.y;
-		FOV.GetComponent<VRFOV> ().yAngle += 1;
-		//transform.eulerAngles = new Vector3(0f, 0f, -VRHead.eulerAngles.y);
+		yAngle = -(transform.eulerAngles.y);
+		FOV.GetComponent<VRFOV> ().yAngle = yAngle;
 	}
 }
