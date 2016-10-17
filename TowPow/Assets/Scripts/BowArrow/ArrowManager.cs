@@ -92,7 +92,7 @@ public class ArrowManager : MonoBehaviour {
 		r.velocity = currentArrow.transform.forward * 80f * dist;
 		r.useGravity = true;
 
-        //currentArrow.GetComponent<BoxCollider>().enabled = true;
+        currentArrow.GetComponent<BoxCollider>().enabled = true;
         currentArrow.GetComponent<BoxCollider> ().isTrigger = true;
         currentArrow.GetComponent<Rigidbody>().isKinematic = false;
         currentArrow.GetComponent<TrailRenderer>().enabled = true;
@@ -111,7 +111,7 @@ public class ArrowManager : MonoBehaviour {
         if(currentArrow == null) {
             currentArrow = Instantiate(Arrow);
             currentArrow.transform.parent = trackedObj.transform;
-            currentArrow.transform.localPosition = new Vector3(0f, 0f, .342f);
+            currentArrow.transform.localPosition = new Vector3(0f, 0f, .3f);
 			currentArrow.transform.localRotation = Quaternion.identity;
         }
 
@@ -129,14 +129,12 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
-        Debug.Log(col.gameObject.name);
         if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
 
     void OnTriggerStay(Collider col) {
-        Debug.Log(col.gameObject.name);
         if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }

@@ -22,7 +22,6 @@ namespace TouchScript
 
 		private Camera topCamera;
 
-		//public List<NetworkInstanceId> towerIds;
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
 
@@ -77,12 +76,8 @@ namespace TouchScript
 			}
 		}
 
-		//[ClientRpc]
 		void TouchBegin(Vector2 position, Tags tags) {
 			Debug.Log ("Touch Start");
-			//Debug.Log ("tags: " + tags.ToString());
-			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
-			//NetworkServer.Spawn (testObject);
 
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
 			spawnPosition.y = 10f;
@@ -98,7 +93,16 @@ namespace TouchScript
 			}
 			if(towerTag == null) {
 				Debug.Log("The fiducial does not represent a tower");
-				return;
+
+				// CHECK FOR TOUCH INPUT
+				if (tags.HasTag ("Touch")) {
+					Vector3 down = new Vector3 (0, -1, 0);
+					if (Physics.Raycast (spawnPosition, down, 10)) {
+						Debug.Log ("Something was hit!");
+					}
+				} else {
+					return;
+				}
 			}
 			
 			// Check if the tower is already placed and get the reference.
@@ -110,14 +114,6 @@ namespace TouchScript
 				activeTower = activeTowers [0];
 			}
 				
-			/*foreach(GameObject tower in towers) {
-				if(tags.HasTag(tower.tag)) {
-					activeTower = tower;
-				}
-			}*/
-
-
-			// Debug.Log("Towerprefab: " + towerPrefab.ToString());
 			
 			// Check if we found anything
 			if(activeTower == null) {
@@ -135,23 +131,14 @@ namespace TouchScript
 					// It's a new position
 					Debug.Log(activeTower);
 					activeTower.GetComponent<TowerSpawn>().Despawn();
-					//towers.Remove(activeTower);
 					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
 			}
+				
 		}
 
 		void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("TouchEnd");
-
-			// Get the tower reference
-			/*GameObject activeTower = null;
-			foreach(GameObject tower in towers) {
-				Debug.Log ("tower in towers is: " + tower.tag);
-				if(tags.HasTag(tower.tag)) {
-					activeTower = tower;
-				}
-			}*/
 
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
@@ -168,14 +155,6 @@ namespace TouchScript
 					}
 				}
 			}
-
-			/*if(activeTower == null) {
-				Debug.Log("The tower that you tried to remove doesn't exist");
-				return;
-			}
-
-			// Start despawntimer
-			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();*/
 		}
 
 		[Command]
@@ -194,21 +173,14 @@ namespace TouchScript
 				Debug.Log("The fiducial does not represent a tower");
 				return;
 			}
-			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
+			//Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
 			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-			//t.GetComponent<TowerSpawn> ().AddTowerController (this);
 
-			Debug.Log("Ska spawna torn på server");
+			//Debug.Log("Ska spawna torn på server");
 			NetworkServer.Spawn(t);
 		}
-
-		//[Command]
+			
 		public void DestroyMe(NetworkInstanceId id, float time) {
-			/*if(!towers.Remove(go)) {
-				Debug.Log("The tower could not be removed");
-				return;
-			}*/
-
 			StartCoroutine (DestroyTowerInSeconds (id, time));
 		}
 
@@ -216,7 +188,7 @@ namespace TouchScript
 			// Find reference in towers
 
 			yield return new WaitForSeconds (time);
-			//NetworkServer.Destroy (go);
+
 			Debug.Log("Ready to destroy");
 
 			if (!goId.IsEmpty()) {
@@ -228,21 +200,5 @@ namespace TouchScript
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
 		}
-
-		/*[ClientRpc]
-		void RpcAddTowersToClients(NetworkInstanceId netId) {
-			if(netId.IsEmpty()){
-				Debug.Log("Tornet vi ska lägga till är null");
-			} else{
-				Debug.Log("Lägger till torn i towers: " + ClientScene.FindLocalObject (netId).ToString());
-				towers.Add (ClientScene.FindLocalObject (netId));
-			}
-		}
-
-		[ClientRpc]
-		void RpcRemoveTowersToClients(NetworkInstanceId netId) {
-			Debug.Log("Tar bort torn i towers: " + NetworkServer.FindLocalObject (netId).ToString());			
-			towers.Remove (ClientScene.FindLocalObject (netId));
-		}*/
 	}
 }
