@@ -1,8 +1,8 @@
-Shader "Shader/Fireshader" {
+Shader "Shaders/Fire2" {
 Properties {
 	_TintColor ("Tint Color", Color) = (0.5,0.5,0.5,0.5)
 	_MainTex ("Particle Texture", 2D) = "white" {}
-	_InvFade("Soft Particles Factor", Range(0.01,3.0)) = 1.0
+	_InvFade ("Soft Particles Factor", Range(0.01,3.0)) = 1.0
 }
 
 Category {
@@ -22,8 +22,6 @@ Category {
 		Pass {
 		
 			CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11 and Xbox360; has structs without semantics (struct v2f members colorResultion)
-#pragma exclude_renderers d3d11 xbox360
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma fragmentoption ARB_precision_hint_fastest
@@ -59,7 +57,6 @@ Category {
 				o.projPos = ComputeScreenPos (o.vertex);
 				COMPUTE_EYEDEPTH(o.projPos.z);
 				#endif
-				//fixed4 newColor = ceil(v.color * _ColorResolution) / _ColorResolution;
 				o.color = v.color;
 				o.texcoord = TRANSFORM_TEX(v.texcoord,_MainTex);
 				return o;
@@ -73,14 +70,12 @@ Category {
 				#ifdef SOFTPARTICLES_ON
 				float sceneZ = LinearEyeDepth (UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos))));
 				float partZ = i.projPos.z;
-				//float fade = saturate (_InvFade * (sceneZ-partZ));
-				//i.color.a *= fade;
+				float fade = saturate (_InvFade * (sceneZ-partZ));
 				i.color.a = 1;
 				#endif
 				
-				
-				//return _TintColor;
-				return 2.0f * i.color * _TintColor * tex2D(_MainTex, i.texcoord);
+				//return 2.0f * i.color * _TintColor * tex2D(_MainTex, i.texcoord);
+				return _TintColor;
 			}
 			ENDCG 
 		}
