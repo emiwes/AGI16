@@ -23,6 +23,7 @@ public class VRFOV : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		setFOVPosition ();
 		//Get new transform for VR Headset
 		Transform VRHead = GameObject.Find("Camera (eye)").transform;
         //Get transform.eulerAngles.y (for world position)

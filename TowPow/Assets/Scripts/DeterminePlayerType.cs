@@ -24,6 +24,7 @@ public class DeterminePlayerType : NetworkBehaviour {
 	void Start() {
 		topCamera.SetActive (true);
 		viveComponents.SetActive (false);
+		hudCanvas.SetActive (true);
 	}
 
 	void Update() {
@@ -51,14 +52,15 @@ public class DeterminePlayerType : NetworkBehaviour {
 			isVive = false;
 			viveComponents.SetActive(false);
 			pixelSenseComponents.SetActive (true);
-			hudCanvas.SetActive(true);
+			hudCanvas.GetComponent<CanvasGroup> ().alpha = 1;
             setHostInGameScript();
 
         }
         else if (type == "Vive") {
 			isVive = true;
+			hudCanvas.GetComponent<CanvasGroup> ().alpha = 0;
 			viveComponents.SetActive(true);
-			hudCanvas.SetActive(false);
+			//hudCanvas.SetActive(false);
 			pixelSenseComponents.SetActive(false);
 			setHostInGameScript();
 
