@@ -9,15 +9,15 @@ public class VRFOV : NetworkBehaviour {
     public float yAngle;
 
 	[SyncVar (hook = "OnVRPosChange")]
-	public Transform VRposition;
+	public Transform VRTransform;
 
     void OnYAngleChange(float yAngle) {
 		//Update rotation of FOV
         transform.eulerAngles = new Vector3(0f, 0f, yAngle);
     }
 
-	void OnVRPosChange(Transform position) {
+	void OnVRPosChange(Transform VRTransform) {
 		//Sets new position
-		transform.position = position;
+		transform.position = VRTransform.position;
 	}
 }

@@ -16,7 +16,7 @@ public class CalcVRAngle : MonoBehaviour {
 		//Used when position of VR player changes
 		//Transform VRHead = GameObject.Find("Camera (eye)").transform;
 		//transform.position = topCamera.WorldToScreenPoint(VRHead.position);
-		FOV.GetComponent<VRFOV> ().VRposition = transform;
+		FOV.GetComponent<VRFOV> ().VRTransform = transform;
 	}
 
 	// Update is called once per frame
