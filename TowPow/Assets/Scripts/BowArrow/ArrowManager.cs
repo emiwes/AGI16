@@ -12,6 +12,7 @@ public class ArrowManager : MonoBehaviour {
 	public GameObject stringAttachPoint;
 	public GameObject arrowStartPoint;
 	public GameObject stringStartPoint;
+	public Material iceArrowMaterial;
 
 	public AudioClip shootSound;
 
@@ -129,9 +130,13 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
-        if (currentArrow != null) {
-            currentArrow.GetComponent<Arrow>().AttachArrowToBow();
-        }
+		if(col.tag == "arrowSwitcher"){
+			GetComponent<Renderer>().material = iceArrowMaterial;
+		} else{
+			if (currentArrow != null) {
+				currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+			}
+		}
     }
 
     void OnTriggerStay(Collider col) {
