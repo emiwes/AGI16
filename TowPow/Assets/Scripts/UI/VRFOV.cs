@@ -10,27 +10,16 @@ public class VRFOV : NetworkBehaviour {
     [SyncVar (hook = "OnYAngleChange")]
     public float yAngle;
 
-	void Awake() {
-		setFOVPosition ();
-	}
+	[SyncVar (hook = "OnVRPosChange")]
+	public Vector3 VRposition;
 
-	public void setFOVPosition() {
-		//Set position of FOV image
-		//Used when position of VR player changes
-		Transform VRHead = GameObject.Find("Camera (eye)").transform;
-		transform.position = topCamera.WorldToScreenPoint(VRHead.position);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		setFOVPosition ();
-		//Get new transform for VR Headset
-		Transform VRHead = GameObject.Find("Camera (eye)").transform;
-        //Get transform.eulerAngles.y (for world position)
-        yAngle = -VRHead.eulerAngles.y;
-        //transform.eulerAngles = new Vector3(0f, 0f, -VRHead.eulerAngles.y);
-	}
     void OnYAngleChange(float yAngle) {
+		//Update rotation of FOV
         transform.eulerAngles = new Vector3(0f, 0f, yAngle);
     }
+
+	void OnVRPosChange(Vector3 VRposition) {
+		//Sets new position
+		transform.position = topCamera.WorldToScreenPoint(VRposition);
+	}
 }
