@@ -41,9 +41,7 @@ public class EnemyCombat : NetworkBehaviour {
 				Destroy (HPSlider.transform.GetChild (1).gameObject);
 				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
 
-				GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(gameObject.transform.position), Quaternion.identity);
-				coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-				NetworkServer.Spawn (coin);
+
 			}
 		}
 	}
@@ -68,7 +66,9 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	void OnDestroy(){
-		
+		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(gameObject.transform.position), Quaternion.identity);
+		coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+		NetworkServer.Spawn (coin);
 	}
 
 }
