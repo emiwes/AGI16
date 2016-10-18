@@ -10,7 +10,6 @@ public class EnemyCombat : NetworkBehaviour {
 	public Camera topCamera;
 
 	public Slider HPSlider;
-	private bool dead = false;
 
 	public AudioClip[] deathSoundArray;
 
@@ -34,14 +33,18 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	public void takeDamage (float damage) {
-		health -= damage;
-		if (health <= 0 && !dead) {
-			//Only kill object once
-			dead = true;
-			Destroy (HPSlider.transform.GetChild(1).gameObject);
-			// Retrieving local players game object from a netId that was stored when localPlayer was instantiated.
-			localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
-			localPlayer.GetComponent<EnemyHandler>().CmdDie (gameObject);
+		if (isServer && health > 0) {
+			health -= damage;
+			if (health <= 0) {
+				//dead = true;
+
+				Destroy (HPSlider.transform.GetChild (1).gameObject);
+				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
+
+				GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(gameObject.transform.position), Quaternion.identity);
+				coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+				NetworkServer.Spawn (coin);
+			}
 		}
 	}
 		
@@ -49,6 +52,19 @@ public class EnemyCombat : NetworkBehaviour {
 		//Update health slider on all clients
 		Debug.Log("<<<Health is>>> " + health);
 		HPSlider.value = health;
+
+		//Will only run once since health is never updated when it is below 0
+		if (health <= 0) {
+			EnemyCombat enemyCombatComponent = gameObject.GetComponent<EnemyCombat> ();
+			Animator animator = gameObject.GetComponent<Animator> ();
+			animator.Play ("Die");
+			//Play death sound
+			float vol = Random.Range (.5f, 1f);
+			enemyCombatComponent.source.PlayOneShot (enemyCombatComponent.deathSoundArray [Random.Range (0, enemyCombatComponent.deathSoundArray.Length)], vol);
+
+			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
+		}
+
 	}
 
 	void OnDestroy(){
