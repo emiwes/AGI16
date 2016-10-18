@@ -9,7 +9,7 @@ public class EnemyHandler : NetworkBehaviour {
 
 	[Command]
 	public void CmdDie(GameObject pirate){
-		Debug.Log ("DYING...");
+
 		EnemyCombat enemyCombatComponent = pirate.GetComponent<EnemyCombat>();
 		Animator animator = pirate.GetComponent<Animator> ();
 		//		animator.SetBool ("Die", true);

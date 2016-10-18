@@ -7,7 +7,7 @@ public class EnemyCombat : NetworkBehaviour {
 	[SyncVar (hook = "OnTakeDamage")]
 	public float health = 100;
 	public GameObject coinPrefab;
-	public Camera topCamera;
+	private Camera topCamera;
 
 	public Slider HPSlider;
 
@@ -21,9 +21,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Start () {
 		HPSlider.maxValue = health;
-		if (!NetworkServer.active) {
-//			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
-		}
+		topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 	}
 
 	void Awake() {
@@ -49,7 +47,6 @@ public class EnemyCombat : NetworkBehaviour {
 		
 	void OnTakeDamage(float health) {
 		//Update health slider on all clients
-		Debug.Log("<<<Health is>>> " + health);
 		HPSlider.value = health;
 
 		//Will only run once since health is never updated when it is below 0
@@ -61,24 +58,13 @@ public class EnemyCombat : NetworkBehaviour {
 			float vol = Random.Range (volLowRange, volHighRange);
 			enemyCombatComponent.source.PlayOneShot (enemyCombatComponent.deathSoundArray [Random.Range (0, enemyCombatComponent.deathSoundArray.Length)], vol);
 
-
-
-			Debug.Log ("spawning coin");
-
 			if (!isServer) {
 				GameObject coin = (GameObject)Instantiate (coinPrefab, topCamera.WorldToScreenPoint (gameObject.transform.position), Quaternion.identity);
 				coin.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
 			}
 
-
 			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
-
 		}
-
-	}
-
-	void OnDestroy(){
-		Debug.Log ("OnDestroy is called");
 	}
 
 }

@@ -10,8 +10,6 @@ public class CoinHandler : NetworkBehaviour {
 
 	[Command]
 	public void CmdIncrementMoney(){
-		Debug.Log ("Destroying coin");
-		Debug.Log ("Money is being incremented");
 		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter += 10;
 	}
 
