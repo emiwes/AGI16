@@ -85,7 +85,6 @@ namespace TouchScript
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
-				Debug.Log (tp.tag);
 				if(tags.HasTag(tp.tag)) {
 					towerTag = tp.tag;
 					break;
