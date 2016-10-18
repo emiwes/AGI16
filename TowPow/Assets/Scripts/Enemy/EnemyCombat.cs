@@ -14,8 +14,8 @@ public class EnemyCombat : NetworkBehaviour {
 	public AudioClip[] deathSoundArray;
 
 	public AudioSource source;
-	private float volLowRange = .5f;
-	private float volHighRange = 1.0f;
+	private float volLowRange = .2f;
+	private float volHighRange = .5f;
 
 	private GameObject localPlayer;
 
@@ -33,6 +33,7 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	public void takeDamage (float damage) {
+		Debug.Log (isServer);
 		if (isServer && health > 0) {
 			health -= damage;
 			if (health <= 0) {
@@ -57,18 +58,27 @@ public class EnemyCombat : NetworkBehaviour {
 			Animator animator = gameObject.GetComponent<Animator> ();
 			animator.Play ("Die");
 			//Play death sound
-			float vol = Random.Range (.5f, 1f);
+			float vol = Random.Range (volLowRange, volHighRange);
 			enemyCombatComponent.source.PlayOneShot (enemyCombatComponent.deathSoundArray [Random.Range (0, enemyCombatComponent.deathSoundArray.Length)], vol);
 
+
+
+			Debug.Log ("spawning coin");
+
+			if (!isServer) {
+				GameObject coin = (GameObject)Instantiate (coinPrefab, topCamera.WorldToScreenPoint (gameObject.transform.position), Quaternion.identity);
+				coin.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
+			}
+
+
 			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
+
 		}
 
 	}
 
 	void OnDestroy(){
-		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(gameObject.transform.position), Quaternion.identity);
-		coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-		NetworkServer.Spawn (coin);
+		Debug.Log ("OnDestroy is called");
 	}
 
 }
