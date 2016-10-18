@@ -18,6 +18,6 @@ public class VRFOV : NetworkBehaviour {
 
 	void OnVRPosChange(Transform position) {
 		//Sets new position
-
+		transform.position = position;
 	}
 }
