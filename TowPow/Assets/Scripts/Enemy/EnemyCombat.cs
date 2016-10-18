@@ -29,8 +29,8 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Awake() {
 		source = GetComponent<AudioSource>();
-		// Retrieving local players game object from a netId that was stored when localPlayer was instantiated.
-		localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
+
+
 	}
 
 	public void takeDamage (float damage) {
@@ -39,7 +39,8 @@ public class EnemyCombat : NetworkBehaviour {
 			//Only kill object once
 			dead = true;
 			Destroy (HPSlider.transform.GetChild(1).gameObject);
-
+			// Retrieving local players game object from a netId that was stored when localPlayer was instantiated.
+			localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
 			localPlayer.GetComponent<EnemyHandler>().CmdDie (gameObject);
 		}
 	}
@@ -51,7 +52,7 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	void OnDestroy(){
-		localPlayer.GetComponent<CoinHandler> ().CmdSpawnCoin (transform.position);
+		
 	}
 
 }

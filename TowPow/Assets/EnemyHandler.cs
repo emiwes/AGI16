@@ -18,5 +18,7 @@ public class EnemyHandler : NetworkBehaviour {
 		//Also change kill counter on all clients
 		Destroy (pirate, animator.GetCurrentAnimatorStateInfo (0).length);
 		GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
+
+		gameObject.GetComponent<CoinHandler>().CmdSpawnCoin (transform.position);
 	}
 }
