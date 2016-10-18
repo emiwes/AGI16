@@ -21,17 +21,16 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Start () {
 		HPSlider.maxValue = health;
+		// THIS FAILS ON THE VIVE BECAUSE TOP CAMERA IS DEACTIVATED.
 		topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 	}
 
 	void Awake() {
 		source = GetComponent<AudioSource>();
-
-
 	}
 
 	public void takeDamage (float damage) {
-		Debug.Log (isServer);
+		
 		if (isServer && health > 0) {
 			health -= damage;
 			if (health <= 0) {

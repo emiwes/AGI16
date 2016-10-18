@@ -40,7 +40,6 @@ public class TowerCombat : MonoBehaviour {
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
-        Debug.Log("Adding nearby enemy "+enemy.name);
 		nearbyEnemies.Add (enemy);
 	}
 
