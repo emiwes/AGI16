@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.Networking;
+//using UnityEngine.Networking;
 
-public class VRFOV : NetworkBehaviour {
-
+public class VRFOV : MonoBehaviour {
+	/*
     [SyncVar (hook = "OnYAngleChange")]
     public float yAngle;
 
@@ -20,5 +20,5 @@ public class VRFOV : NetworkBehaviour {
 		//Sets new position
 		Camera topCamera = GameObject.Find("TopCamera").GetComponent<Camera>();
 		transform.position = topCamera.WorldToScreenPoint(VRPosition);
-	}
+	}*/
 }
