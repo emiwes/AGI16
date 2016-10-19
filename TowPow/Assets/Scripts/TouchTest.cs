@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace TouchScript
 {
@@ -21,6 +23,7 @@ namespace TouchScript
 		private TowerSpawn blackTower;
 
 		private Camera topCamera;
+		private GraphicRaycaster hudCanvasRaycaster;
 
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
@@ -32,6 +35,7 @@ namespace TouchScript
 			towerTypes.Add (BlackPrefab);
 
 			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+			hudCanvasRaycaster = GameObject.Find ("HUDCanvas").GetComponent<GraphicRaycaster>();
 		}
 
 		private void OnEnable()
@@ -94,11 +98,21 @@ namespace TouchScript
 				Debug.Log("The fiducial does not represent a tower");
 
 				// CHECK FOR TOUCH INPUT
-				if (tags.HasTag ("Touch")) {
-					Vector3 down = new Vector3 (0, -1, 0);
-					if (Physics.Raycast (spawnPosition, down, 10)) {
-						Debug.Log ("Something was hit!");
+				if (tags.HasTag ("Mouse")) {
+					PointerEventData ped = new PointerEventData(null);
+					ped.position = position;
+					List<RaycastResult> results = new List<RaycastResult>();
+					hudCanvasRaycaster.Raycast(ped, results);
+
+					foreach(RaycastResult r in results){
+						Debug.Log (r.gameObject.name);
+						if (r.gameObject.name == "CoinSprite(Clone)") {
+							r.gameObject.GetComponent<CoinClick> ().DestroyCoin ();
+							break;
+						}
 					}
+
+					return;
 				} else {
 					return;
 				}
