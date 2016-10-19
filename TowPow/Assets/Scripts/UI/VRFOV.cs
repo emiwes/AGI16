@@ -18,6 +18,7 @@ public class VRFOV : NetworkBehaviour {
 
 	void OnVRPosChange(Vector3 VRPosition) {
 		//Sets new position
-		transform.position = VRPosition;
+		Camera topCamera = GameObject.Find("TopCamera");
+		transform.position = topCamera.WorldToScreenPoint(VRPosition);
 	}
 }
