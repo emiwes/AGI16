@@ -7,8 +7,10 @@ public class TowerSpawn : MonoBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
+
 	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
+
 	private Camera topCamera;
 
 	public bool despawning = false;

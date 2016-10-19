@@ -36,13 +36,6 @@ public class EnemyCombat : NetworkBehaviour {
 		}
 	}
 
-	[Command]
-	void CmdDie(){
-		
-		//Also change kill counter on all clients
-
-	}
-
 	void OnTakeDamage(float health) {
 		//Update health slider on all clients
 		HPSlider.value = health;
