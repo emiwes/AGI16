@@ -59,11 +59,11 @@ public class EnemyCombat : NetworkBehaviour {
 		HPSlider.value = health;
 	}
 
-	void OnDestroy(){
+	/*void OnDestroy(){
 		if (!NetworkServer.active) {
 			spawnCoin ();
 		}
-	}
+	}*/
 
 	void spawnCoin (){
 		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);

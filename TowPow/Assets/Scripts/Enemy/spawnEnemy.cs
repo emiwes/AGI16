@@ -54,7 +54,6 @@ public class spawnEnemy : NetworkBehaviour
 
         //Instatiate Enemy
         GameObject temp_enemy = Instantiate(enemyPrefab, startPoints[spawnPoint].position, Quaternion.identity) as GameObject;
-        Debug.Log(transform.position);
         //set path as a child to spawner Gameobject.
         temp_enemy.GetComponent<EnemyMovement>().target = targetPoints[targetPoint];
         temp_enemy.transform.SetParent(this.transform);
@@ -75,7 +74,7 @@ public class spawnEnemy : NetworkBehaviour
         int spawnPoint = Random.Range(0, startPoints.Count);//max exclusive for int, inclusive for floats
         int targetPoint = Random.Range(0, targetPoints.Count);//max exclusive for int, inclusive for floats
 
-        Debug.Log("Spawn point randomized: "+ spawnPoint);
+        //Debug.Log("Spawn point randomized: "+ spawnPoint);
         spawnSingleEnemy(spawnPoint, targetPoint);
     }
 }

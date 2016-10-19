@@ -18,8 +18,10 @@ public class GameScript : NetworkBehaviour {
 	public int moneyCounter = 0;
 
 	public int PlayerStartingHealth = 10;
+
 	[HideInInspector]
-	public int PlayerHealth = 10;
+    [SyncVar(hook = "OnChangeHealth")]
+    public int PlayerHealth;
 
 	public float spawnWaitTime;
 
@@ -75,7 +77,7 @@ public class GameScript : NetworkBehaviour {
 			moneyCounter = 0;
 			PlayerHealth = PlayerStartingHealth;
 			//Update GUI as well
-			GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+			//GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
 		}
 
         /*describing the if
@@ -112,4 +114,10 @@ public class GameScript : NetworkBehaviour {
 	void OnMoneyChange(int money){
 		MoneyText.text = money.ToString();
 	}
+
+    void OnChangeHealth(int health)
+    {
+        //HealthSlider.value = health;
+        //HealthText.text = health.ToString();
+    }
 }
