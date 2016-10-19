@@ -10,7 +10,6 @@ public class EnemyCombat : NetworkBehaviour {
 	private Camera topCamera;
 
 	public Slider HPSlider;
-	private bool dead = false;
 
 	public AudioClip[] deathSoundArray;
 
@@ -20,9 +19,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Start () {
 		HPSlider.maxValue = health;
-		if (!NetworkServer.active) {
-			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
-		}
+		topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 	}
 
 	void Awake() {
@@ -30,38 +27,38 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	public void takeDamage (float damage) {
-		health -= damage;
-		if (health <= 0 && !dead) {
-			//Only kill object once
-			dead = true;
-			Destroy (HPSlider.transform.GetChild(1).gameObject);
-			CmdDie ();
+		if (isServer && health > 0) {
+			health -= damage;
+			if (health <= 0) {
+				Destroy (HPSlider.transform.GetChild(1).gameObject);
+				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
+			}
 		}
 	}
 
 	[Command]
 	void CmdDie(){
 		
-		Animator animator = gameObject.GetComponent<Animator> ();
-//		animator.SetBool ("Die", true);
-
-		animator.Play ("Die");
-		//Play death sound
-		float vol = Random.Range (volLowRange, volHighRange);
-		source.PlayOneShot(deathSoundArray[Random.Range(0, deathSoundArray.Length)],vol);
 		//Also change kill counter on all clients
-		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
-		GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
+
 	}
 
 	void OnTakeDamage(float health) {
 		//Update health slider on all clients
 		HPSlider.value = health;
-	}
+		if (health <= 0) {
+			Animator animator = gameObject.GetComponent<Animator> ();
+			
+			animator.Play ("Die");
+			//Play death sound
+			float vol = Random.Range (volLowRange, volHighRange);
+			source.PlayOneShot(deathSoundArray[Random.Range(0, deathSoundArray.Length)],vol);
 
-	void OnDestroy(){
-		if (!NetworkServer.active) {
-			spawnCoin ();
+			if (!isServer) {
+				spawnCoin ();
+			}
+
+			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 		}
 	}
 
@@ -69,5 +66,4 @@ public class EnemyCombat : NetworkBehaviour {
 		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
 		coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
 	}
-
 }
