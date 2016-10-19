@@ -189,9 +189,8 @@ namespace TouchScript
 
 			yield return new WaitForSeconds (time);
 
-			Debug.Log("Ready to destroy");
-
 			if (!goId.IsEmpty()) {
+				Debug.Log("Ready to destroy");
 				CmdDestroyTowerByNetId (goId);
 			}
 		}
