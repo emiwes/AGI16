@@ -19,7 +19,7 @@ public class GameScript : NetworkBehaviour {
 
 	public int PlayerStartingHealth = 10;
 	[HideInInspector]
-	public int PlayerHealth = 0;
+	public int PlayerHealth = 10;
 
 	public float spawnWaitTime;
 

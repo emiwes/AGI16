@@ -1,22 +1,25 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class spawnEnemy : NetworkBehaviour
 {
 
     public GameObject enemyPrefab;
-    [HideInInspector]
-    public Transform target;
+    //[HideInInspector]
+    public List<Transform> targetPoints = new List<Transform>();
+    public List<Transform> startPoints = new List<Transform>();
     //public GameObject pathPrefab;
     //public GameObject startPosition;
     //public GameObject spawObj;
-	private bool isHost;
+    private bool isHost;
 	private Transform VRPosition;
 
     // Use this for initialization
     void Start () {
-        target = this.transform.Find("target");
+        //target = this.transform.Find("target");
 		isHost = false;
 		VRPosition = GameObject.Find ("[CameraRig]").transform;
         Debug.Log(VRPosition);
@@ -46,13 +49,14 @@ public class spawnEnemy : NetworkBehaviour
 
     }
 
-    public void spawnSingleEnemy()
+    public void spawnSingleEnemy(int spawnPoint, int targetPoint)
     {
 
         //Instatiate Enemy
-        GameObject temp_enemy = Instantiate(enemyPrefab, this.transform.position, Quaternion.identity) as GameObject;
+        GameObject temp_enemy = Instantiate(enemyPrefab, startPoints[spawnPoint].position, Quaternion.identity) as GameObject;
+        Debug.Log(transform.position);
         //set path as a child to spawner Gameobject.
-        temp_enemy.GetComponent<EnemyMovement>().target = target;
+        temp_enemy.GetComponent<EnemyMovement>().target = targetPoints[targetPoint];
         temp_enemy.transform.SetParent(this.transform);
         //to spawn on all clients.
 		//----without slider
@@ -64,5 +68,14 @@ public class spawnEnemy : NetworkBehaviour
 		}
         NetworkServer.Spawn(temp_enemy);
 
+    }
+
+    public void spawnSingleEnemy()
+    {
+        int spawnPoint = Random.Range(0, startPoints.Count);//max exclusive for int, inclusive for floats
+        int targetPoint = Random.Range(0, targetPoints.Count);//max exclusive for int, inclusive for floats
+
+        Debug.Log("Spawn point randomized: "+ spawnPoint);
+        spawnSingleEnemy(spawnPoint, targetPoint);
     }
 }
