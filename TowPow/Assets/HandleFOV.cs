@@ -15,9 +15,12 @@ public class HandleFOV : NetworkBehaviour {
 	void Start() {
 		FOV = GameObject.Find ("FOV");
 		//Set server started active in CalcVRAngle
-		CalcVRAngle AngleScript = GameObject.Find("Camera (eye)").GetComponent<CalcVRAngle>();
-		AngleScript.GetFOVhandler ();
-		AngleScript.serverStarted = true;
+		//TODO: Only on VIVE!
+		if (isServer) {
+			CalcVRAngle AngleScript = GameObject.Find("Camera (eye)").GetComponent<CalcVRAngle>();
+			AngleScript.GetFOVhandler ();
+			AngleScript.serverStarted = true;
+		}
 	}
 
 	void OnYAngleChange(float yAngle) {
