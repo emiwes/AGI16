@@ -58,9 +58,11 @@ namespace TouchScript
 			}
 		}
 
-		private void touchesBeganHandler(object sender, TouchEventArgs e)
-		{
-			
+		private void touchesBeganHandler(object sender, TouchEventArgs e) {
+			if (DeterminePlayerType.isVive) { 
+				return; 
+			}
+
 			foreach (var point in e.Touches) {
 //				Debug.Log ("pointHit: " + point.Hit);
 //				Debug.Log ("pointID: " + point.Id);
@@ -75,6 +77,10 @@ namespace TouchScript
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
+			if (DeterminePlayerType.isVive) { 
+				return; 
+			}
+
 			foreach (var point in e.Touches) {
 				TouchEnd (point.Position, point.Tags);
 			}
