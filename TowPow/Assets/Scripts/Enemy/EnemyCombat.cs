@@ -21,8 +21,9 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Start () {
 		HPSlider.maxValue = health;
-		//TODO: THIS FAILS ON THE VIVE BECAUSE TOP CAMERA IS DEACTIVATED.
-		topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
+		if(!DeterminePlayerType.isVive) {
+			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
+		}
 	}
 
 	void Awake() {
@@ -36,7 +37,7 @@ public class EnemyCombat : NetworkBehaviour {
 			if (health <= 0) {
 				//dead = true;
 
-				Destroy (HPSlider.transform.GetChild (1).gameObject);
+				Destroy (HPSlider.gameObject);
 				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
 
 
@@ -57,8 +58,7 @@ public class EnemyCombat : NetworkBehaviour {
 			float vol = Random.Range (volLowRange, volHighRange);
 			enemyCombatComponent.source.PlayOneShot (enemyCombatComponent.deathSoundArray [Random.Range (0, enemyCombatComponent.deathSoundArray.Length)], vol);
 
-			//TODO: WILL FAIL IF PIXELSENSE IS HOST
-			if (!isServer) {
+			if (!DeterminePlayerType.isVive) {
 				GameObject coin = (GameObject)Instantiate (coinPrefab, topCamera.WorldToScreenPoint (gameObject.transform.position), Quaternion.identity);
 				coin.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
 			}

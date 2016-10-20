@@ -50,11 +50,11 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-        if (isHost && Input.GetKeyUp(KeyCode.S))
+		if (isServer && Input.GetKeyUp(KeyCode.S))
         {
             GameStarted = true;
         }
-		else if (isHost && Input.GetKeyUp(KeyCode.M))
+		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
 			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
 				if (enemy.gameObject.name != "target") {
@@ -85,7 +85,7 @@ public class GameScript : NetworkBehaviour {
        */
 
       
-        if (isHost && GameStarted && !waveIsRunning && !GameOver) {
+		if (isServer && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
 

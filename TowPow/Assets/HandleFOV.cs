@@ -15,8 +15,8 @@ public class HandleFOV : NetworkBehaviour {
 	void Start() {
 		FOV = GameObject.Find ("FOV");
 		//Set server started active in CalcVRAngle
-		//TODO: Only on VIVE!
-		if (isServer) {
+
+		if (DeterminePlayerType.isVive) {
 			CalcVRAngle AngleScript = GameObject.Find("Camera (eye)").GetComponent<CalcVRAngle>();
 			AngleScript.GetFOVhandler ();
 			AngleScript.serverStarted = true;
@@ -30,7 +30,9 @@ public class HandleFOV : NetworkBehaviour {
 
 	void OnVRPosChange(Vector3 VRPosition) {
 		//Sets new position
-		Camera topCamera = GameObject.Find("TopCamera").GetComponent<Camera>();
-		FOV.transform.position = topCamera.WorldToScreenPoint(VRPosition);
+		if(!DeterminePlayerType.isVive){
+			Camera topCamera = GameObject.Find("TopCamera").GetComponent<Camera>();
+			FOV.transform.position = topCamera.WorldToScreenPoint(VRPosition);
+		}
 	}
 }

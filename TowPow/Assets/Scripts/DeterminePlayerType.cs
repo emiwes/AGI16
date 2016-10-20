@@ -13,10 +13,6 @@ public class DeterminePlayerType : NetworkBehaviour {
 
 	public GameObject topCamera;
 
-	public GameObject ViveCamera;
-	public GameObject ViveController_Left;
-	public GameObject ViveController_Right;
-
 	public static bool isVive;
 
 	bool showUI = true;
@@ -53,8 +49,6 @@ public class DeterminePlayerType : NetworkBehaviour {
 			viveComponents.SetActive(false);
 			pixelSenseComponents.SetActive (true);
 			hudCanvas.GetComponent<CanvasGroup> ().alpha = 1;
-            setHostInGameScript();
-
         }
         else if (type == "Vive") {
 			isVive = true;
@@ -62,19 +56,8 @@ public class DeterminePlayerType : NetworkBehaviour {
 			viveComponents.SetActive(true);
 			//hudCanvas.SetActive(false);
 			pixelSenseComponents.SetActive(false);
-			setHostInGameScript();
-
         } else {
 			Debug.LogError ("Invalid client type: "+type);
 		}
 	}
-
-    void setHostInGameScript()
-    {
-        //NetworkServer.active is a state that determines if it is a server running on this client
-        // isServer dosen't work on objects without networkIdentity like where this script is placed.
-        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = NetworkServer.active;
-		//Update host status on enemy spawner
-		GameObject.Find ("spawner").GetComponent<spawnEnemy> ().updateHostStatus (NetworkServer.active);
-    }
 }
