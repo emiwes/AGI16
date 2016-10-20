@@ -101,7 +101,7 @@ namespace TouchScript
 				}
 			}
 			if(towerTag == null) {
-				if (tags.HasTag ("Touch")) {
+				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
 					PointerEventData ped = new PointerEventData (null);
 					ped.position = position;
 					List<RaycastResult> results = new List<RaycastResult> ();

@@ -27,7 +27,6 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
-    public bool isHost = false;
 
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
