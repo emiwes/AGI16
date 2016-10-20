@@ -55,7 +55,7 @@ public class spawnEnemy : NetworkBehaviour
         //Instatiate Enemy
         GameObject temp_enemy = Instantiate(enemyPrefab, startPoints[spawnPoint].position, Quaternion.identity) as GameObject;
         //set path as a child to spawner Gameobject.
-        //temp_enemy.GetComponent<EnemyMovement>().target = targetPoints[targetPoint];
+        temp_enemy.GetComponent<EnemyMovement>().target = startPoints[spawnPoint];
         temp_enemy.transform.SetParent(this.transform);
         //to spawn on all clients.
 		//----without slider
