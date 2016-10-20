@@ -28,12 +28,12 @@ public class NavigationNode : MonoBehaviour {
             //changes target to a random of the childs
             int RandomChild = Random.Range(0, childs.Count);
             em.target = childs[RandomChild];
-            Debug.Log("entered rigth node");
+            //Debug.Log("entered rigth node");
         }
-        else
+        /*else
         {
             Debug.Log("entered wrong node");
-        }
+        }*/
 
         
     }

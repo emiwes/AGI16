@@ -9,7 +9,10 @@ public class GameScript : NetworkBehaviour {
 	public Text MoneyText;
 	public Text KillText;
 
-	public int creepsPerWave;
+    public Slider HealthSlider;
+    public Text HealthText;
+
+    public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
 	[SyncVar (hook = "OnKillChange")]
@@ -29,7 +32,7 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
-    public bool isHost = false;
+    //public bool isHost = false;
 
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
@@ -52,12 +55,13 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-        if (isHost && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.S))
         {
             GameStarted = true;
         }
-		else if (isHost && Input.GetKeyUp(KeyCode.M))
+		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
+            Debug.Log("reset pressed");
 			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
 				if (enemy.gameObject.name != "target") {
 					//Destroy all child pirates
@@ -73,10 +77,12 @@ public class GameScript : NetworkBehaviour {
 			waveNr = 0;
 			waveIsRunning = false;
 			GameOver = false;
-			killCounter = 0;
-			moneyCounter = 0;
+			//killCounter = 0;
+			//moneyCounter = 0;
 			PlayerHealth = PlayerStartingHealth;
 			//Update GUI as well
+
+
 			//GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
 		}
 
@@ -87,7 +93,7 @@ public class GameScript : NetworkBehaviour {
        */
 
       
-        if (isHost && GameStarted && !waveIsRunning && !GameOver) {
+        if (isServer && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
 
@@ -105,6 +111,18 @@ public class GameScript : NetworkBehaviour {
 		}
 	}
 
+    public void EnemyReachedGoal()
+    {
+
+        //GameScriptRef.PlayerHealth -= 1;
+        if (PlayerHealth > 0)
+        {
+            PlayerHealth -= 1;
+            Debug.Log("PlayerHealth: " + PlayerHealth);
+            //update GUI
+        }
+    }
+
 	void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
@@ -117,7 +135,11 @@ public class GameScript : NetworkBehaviour {
 
     void OnChangeHealth(int health)
     {
-        //HealthSlider.value = health;
-        //HealthText.text = health.ToString();
+        HealthText.text = health.ToString();
+        if(health <= 0)
+        {
+            GameOver = true;
+            HealthText.text = "GAME OVER";
+        }
     }
 }

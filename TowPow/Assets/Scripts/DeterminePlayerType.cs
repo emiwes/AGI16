@@ -73,7 +73,7 @@ public class DeterminePlayerType : NetworkBehaviour {
     {
         //NetworkServer.active is a state that determines if it is a server running on this client
         // isServer dosen't work on objects without networkIdentity like where this script is placed.
-        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = NetworkServer.active;
+        //GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = NetworkServer.active;
 		//Update host status on enemy spawner
 		GameObject.Find ("spawner").GetComponent<spawnEnemy> ().updateHostStatus (NetworkServer.active);
     }
