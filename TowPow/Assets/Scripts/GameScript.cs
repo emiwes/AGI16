@@ -115,7 +115,7 @@ public class GameScript : NetworkBehaviour {
         if (PlayerHealth > 0)
         {
             PlayerHealth -= 1;
-            Debug.Log("PlayerHealth: " + PlayerHealth);
+            //Debug.Log("PlayerHealth: " + PlayerHealth);
             //update GUI
         }
     }
