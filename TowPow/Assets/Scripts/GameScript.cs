@@ -32,8 +32,6 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
-    //public bool isHost = false;
-
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
@@ -56,6 +54,7 @@ public class GameScript : NetworkBehaviour {
        */
 
         if (isServer && Input.GetKeyUp(KeyCode.S))
+
         {
             GameStarted = true;
         }
@@ -91,9 +90,7 @@ public class GameScript : NetworkBehaviour {
        * if a wave is not running spawn
        * and not gameOver
        */
-
-      
-        if (isServer && GameStarted && !waveIsRunning && !GameOver) {
+		if (isServer && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
 

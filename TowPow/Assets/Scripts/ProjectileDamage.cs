@@ -7,6 +7,10 @@ public class ProjectileDamage : MonoBehaviour {
 	private AudioSource source;
 	public float damage;
 
+	void Awake(){
+		source = gameObject.GetComponent<AudioSource> ();
+	}
+
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
 			other.gameObject.GetComponent<EnemyCombat> ().takeDamage(damage);
