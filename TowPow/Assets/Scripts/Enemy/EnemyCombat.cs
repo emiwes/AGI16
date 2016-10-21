@@ -62,7 +62,6 @@ public class EnemyCombat : NetworkBehaviour {
 				GameObject coin = (GameObject)Instantiate (coinPrefab, topCamera.WorldToScreenPoint (gameObject.transform.position), Quaternion.identity);
 				coin.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
 			}
-
 			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 		}
 	}

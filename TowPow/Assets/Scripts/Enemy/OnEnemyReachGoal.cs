@@ -7,28 +7,24 @@ public class OnEnemyReachGoal : NetworkBehaviour {
 
 	public Slider HealthSlider;
 	public Text HealthText;
-	[SyncVar (hook = "OnChangeHealth")]
-	public int HealthSliderValue = 0;
+
+    private GameScript GameScriptRef;
 
 	void Awake() {
-		HealthSliderValue = GameObject.Find ("GameHandler").GetComponent<GameScript> ().PlayerHealth;
-	}
+        GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
+
+    }
 
 	void OnTriggerEnter(Collider other) {
+        if (!GameScriptRef)
+        {
+            GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
+        }
 		if (isServer && other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject);
-			if (HealthSliderValue != 0) {
-				HealthSliderValue -= 1;
-				GameObject.Find ("GameHandler").GetComponent<GameScript> ().PlayerHealth -= 1;
-				if (HealthSliderValue == 0) {
-					GameObject.Find ("GameHandler").GetComponent<GameScript> ().GameOver = true;
-					HealthText.text = "GAME OVER";
-				}
-			}
+            GameScriptRef.EnemyReachedGoal();
 		}
 	}
-	void OnChangeHealth(int health) {
-		HealthSlider.value = health;
-		HealthText.text = health.ToString();
-	}
+
+	
 }

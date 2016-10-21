@@ -9,7 +9,10 @@ public class GameScript : NetworkBehaviour {
 	public Text MoneyText;
 	public Text KillText;
 
-	public int creepsPerWave;
+    public Slider HealthSlider;
+    public Text HealthText;
+
+    public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
 	[SyncVar (hook = "OnKillChange")]
@@ -18,8 +21,10 @@ public class GameScript : NetworkBehaviour {
 	public int moneyCounter = 0;
 
 	public int PlayerStartingHealth = 10;
+
 	[HideInInspector]
-	public int PlayerHealth = 0;
+    [SyncVar(hook = "OnChangeHealth")]
+    public int PlayerHealth;
 
 	public float spawnWaitTime;
 
@@ -27,7 +32,6 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
-
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
@@ -49,12 +53,14 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-		if (isServer && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.S))
+
         {
             GameStarted = true;
         }
 		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
+            Debug.Log("reset pressed");
 			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
 				if (enemy.gameObject.name != "target") {
 					//Destroy all child pirates
@@ -70,11 +76,13 @@ public class GameScript : NetworkBehaviour {
 			waveNr = 0;
 			waveIsRunning = false;
 			GameOver = false;
-			killCounter = 0;
-			moneyCounter = 0;
+			//killCounter = 0;
+			//moneyCounter = 0;
 			PlayerHealth = PlayerStartingHealth;
 			//Update GUI as well
-			GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+
+
+			//GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
 		}
 
         /*describing the if
@@ -82,8 +90,6 @@ public class GameScript : NetworkBehaviour {
        * if a wave is not running spawn
        * and not gameOver
        */
-
-      
 		if (isServer && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
@@ -102,6 +108,18 @@ public class GameScript : NetworkBehaviour {
 		}
 	}
 
+    public void EnemyReachedGoal()
+    {
+
+        //GameScriptRef.PlayerHealth -= 1;
+        if (PlayerHealth > 0)
+        {
+            PlayerHealth -= 1;
+            Debug.Log("PlayerHealth: " + PlayerHealth);
+            //update GUI
+        }
+    }
+
 	void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
@@ -111,4 +129,14 @@ public class GameScript : NetworkBehaviour {
 	void OnMoneyChange(int money){
 		MoneyText.text = money.ToString();
 	}
+
+    void OnChangeHealth(int health)
+    {
+        HealthText.text = health.ToString();
+        if(health <= 0)
+        {
+            GameOver = true;
+            HealthText.text = "GAME OVER";
+        }
+    }
 }
