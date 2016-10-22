@@ -32,6 +32,12 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
+    [Space(10)]
+    [Header("Arcade Mode")]
+    public bool ArcadeModeStarted = false;
+    public int ArcadeStartAmount = 5;
+    public int ArcadeMultiplier = 2;
+
     //public bool isHost = false;
 
 
@@ -54,36 +60,17 @@ public class GameScript : NetworkBehaviour {
        * Not a fan of the long following if but it works
        * TODO: Make prettier!
        */
-
-        if (isServer && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.A))
+        {
+            ArcadeModeStarted = true;
+        }
+        else if (isServer && Input.GetKeyUp(KeyCode.S))
         {
             GameStarted = true;
         }
 		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
-            Debug.Log("reset pressed");
-			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
-				if (enemy.gameObject.name != "target") {
-					//Destroy all child pirates
-					Destroy (enemy.gameObject);
-				}
-			}
-			foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile")) {
-				//Destroy all bullets as well
-				Destroy (bullet);
-			}
-			//Reset game values
-			GameStarted = false;
-			waveNr = 0;
-			waveIsRunning = false;
-			GameOver = false;
-			//killCounter = 0;
-			//moneyCounter = 0;
-			PlayerHealth = PlayerStartingHealth;
-			//Update GUI as well
-
-
-			//GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+            ResetGame();
 		}
 
         /*describing the if
@@ -113,17 +100,41 @@ public class GameScript : NetworkBehaviour {
 
     public void EnemyReachedGoal()
     {
-
-        //GameScriptRef.PlayerHealth -= 1;
         if (PlayerHealth > 0)
         {
             PlayerHealth -= 1;
-            Debug.Log("PlayerHealth: " + PlayerHealth);
-            //update GUI
         }
     }
 
-	void OnWaveChange(int wave){
+    void ResetGame()
+    {
+        Debug.Log("resets game");
+        
+        foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform)
+        {
+            if (enemy.gameObject.name != "target")
+            {
+                //Destroy all child pirates
+                Destroy(enemy.gameObject);
+            }
+        }
+        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile"))
+        {
+            //Destroy all bullets as well
+            Destroy(bullet);
+        }
+        //Reset game values
+        GameStarted = false;
+        waveNr = 0;
+        waveIsRunning = false;
+        GameOver = false;
+        //killCounter = 0;
+        //moneyCounter = 0;
+        PlayerHealth = PlayerStartingHealth;
+        //Update GUI as well
+    }
+
+    void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
@@ -136,6 +147,7 @@ public class GameScript : NetworkBehaviour {
     void OnChangeHealth(int health)
     {
         HealthText.text = health.ToString();
+        HealthSlider.value = health;
         if(health <= 0)
         {
             GameOver = true;

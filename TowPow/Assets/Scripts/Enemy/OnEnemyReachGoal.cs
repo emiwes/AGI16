@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 
 public class OnEnemyReachGoal : NetworkBehaviour {
 
-	public Slider HealthSlider;
-	public Text HealthText;
+	//public Slider HealthSlider;
+	//public Text HealthText;
 
     private GameScript GameScriptRef;
 
@@ -16,10 +16,9 @@ public class OnEnemyReachGoal : NetworkBehaviour {
     }
 
 	void OnTriggerEnter(Collider other) {
-        if (!GameScriptRef)
-        {
-            GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
-        }
+        //if (!GameScriptRef){
+            //GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
+        //}
 		if (isServer && other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject);
             GameScriptRef.EnemyReachedGoal();
