@@ -2,18 +2,23 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class CoinClick : NetworkBehaviour {
+public class CoinClick : MonoBehaviour {
+	private float destroyTimer = 5.0f;
+	GameObject localPlayer;
 
-	public void DestroyCoin(){
-		Debug.Log ("Coin was clicked");
-		Destroy (this.transform.gameObject);
-		CmdIncrementMoney ();
-
+	void Start() {
+		localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
 	}
 
-	[Command]
-	void CmdIncrementMoney(){
-		Debug.Log ("Money is being incremented");
-		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter += 10;
+	public void DestroyCoin(){
+		localPlayer.GetComponent<CoinHandler> ().CmdIncrementMoney ();
+		localPlayer.GetComponent<CoinHandler>().DestroyCoin (gameObject);
+	}
+
+	void Update() {
+		destroyTimer -= Time.deltaTime;
+		if (destroyTimer <= 0) {
+			localPlayer.GetComponent<CoinHandler>().DestroyCoin (gameObject);
+		}
 	}
 }
