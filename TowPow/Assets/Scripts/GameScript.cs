@@ -60,29 +60,7 @@ public class GameScript : NetworkBehaviour {
         }
 		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
-            Debug.Log("reset pressed");
-			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
-				if (enemy.gameObject.name != "target") {
-					//Destroy all child pirates
-					Destroy (enemy.gameObject);
-				}
-			}
-			foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile")) {
-				//Destroy all bullets as well
-				Destroy (bullet);
-			}
-			//Reset game values
-			GameStarted = false;
-			waveNr = 0;
-			waveIsRunning = false;
-			GameOver = false;
-			//killCounter = 0;
-			//moneyCounter = 0;
-			PlayerHealth = PlayerStartingHealth;
-			//Update GUI as well
-
-
-			//GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+            resetGame();
 		}
 
         /*describing the if
@@ -119,8 +97,38 @@ public class GameScript : NetworkBehaviour {
             //update GUI
         }
     }
+    
+    private void resetGame()
+    {
+        Debug.Log("reset pressed");
+        foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform)
+        {
+            if (enemy.gameObject.name != "target")
+            {
+                //Destroy all child pirates
+                Destroy(enemy.gameObject);
+            }
+        }
+        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile"))
+        {
+            //Destroy all bullets as well
+            Destroy(bullet);
+        }
+        //Reset game values
+        GameStarted = false;
+        waveNr = 0;
+        waveIsRunning = false;
+        GameOver = false;
+        //killCounter = 0;
+        //moneyCounter = 0;
+        PlayerHealth = PlayerStartingHealth;
+        //Update GUI as well
 
-	void OnWaveChange(int wave){
+
+        //GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+    }
+
+    void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
@@ -133,6 +141,7 @@ public class GameScript : NetworkBehaviour {
     void OnChangeHealth(int health)
     {
         HealthText.text = health.ToString();
+        HealthSlider.value = health;
         if(health <= 0)
         {
             GameOver = true;
