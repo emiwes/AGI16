@@ -33,6 +33,12 @@ public class GameScript : NetworkBehaviour {
 
     public bool GameStarted = false;
 
+    [Space(10)]
+    [Header("Arcade Mode")]
+    public bool ArcadeModeStarted = false;
+    public int ArcadeStartAmount = 5;
+    public int ArcadeMultiplier = 2;
+
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
 		for (int i = 0; i < nrOfCreeps; i++) {
@@ -53,7 +59,11 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-        if (isServer && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.A))
+        {
+            ArcadeModeStarted = true;
+        }
+        else if (isServer && Input.GetKeyUp(KeyCode.S))
 
         {
             GameStarted = true;
