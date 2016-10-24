@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class TowerCombat : MonoBehaviour {
+public class TowerCombat : NetworkBehaviour {
 	public List<GameObject> nearbyEnemies = new List<GameObject>();
 	GameObject closestEnemy = null;
 
@@ -16,6 +17,9 @@ public class TowerCombat : MonoBehaviour {
 
 	public AudioClip shootSound;
 	private AudioSource source;
+
+	[SyncVar (hook = "OnLevelUp")]
+	public int level = 1;
 
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
@@ -107,5 +111,10 @@ public class TowerCombat : MonoBehaviour {
 				nearbyEnemies.RemoveAt (i);
 			}
 		}
+	}
+
+	void OnLevelUp(int lvl){
+		Debug.Log("Leveling up hook triggered");
+		level = lvl;
 	}
 }

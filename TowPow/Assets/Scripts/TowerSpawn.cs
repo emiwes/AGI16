@@ -9,14 +9,16 @@ public class TowerSpawn : NetworkBehaviour {
 	public float spawnDuration = 2f;
 	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
+	public GameObject upgradeButtonPrefab;
 	private Camera topCamera;
 
 	[SyncVar]
 	public bool despawning = false;
 	private float despawnTimer = 0f;
-	private float despawnTime = 0.5f;
+	private float despawnTime = 1.0f;
 
 	private GameObject buildProgress;
+	private GameObject upgradeButton;
 	private bool isBuildingTower = false;
 
 	private float serverDespawnTime = 2f;
@@ -140,14 +142,31 @@ public class TowerSpawn : NetworkBehaviour {
 		Debug.Log ("FillBuildProgress");
 		float elapsedTime = 0f;
 		while (elapsedTime < time) {
+			if(image == null){
+				break;
+			}
 			image.fillAmount =  Mathf.Lerp(startValue, endValue, elapsedTime/time);
 			image.color = Color.Lerp (startColor, endColor, (elapsedTime / time));
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
-		image.color = endColor;
-		image.fillAmount = endValue;
+		if(image != null){
+			image.color = endColor;
+			image.fillAmount = endValue;
+		}
 		isBuildingTower = false;
+
+		// Attach upgrade button now that the tower has spawned
+		AttachUpgradeButtonToTower();
+	}
+
+	void AttachUpgradeButtonToTower(){
+		Vector3 upgradeButtonPos = topCamera.WorldToScreenPoint(gameObject.transform.position);
+		upgradeButtonPos.y -= 30;
+		upgradeButton = (GameObject)Instantiate(upgradeButtonPrefab, upgradeButtonPos, Quaternion.identity);
+		upgradeButton.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+
+		upgradeButton.GetComponent<UpgradeTower>().tower = gameObject;
 	}
 //
 //	public void AddTowerController(TouchScript.TouchTest tt) {

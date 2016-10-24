@@ -112,6 +112,10 @@ namespace TouchScript
 							r.gameObject.GetComponent<CoinClick> ().DestroyCoin ();
 							break;
 						}
+
+						else if(r.gameObject.name == "UpgradeTowerButton(Clone)"){
+							r.gameObject.GetComponent<UpgradeTower>().Upgrade();
+						}
 					}
 				}
 				return;
