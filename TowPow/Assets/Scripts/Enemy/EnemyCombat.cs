@@ -10,17 +10,18 @@ public class EnemyCombat : NetworkBehaviour {
 	private Camera topCamera;
 
 	public Slider HPSlider;
-	private bool dead = false;
 
 	public AudioClip[] deathSoundArray;
 
-	private AudioSource source;
-	private float volLowRange = .5f;
-	private float volHighRange = 1.0f;
+	public AudioSource source;
+	private float volLowRange = .2f;
+	private float volHighRange = .5f;
+
+	private GameObject localPlayer;
 
 	void Start () {
 		HPSlider.maxValue = health;
-		if (!NetworkServer.active) {
+		if(!DeterminePlayerType.isVive) {
 			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera> ();
 		}
 	}
@@ -30,44 +31,39 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	public void takeDamage (float damage) {
-		health -= damage;
-		if (health <= 0 && !dead) {
-			//Only kill object once
-			dead = true;
-			Destroy (HPSlider.transform.GetChild(1).gameObject);
-			CmdDie ();
+		
+		if (isServer && health > 0) {
+			health -= damage;
+			if (health <= 0) {
+				//dead = true;
+
+				Destroy (HPSlider.gameObject);
+				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
+
+
+			}
 		}
 	}
-
-	[Command]
-	void CmdDie(){
 		
-		Animator animator = gameObject.GetComponent<Animator> ();
-//		animator.SetBool ("Die", true);
-
-		animator.Play ("Die");
-		//Play death sound
-		float vol = Random.Range (volLowRange, volHighRange);
-		source.PlayOneShot(deathSoundArray[Random.Range(0, deathSoundArray.Length)],vol);
-		//Also change kill counter on all clients
-		Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
-		GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
-	}
-
 	void OnTakeDamage(float health) {
 		//Update health slider on all clients
 		HPSlider.value = health;
-	}
 
-	void OnDestroy(){
-		if (!NetworkServer.active) {
-			spawnCoin ();
+		//Will only run once since health is never updated when it is below 0
+		if (health <= 0) {
+			EnemyCombat enemyCombatComponent = gameObject.GetComponent<EnemyCombat> ();
+			Animator animator = gameObject.GetComponent<Animator> ();
+			animator.Play ("Die");
+			//Play death sound
+			float vol = Random.Range (volLowRange, volHighRange);
+			enemyCombatComponent.source.PlayOneShot (enemyCombatComponent.deathSoundArray [Random.Range (0, enemyCombatComponent.deathSoundArray.Length)], vol);
+
+			if (!DeterminePlayerType.isVive) {
+				GameObject coin = (GameObject)Instantiate (coinPrefab, topCamera.WorldToScreenPoint (gameObject.transform.position), Quaternion.identity);
+				coin.transform.SetParent (GameObject.Find ("HUDCanvas").transform);
+			}
+			Destroy (gameObject, animator.GetCurrentAnimatorStateInfo (0).length);
 		}
-	}
-
-	void spawnCoin (){
-		GameObject coin = (GameObject)Instantiate(coinPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
-		coin.transform.SetParent(GameObject.Find("HUDCanvas").transform);
 	}
 
 }

@@ -9,7 +9,10 @@ public class GameScript : NetworkBehaviour {
 	public Text MoneyText;
 	public Text KillText;
 
-	public int creepsPerWave;
+    public Slider HealthSlider;
+    public Text HealthText;
+
+    public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
 	[SyncVar (hook = "OnKillChange")]
@@ -18,8 +21,10 @@ public class GameScript : NetworkBehaviour {
 	public int moneyCounter = 0;
 
 	public int PlayerStartingHealth = 10;
+
 	[HideInInspector]
-	public int PlayerHealth = 0;
+    [SyncVar(hook = "OnChangeHealth")]
+    public int PlayerHealth;
 
 	public float spawnWaitTime;
 
@@ -27,8 +32,6 @@ public class GameScript : NetworkBehaviour {
 	public bool GameOver = false;
 
     public bool GameStarted = false;
-    public bool isHost = false;
-
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
@@ -50,32 +53,14 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-        if (isHost && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.S))
+
         {
             GameStarted = true;
         }
-		else if (isHost && Input.GetKeyUp(KeyCode.M))
+		else if (isServer && Input.GetKeyUp(KeyCode.M))
 		{
-			foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform) {
-				if (enemy.gameObject.name != "target") {
-					//Destroy all child pirates
-					Destroy (enemy.gameObject);
-				}
-			}
-			foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile")) {
-				//Destroy all bullets as well
-				Destroy (bullet);
-			}
-			//Reset game values
-			GameStarted = false;
-			waveNr = 0;
-			waveIsRunning = false;
-			GameOver = false;
-			killCounter = 0;
-			moneyCounter = 0;
-			PlayerHealth = PlayerStartingHealth;
-			//Update GUI as well
-			GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+            resetGame();
 		}
 
         /*describing the if
@@ -83,9 +68,7 @@ public class GameScript : NetworkBehaviour {
        * if a wave is not running spawn
        * and not gameOver
        */
-
-      
-        if (isHost && GameStarted && !waveIsRunning && !GameOver) {
+		if (isServer && GameStarted && !waveIsRunning && !GameOver) {
 			//If no wave is running, spawn a new wave
 			waveNr += 1;
 
@@ -103,7 +86,49 @@ public class GameScript : NetworkBehaviour {
 		}
 	}
 
-	void OnWaveChange(int wave){
+    public void EnemyReachedGoal()
+    {
+
+        //GameScriptRef.PlayerHealth -= 1;
+        if (PlayerHealth > 0)
+        {
+            PlayerHealth -= 1;
+            //Debug.Log("PlayerHealth: " + PlayerHealth);
+            //update GUI
+        }
+    }
+    
+    private void resetGame()
+    {
+        Debug.Log("reset pressed");
+        foreach (Transform enemy in GameObject.Find("spawner").gameObject.transform)
+        {
+            if (enemy.gameObject.name != "target")
+            {
+                //Destroy all child pirates
+                Destroy(enemy.gameObject);
+            }
+        }
+        foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("projectile"))
+        {
+            //Destroy all bullets as well
+            Destroy(bullet);
+        }
+        //Reset game values
+        GameStarted = false;
+        waveNr = 0;
+        waveIsRunning = false;
+        GameOver = false;
+        //killCounter = 0;
+        //moneyCounter = 0;
+        PlayerHealth = PlayerStartingHealth;
+        //Update GUI as well
+
+
+        //GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
+    }
+
+    void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
@@ -112,4 +137,15 @@ public class GameScript : NetworkBehaviour {
 	void OnMoneyChange(int money){
 		MoneyText.text = money.ToString();
 	}
+
+    void OnChangeHealth(int health)
+    {
+        HealthText.text = health.ToString();
+        HealthSlider.value = health;
+        if(health <= 0)
+        {
+            GameOver = true;
+            HealthText.text = "GAME OVER";
+        }
+    }
 }
