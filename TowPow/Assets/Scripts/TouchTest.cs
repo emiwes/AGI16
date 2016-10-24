@@ -89,8 +89,8 @@ namespace TouchScript
 		void TouchBegin(Vector2 position, Tags tags) {
 			Debug.Log ("Touch Start");
 
-			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-			spawnPosition.y = 10f;
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 16f));
+			spawnPosition.y = 16f;
 
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
@@ -161,7 +161,8 @@ namespace TouchScript
 			if (towerTag != null) {
 				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
 					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+						CmdStartDespawning(tower);
+						// tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 					}
 				}
 			}
@@ -205,6 +206,11 @@ namespace TouchScript
 		[Command]
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+		}
+
+		[Command]
+		void CmdStartDespawning(GameObject tower){
+			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
 	}
 }

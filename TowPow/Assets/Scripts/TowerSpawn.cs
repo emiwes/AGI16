@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class TowerSpawn : MonoBehaviour {
+public class TowerSpawn : NetworkBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
@@ -11,8 +11,9 @@ public class TowerSpawn : MonoBehaviour {
 	public GameObject circleProgressPrefab;
 	private Camera topCamera;
 
+	[SyncVar]
 	public bool despawning = false;
-	private float despawnTimer;
+	private float despawnTimer = 0f;
 	private float despawnTime = 0.5f;
 
 	private GameObject buildProgress;
@@ -41,14 +42,15 @@ public class TowerSpawn : MonoBehaviour {
 			despawnTimer += Time.deltaTime;
 			if(despawnTimer > despawnTime) {
 				despawning = false;
+				despawnTimer = 0;
 				Despawn();
 			}
 		}
 	}
 
+
 	public void StartDespawnTimer() {
 		despawning = true;
-		despawnTimer = 0;
 	}
 
 	public void StopDespawnTimer() {
@@ -61,13 +63,17 @@ public class TowerSpawn : MonoBehaviour {
 		if(isBuildingTower) {
 			isBuildingTower = false;
 			StopCoroutine (buildTowerOverTimeEnumerator);
-            if (!DeterminePlayerType.isVive){
-                StopCoroutine(fillBuildProgressEnumerator);
-            }
+			if (!DeterminePlayerType.isVive){
+				StopCoroutine(fillBuildProgressEnumerator);
+			}
 		}
 
-		// Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
-		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		
+		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
+		// Vector3 endPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		
+		// Start the despawning animation
+
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
 
         if (!DeterminePlayerType.isVive)
@@ -84,8 +90,8 @@ public class TowerSpawn : MonoBehaviour {
 	void Spawn() {
 		Vector3 endPoint = transform.position;
 
-//		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
-		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		transform.position = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
+		// transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 		buildTowerOverTimeEnumerator = MoveOverSeconds (endPoint, spawnDuration);
 		StartCoroutine(buildTowerOverTimeEnumerator);
 		//SPAWN THE TOWER WITH PROGRESS
