@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public class CoinHandler : NetworkBehaviour {
-
+	// TODO ta bort kanske när allt funkar lol
 	public Camera topCamera;
 	public GameObject coinPrefab;
 

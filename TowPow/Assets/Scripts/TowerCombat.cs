@@ -115,7 +115,8 @@ public class TowerCombat : NetworkBehaviour {
 	}
 
 	public void LevelUp(){
-		towerLevelHandler.LevelUp (gameObject.tag);
+		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
+		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
 	}
 
 	public void SyncTowerLevel() {
