@@ -130,6 +130,7 @@ public class GameScript : NetworkBehaviour {
         }
         //Reset game values
         GameStarted = false;
+        ArcadeModeStarted = false;
         waveNr = 0;
         waveIsRunning = false;
         GameOver = false;
