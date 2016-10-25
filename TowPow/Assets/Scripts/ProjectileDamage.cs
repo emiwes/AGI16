@@ -9,6 +9,7 @@ public class ProjectileDamage : MonoBehaviour {
 	public float damageOverTime = 0;
 	public float speedMultiplier = 1;
 	public float speedOverTime = 0;
+	public Material morphEnemyToMaterial;
 
 	void Awake(){
 		source = gameObject.GetComponent<AudioSource> ();

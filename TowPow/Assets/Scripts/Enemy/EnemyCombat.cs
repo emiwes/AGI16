@@ -19,6 +19,8 @@ public class EnemyCombat : NetworkBehaviour {
 
 	private GameObject localPlayer;
 	private float initialEnemySpeed;
+	private Material initialMaterial;
+	private SkinnedMeshRenderer smr;
 
 	void Start () {
 		HPSlider.maxValue = health;
@@ -29,24 +31,40 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Awake() {
 		source = GetComponent<AudioSource>();
+
+		// Save the initial speed of the enemy
 		initialEnemySpeed = GetComponent<NavMeshAgent>().speed;
+
+		// Get the SkinnedMeshRenderer of the enemy
+		smr = transform.FindChild("Pirate").gameObject.GetComponent<SkinnedMeshRenderer>();
+
+		// Save the initial material of the pirate
+		initialMaterial = smr.material;
+		Debug.Log(initialMaterial);
+		
+		// initialEnemySpeed = GetComponent<Material>().mainTexture;
 	}
 
 
 	public void HandleIncomingProjectile(ProjectileDamage projectile){
 		ProjectileDamage p = projectile;
 		
-		// Take damage from projectile
 		if(p.damage != 0){
+			// Take damage from projectile
 			takeDamage(p.damage);
 		}
 
-		// Slow down enemy
+		
 		if(p.speedMultiplier != 1){
-			Debug.Log (p.speedOverTime);
+			// Slow down enemy
 			StartCoroutine(AffectOverSeconds(p.speedOverTime, 0, p.speedMultiplier));
-			// gameObject.GetComponent<NavMeshAgent>().speed *= p.slowFactor;
 		}
+
+		if(p.morphEnemyToMaterial != null){
+			// Change the material to the material of the arrow
+			smr.material = p.morphEnemyToMaterial;
+		}
+
 	}
 
 	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1) {
