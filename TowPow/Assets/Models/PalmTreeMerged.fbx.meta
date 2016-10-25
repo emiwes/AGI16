@@ -1,60 +1,15 @@
 fileFormatVersion: 2
-guid: 92cc6190795d2b54a9615a1c6d917317
-timeCreated: 1475856341
+guid: 50ade90d47c5d4a04995cfea7ea1fb33
+timeCreated: 1476886906
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: leave2
-    100002: leave3
-    100004: leave4
-    100006: leave5
-    100008: leave6
-    100010: leave7
-    100012: leave8
-    100014: //RootNode
-    100016: coconut3
-    100018: coconut4
-    400000: leave2
-    400002: leave3
-    400004: leave4
-    400006: leave5
-    400008: leave6
-    400010: leave7
-    400012: leave8
-    400014: //RootNode
-    400016: coconut3
-    400018: coconut4
-    2300000: leave2
-    2300002: leave3
-    2300004: leave4
-    2300006: leave5
-    2300008: leave6
-    2300010: leave7
-    2300012: leave8
-    2300014: //RootNode
-    2300016: coconut3
-    2300018: coconut4
-    3300000: leave2
-    3300002: leave3
-    3300004: leave4
-    3300006: leave5
-    3300008: leave6
-    3300010: leave7
-    3300012: leave8
-    3300014: //RootNode
-    3300016: coconut3
-    3300018: coconut4
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: tree2
-    4300002: leave8
-    4300004: leave2
-    4300006: leave3
-    4300008: leave4
-    4300010: leave5
-    4300012: leave6
-    4300014: leave7
-    4300016: coconut3
-    4300018: coconut4
     9500000: //RootNode
   materials:
     importMaterials: 0

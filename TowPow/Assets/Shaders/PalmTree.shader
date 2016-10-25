@@ -1,4 +1,7 @@
-﻿Shader "Custom/Leaf" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Custom/Leaf" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_Cutoff ("Cutoff", Range(0,1)) = 0.5
@@ -51,7 +54,9 @@
 			float4 disTex = tex2Dlod(_DisplacementTex, v.texcoord);
 			float3 defaultWind = _DefaultWind.xyz * _DefaultWindForce;
 			float3 windOffset = _WindOffset;// * _WindForceOffset;
-			v.vertex.xyz += disTex.xyz * _DisMul * sinTime * defaultWind + disTex.xyz * windOffset;
+			float4 world_space_vertex = mul( unity_ObjectToWorld, v.vertex );
+			world_space_vertex.xyz += disTex.xyz * _DisMul * sinTime * defaultWind + disTex.xyz * windOffset;
+			v.vertex = mul( unity_WorldToObject, world_space_vertex );
         	//o.customColor = abs(v.normal);
         	//UNITY_INITIALIZE_OUTPUT(Input,o);
       	}

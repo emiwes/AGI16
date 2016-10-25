@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Leaf : MonoBehaviour {
+public class PalmTree: MonoBehaviour {
 
 	Renderer renderer;
 
@@ -16,7 +16,10 @@ public class Leaf : MonoBehaviour {
 		speed = new Vector3();
 
 		renderer = GetComponent<Renderer> ();
-		renderer.material.SetFloat ("_Offset", Random.Range (0, 10));
+		float offset = Random.Range (0, 10);
+		for (int i = 0; i < renderer.materials.Length; i++) {
+			renderer.materials[i].SetFloat ("_Offset", offset);
+		}
 
 		// Get all the wind defaultvalues
 		//windForce = renderer.material.GetFloat ("_WindForce");
@@ -26,12 +29,14 @@ public class Leaf : MonoBehaviour {
 	void Update() {
 		//float windForceOffset = renderer.material.GetFloat ("_WindForceOffset");
 		Vector4 windOffset = renderer.material.GetVector ("_WindOffset");
-		windOffset = UpdateLeafOffset (windOffset);
+		windOffset = UpdateTreeOffset (windOffset);
 		//renderer.material.SetFloat ("_WindForceOffset", windForceOffset / 1.1f);
-		renderer.material.SetVector ("_WindOffset", windOffset);
+		for (int i = 0; i < renderer.materials.Length; i++) {
+			renderer.materials [i].SetVector ("_WindOffset", windOffset);
+		}
 	}
 
-	Vector4 UpdateLeafOffset(Vector4 windOffset) {
+	Vector4 UpdateTreeOffset(Vector4 windOffset) {
 		for (int i = 0; i < 3; i++) {
 			float a = -(windOffset [i] - speed [i]);
 			speed [i] += a;

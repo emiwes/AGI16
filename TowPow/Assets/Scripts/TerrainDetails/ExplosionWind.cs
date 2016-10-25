@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public class ExplosionWind : MonoBehaviour {
 	public float explosionForce = 1f;
 
-	private Leaf[] leaves;
+	private PalmTree[] trees;
 
 	// Use this for initialization
 	void Start () {
-		leaves = Object.FindObjectsOfType<Leaf> ();
+		trees = Object.FindObjectsOfType<PalmTree> ();
 	}
 	
 	// Update is called once per frame
@@ -20,12 +20,12 @@ public class ExplosionWind : MonoBehaviour {
 	}
 
 	void Explosion () {
-		foreach (Leaf leaf in leaves) {
-			GameObject go = leaf.gameObject;
+		foreach (PalmTree tree in trees) {
+			GameObject go = tree.gameObject;
 			Vector3 blastVector = (go.transform.position - transform.position);
 			blastVector = blastVector.normalized / blastVector.magnitude;
 			blastVector *= explosionForce;
-			leaf.SetSpeed(blastVector);
+			tree.SetSpeed(blastVector);
 		}
 	}
 }
