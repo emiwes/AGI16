@@ -5,8 +5,10 @@ public class ProjectileDamage : MonoBehaviour {
 
 	public AudioClip hitSound;
 	private AudioSource source;
-	public float damage;
-	public float slowFactor = 1;
+	public float damage = 30;
+	public float damageOverTime = 0;
+	public float speedMultiplier = 1;
+	public float speedOverTime = 0;
 
 	void Awake(){
 		source = gameObject.GetComponent<AudioSource> ();

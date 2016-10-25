@@ -18,6 +18,7 @@ public class EnemyCombat : NetworkBehaviour {
 	private float volHighRange = .5f;
 
 	private GameObject localPlayer;
+	private float initialEnemySpeed;
 
 	void Start () {
 		HPSlider.maxValue = health;
@@ -28,7 +29,9 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Awake() {
 		source = GetComponent<AudioSource>();
+		initialEnemySpeed = GetComponent<NavMeshAgent>().speed;
 	}
+
 
 	public void HandleIncomingProjectile(ProjectileDamage projectile){
 		ProjectileDamage p = projectile;
@@ -40,8 +43,30 @@ public class EnemyCombat : NetworkBehaviour {
 
 		// Slow down enemy
 		if(p.slowFactor != 1){
-			gameObject.GetComponent<NavMeshAgent>().speed *= p.slowFactor;
+			StartCoroutine(AffectOverSeconds(p.speedOverTime, null, p.speedMultiplier));
+			// gameObject.GetComponent<NavMeshAgent>().speed *= p.slowFactor;
 		}
+	}
+
+	IEnumerator AffectOverSeconds(float time, float damage = null, float speedMultiplier = null) {
+		float elapsedTime = 0;
+
+		// The NavMeshAgent of this enemy
+		NavMeshAgent nma = gameObject.GetComponent<NavMeshAgent>();
+
+		// The most slowed the enemy will be, which is right when the projectile hits
+		float peakSlow;
+		speedMultiplier ? peakSlow = initialEnemySpeed * speedMultiplier :;
+
+		while (elapsedTime < time) {
+			// If we have a speed multiplier, change the speed over time
+			speedMultiplier ? nma.speed = peakSlow + (initialEnemySpeed - (peakSlow)) * (elapsedTime/time)):;
+			elapsedTime += Time.deltaTime;
+			yield return new WaitForEndOfFrame ();
+		}
+
+		// Reset the enemy speed to the normal value
+		nma.speed = initialEnemySpeed;
 	}
 
 	public void takeDamage (float damage) {
