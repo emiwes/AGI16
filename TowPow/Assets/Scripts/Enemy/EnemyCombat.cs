@@ -42,25 +42,31 @@ public class EnemyCombat : NetworkBehaviour {
 		}
 
 		// Slow down enemy
-		if(p.slowFactor != 1){
-			StartCoroutine(AffectOverSeconds(p.speedOverTime, null, p.speedMultiplier));
+		if(p.speedMultiplier != 1){
+			Debug.Log (p.speedOverTime);
+			StartCoroutine(AffectOverSeconds(p.speedOverTime, 0, p.speedMultiplier));
 			// gameObject.GetComponent<NavMeshAgent>().speed *= p.slowFactor;
 		}
 	}
 
-	IEnumerator AffectOverSeconds(float time, float damage = null, float speedMultiplier = null) {
+	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1) {
 		float elapsedTime = 0;
 
 		// The NavMeshAgent of this enemy
 		NavMeshAgent nma = gameObject.GetComponent<NavMeshAgent>();
 
 		// The most slowed the enemy will be, which is right when the projectile hits
-		float peakSlow;
-		speedMultiplier ? peakSlow = initialEnemySpeed * speedMultiplier :;
+		float peakSlow = -1;
+		if(speedMultiplier != -1){
+			peakSlow = initialEnemySpeed * speedMultiplier;
+		}
 
 		while (elapsedTime < time) {
 			// If we have a speed multiplier, change the speed over time
-			speedMultiplier ? nma.speed = peakSlow + (initialEnemySpeed - (peakSlow)) * (elapsedTime/time)):;
+			if(speedMultiplier != -1){
+				nma.speed = peakSlow + (initialEnemySpeed - (peakSlow)) * (elapsedTime/time);
+			}
+
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
