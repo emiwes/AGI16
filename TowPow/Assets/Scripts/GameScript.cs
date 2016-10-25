@@ -11,6 +11,7 @@ public class GameScript : NetworkBehaviour {
 
     public Slider HealthSlider;
     public Text HealthText;
+    private spawnEnemy enemySpawner;
 
     public int creepsPerWave;
 	[SyncVar (hook = "OnWaveChange")]
@@ -40,7 +41,7 @@ public class GameScript : NetworkBehaviour {
     public int ArcadeMultiplier = 2;
 
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
-		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
+		//spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
@@ -50,7 +51,9 @@ public class GameScript : NetworkBehaviour {
 
 	void Awake() {
 		PlayerHealth = PlayerStartingHealth;
-	}
+        enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -62,6 +65,7 @@ public class GameScript : NetworkBehaviour {
         if (isServer && Input.GetKeyUp(KeyCode.A))
         {
             ArcadeModeStarted = true;
+            ArcadeSpawn(ArcadeStartAmount);
         }
         else if (isServer && Input.GetKeyUp(KeyCode.S))
 
@@ -129,20 +133,30 @@ public class GameScript : NetworkBehaviour {
         waveNr = 0;
         waveIsRunning = false;
         GameOver = false;
-        //killCounter = 0;
-        //moneyCounter = 0;
+        killCounter = 0;
+        moneyCounter = 0;
         PlayerHealth = PlayerStartingHealth;
-        //Update GUI as well
-
-
-        //GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
     }
 
+    void ArcadeSpawn(int newEnemies)
+    {
+        
+        //spawnEnemy enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
+        for (int i = 0; i < newEnemies; i++)
+        {
+            enemySpawner.spawnSingleEnemy();
+        }
+    }
     void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
 		KillText.text = kills.ToString();
+        if (ArcadeModeStarted)
+        {
+            //spawn new enemies.
+            ArcadeSpawn(ArcadeMultiplier);
+        }
 	}
 	void OnMoneyChange(int money){
 		MoneyText.text = money.ToString();
