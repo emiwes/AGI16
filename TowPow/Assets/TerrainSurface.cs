@@ -2,12 +2,25 @@
 using System.Collections;
 
 public class TerrainSurface : MonoBehaviour {
+
+    //Code copied from http://answers.unity3d.com/questions/456973/getting-the-texture-of-a-certain-point-on-terrain.html
+    //But modified to work in our situation
     public int surfaceIndex = 0;
 
     private Terrain terrain;
     private TerrainData terrainData;
     private Vector3 terrainPos;
+    private Camera topCamera;
+    public Texture2D validTexture;
 
+
+    void Awake()
+    {
+        if (!DeterminePlayerType.isVive)
+        {
+            topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
+        }
+}
     // Use this for initialization
     void Start()
     {
@@ -21,12 +34,29 @@ public class TerrainSurface : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        surfaceIndex = GetMainTexture(transform.position);
+        /*if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 position = Input.mousePosition;
+            Vector3 worldPoint = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
+            surfaceIndex = GetMainTexture(worldPoint);
+            Debug.Log("clicked on: " + terrainData.splatPrototypes[surfaceIndex].texture.name);
+            Debug.Log("valid placement: " + validTowerPlacement(worldPoint));
+
+        }*/
+            
     }
 
-    void OnGUI()
+    public bool validTowerPlacement(Vector3 spawnPosition)
     {
-        GUI.Box(new Rect(100, 100, 200, 25), "index: " + surfaceIndex.ToString() + ", name: " + terrainData.splatPrototypes[surfaceIndex].texture.name);
+        int si = GetMainTexture(spawnPosition);
+        
+        if (terrainData.splatPrototypes[si].texture == validTexture)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 
     private float[] GetTextureMix(Vector3 WorldPos)
@@ -72,6 +102,8 @@ public class TerrainSurface : MonoBehaviour {
                 maxMix = mix[n];
             }
         }
+
+
         return maxIndex;
     }
 }

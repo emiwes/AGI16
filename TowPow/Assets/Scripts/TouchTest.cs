@@ -24,6 +24,7 @@ namespace TouchScript
 
 		private Camera topCamera;
 		private GraphicRaycaster hudCanvasRaycaster;
+        private TerrainSurface terrainScript;
 
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
@@ -34,7 +35,10 @@ namespace TouchScript
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
 
-			if (!DeterminePlayerType.isVive) {
+            //get script on terrain
+            terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
+
+            if (!DeterminePlayerType.isVive) {
 				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
 			}
 			hudCanvasRaycaster = GameObject.Find ("HUDCanvas").GetComponent<GraphicRaycaster>();
@@ -172,6 +176,11 @@ namespace TouchScript
 			// Figure out what towertype we are dealing with
 			GameObject towerPrefab = null;
 
+            //check if valid placement
+            
+
+            
+
 			
 			foreach(GameObject tp in towerTypes) {
 				if(tp.tag == tag) {
@@ -184,8 +193,12 @@ namespace TouchScript
 				return;
 			}
 
-			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-			NetworkServer.Spawn(t);
+            Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(position));
+            if (terrainScript.validTowerPlacement(position))
+            {
+                GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
+                NetworkServer.Spawn(t);
+            }
 		}
 			
 		public void DestroyMe(NetworkInstanceId id, float time) {
