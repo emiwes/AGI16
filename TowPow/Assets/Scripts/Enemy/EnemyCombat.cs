@@ -30,6 +30,20 @@ public class EnemyCombat : NetworkBehaviour {
 		source = GetComponent<AudioSource>();
 	}
 
+	public void HandleIncomingProjectile(ProjectileDamage projectile){
+		ProjectileDamage p = projectile;
+		
+		// Take damage from projectile
+		if(p.damage != 0){
+			takeDamage(p.damage);
+		}
+
+		// Slow down enemy
+		if(p.slowFactor != 1){
+			gameObject.GetComponent<NavMeshAgent>().speed *= p.slowFactor;
+		}
+	}
+
 	public void takeDamage (float damage) {
 		
 		if (isServer && health > 0) {
