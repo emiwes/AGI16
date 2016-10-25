@@ -16,7 +16,9 @@ public class TowerSpawn : MonoBehaviour {
 	private float despawnTime = 0.5f;
 
 	private GameObject buildProgress;
-	private bool isBuildingTower = false;
+    private GameObject towerCanvas;
+
+    private bool isBuildingTower = false;
 
 	private float serverDespawnTime = 2f;
 
@@ -33,7 +35,16 @@ public class TowerSpawn : MonoBehaviour {
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
 
-		Spawn ();
+        //instatiate canvas
+        towerCanvas = new GameObject("towerCanvas");
+        towerCanvas.layer = 5; //UI layer
+        Canvas c = towerCanvas.AddComponent<Canvas>();
+        c.renderMode = RenderMode.ScreenSpaceOverlay;
+        towerCanvas.AddComponent<CanvasGroup>();
+        towerCanvas.AddComponent<GraphicRaycaster>();
+
+        towerCanvas.transform.SetParent(gameObject.transform);
+        Spawn ();
 	}
 
 	void Update () {
@@ -98,7 +109,11 @@ public class TowerSpawn : MonoBehaviour {
 
         if (!DeterminePlayerType.isVive){
             buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
-            buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+
+
+            buildProgress.transform.SetParent(towerCanvas.transform);
+            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
         }
 
         //buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
