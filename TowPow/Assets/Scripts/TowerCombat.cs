@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 
 public class TowerCombat : NetworkBehaviour {
-	public TowerLevelHandler towerLevelHandler;
+	public TowerLevelSynchronize towerLevelSynchronize;
 
 	public List<GameObject> nearbyEnemies = new List<GameObject>();
 	GameObject closestEnemy = null;
@@ -26,7 +26,7 @@ public class TowerCombat : NetworkBehaviour {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
-		towerLevelHandler = GameObject.Find ("GameHandler").GetComponent<TowerLevelHandler>();
+		towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize>();
 		SyncTowerLevel ();
 	}
 
@@ -120,6 +120,6 @@ public class TowerCombat : NetworkBehaviour {
 	}
 
 	public void SyncTowerLevel() {
-		level = towerLevelHandler.GetLevel (gameObject.tag);
+		level = towerLevelSynchronize.GetLevel (gameObject.tag);
 	}
 }

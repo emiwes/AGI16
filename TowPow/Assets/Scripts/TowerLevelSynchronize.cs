@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-public class TowerLevelHandler : NetworkBehaviour {
+public class TowerLevelSynchronize : NetworkBehaviour {
 
 	[SyncVar (hook = "RedLevelUp")]
 	public int towerRedLevel = 1;
