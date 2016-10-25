@@ -91,6 +91,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 		// Reset the enemy speed to the normal value
 		nma.speed = initialEnemySpeed;
+		smr.material = initialMaterial;
 	}
 
 	public void takeDamage (float damage) {
