@@ -5,25 +5,24 @@ using UnityEngine.Networking;
 
 public class OnEnemyReachGoal : NetworkBehaviour {
 
-	public Slider HealthSlider;
-	public Text HealthText;
-	[SyncVar (hook = "OnChangeHealth")]
-	public int HealthSliderValue = 10;
+
+    private GameScript GameScriptRef;
+
+	void Awake() {
+        GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
+
+    }
 
 	void OnTriggerEnter(Collider other) {
+        //if (!GameScriptRef)
+        //{
+        //    GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
+        //}
 		if (isServer && other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject);
-			if (HealthSliderValue == 0) {
-				GameObject.Find ("GameHandler").gameObject.GetComponent<GameScript>().GameOver = true;
-				Debug.Log ("GAME OVER");
-			} 
-			else {
-				HealthSliderValue -= 1;
-			}
+            GameScriptRef.EnemyReachedGoal();
 		}
 	}
-	void OnChangeHealth(int health) {
-		HealthSlider.value = health;
-		HealthText.text = health.ToString();
-	}
+
+	
 }

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace TouchScript
 {
@@ -21,8 +23,8 @@ namespace TouchScript
 		private TowerSpawn blackTower;
 
 		private Camera topCamera;
+		private GraphicRaycaster hudCanvasRaycaster;
 
-		//public List<NetworkInstanceId> towerIds;
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
 
@@ -32,12 +34,14 @@ namespace TouchScript
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
 
-			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+			if (!DeterminePlayerType.isVive) {
+				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+			}
+			hudCanvasRaycaster = GameObject.Find ("HUDCanvas").GetComponent<GraphicRaycaster>();
 		}
 
 		private void OnEnable()
 		{
-			Debug.Log ("start");
 			if (TouchManager.Instance != null)
 			{
 				TouchManager.Instance.TouchesBegan += touchesBeganHandler;
@@ -54,9 +58,11 @@ namespace TouchScript
 			}
 		}
 
-		private void touchesBeganHandler(object sender, TouchEventArgs e)
-		{
-			
+		private void touchesBeganHandler(object sender, TouchEventArgs e) {
+			if (DeterminePlayerType.isVive) { 
+				return; 
+			}
+
 			foreach (var point in e.Touches) {
 //				Debug.Log ("pointHit: " + point.Hit);
 //				Debug.Log ("pointID: " + point.Id);
@@ -71,18 +77,17 @@ namespace TouchScript
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
-			Debug.Log ("End handler");
+			if (DeterminePlayerType.isVive) { 
+				return; 
+			}
+
 			foreach (var point in e.Touches) {
 				TouchEnd (point.Position, point.Tags);
 			}
 		}
 
-		//[ClientRpc]
 		void TouchBegin(Vector2 position, Tags tags) {
 			Debug.Log ("Touch Start");
-			//Debug.Log ("tags: " + tags.ToString());
-			//GameObject testObject = (GameObject)Instantiate (Prefab, transform.position, transform.rotation);
-			//NetworkServer.Spawn (testObject);
 
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
 			spawnPosition.y = 10f;
@@ -90,14 +95,25 @@ namespace TouchScript
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
-				Debug.Log (tp.tag);
 				if(tags.HasTag(tp.tag)) {
 					towerTag = tp.tag;
 					break;
 				}
 			}
 			if(towerTag == null) {
-				Debug.Log("The fiducial does not represent a tower");
+				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
+					PointerEventData ped = new PointerEventData (null);
+					ped.position = position;
+					List<RaycastResult> results = new List<RaycastResult> ();
+					hudCanvasRaycaster.Raycast (ped, results);
+
+					foreach (RaycastResult r in results) {
+						if (r.gameObject.name == "CoinSprite(Clone)") {
+							r.gameObject.GetComponent<CoinClick> ().DestroyCoin ();
+							break;
+						}
+					}
+				}
 				return;
 			}
 			
@@ -110,20 +126,11 @@ namespace TouchScript
 				activeTower = activeTowers [0];
 			}
 				
-			/*foreach(GameObject tower in towers) {
-				if(tags.HasTag(tower.tag)) {
-					activeTower = tower;
-				}
-			}*/
-
-
-			// Debug.Log("Towerprefab: " + towerPrefab.ToString());
 			
 			// Check if we found anything
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				Debug.Log("instantiating tower to CMD");
 				CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
@@ -133,25 +140,15 @@ namespace TouchScript
 					activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
 				} else {
 					// It's a new position
-					Debug.Log(activeTower);
 					activeTower.GetComponent<TowerSpawn>().Despawn();
-					//towers.Remove(activeTower);
 					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
 			}
+				
 		}
 
 		void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("TouchEnd");
-
-			// Get the tower reference
-			/*GameObject activeTower = null;
-			foreach(GameObject tower in towers) {
-				Debug.Log ("tower in towers is: " + tower.tag);
-				if(tags.HasTag(tower.tag)) {
-					activeTower = tower;
-				}
-			}*/
 
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
@@ -168,14 +165,6 @@ namespace TouchScript
 					}
 				}
 			}
-
-			/*if(activeTower == null) {
-				Debug.Log("The tower that you tried to remove doesn't exist");
-				return;
-			}
-
-			// Start despawntimer
-			activeTower.GetComponent<TowerSpawn>().StartDespawnTimer();*/
 		}
 
 		[Command]
@@ -194,21 +183,12 @@ namespace TouchScript
 				Debug.Log("The fiducial does not represent a tower");
 				return;
 			}
-			Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
-			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-			//t.GetComponent<TowerSpawn> ().AddTowerController (this);
 
-			Debug.Log("Ska spawna torn på server");
+			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 			NetworkServer.Spawn(t);
 		}
-
-		//[Command]
+			
 		public void DestroyMe(NetworkInstanceId id, float time) {
-			/*if(!towers.Remove(go)) {
-				Debug.Log("The tower could not be removed");
-				return;
-			}*/
-
 			StartCoroutine (DestroyTowerInSeconds (id, time));
 		}
 
@@ -216,8 +196,6 @@ namespace TouchScript
 			// Find reference in towers
 
 			yield return new WaitForSeconds (time);
-			//NetworkServer.Destroy (go);
-			Debug.Log("Ready to destroy");
 
 			if (!goId.IsEmpty()) {
 				CmdDestroyTowerByNetId (goId);
@@ -228,21 +206,5 @@ namespace TouchScript
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
 		}
-
-		/*[ClientRpc]
-		void RpcAddTowersToClients(NetworkInstanceId netId) {
-			if(netId.IsEmpty()){
-				Debug.Log("Tornet vi ska lägga till är null");
-			} else{
-				Debug.Log("Lägger till torn i towers: " + ClientScene.FindLocalObject (netId).ToString());
-				towers.Add (ClientScene.FindLocalObject (netId));
-			}
-		}
-
-		[ClientRpc]
-		void RpcRemoveTowersToClients(NetworkInstanceId netId) {
-			Debug.Log("Tar bort torn i towers: " + NetworkServer.FindLocalObject (netId).ToString());			
-			towers.Remove (ClientScene.FindLocalObject (netId));
-		}*/
 	}
 }

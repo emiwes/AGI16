@@ -12,6 +12,10 @@ public class ArrowManager : MonoBehaviour {
 	public GameObject stringAttachPoint;
 	public GameObject arrowStartPoint;
 	public GameObject stringStartPoint;
+	public GameObject iceArrow;
+	public GameObject fireArrow;
+	public GameObject lightningArrow;
+//	public Material iceArrowMaterial;
 
 	public AudioClip shootSound;
 
@@ -107,11 +111,12 @@ public class ArrowManager : MonoBehaviour {
 	
 	}
 
+	// Spawn a new arrow
     public void AttachArrowToHand() {
         if(currentArrow == null) {
             currentArrow = Instantiate(Arrow);
             currentArrow.transform.parent = trackedObj.transform;
-            currentArrow.transform.localPosition = new Vector3(0f, 0f, .342f);
+            currentArrow.transform.localPosition = new Vector3(0f, 0f, .3f);
 			currentArrow.transform.localRotation = Quaternion.identity;
         }
 
@@ -128,16 +133,29 @@ public class ArrowManager : MonoBehaviour {
 		isAttached = true;
 	}
 
+	void ChangeToNewArrow(GameObject newArrow){
+		Arrow = newArrow;
+		Destroy(currentArrow);
+		currentArrow = null;
+	}
+
     void OnTriggerEnter(Collider col) {
-        Debug.Log(col.gameObject.name);
-        if (currentArrow != null) {
-            currentArrow.GetComponent<Arrow>().AttachArrowToBow();
-        }
+		Debug.Log (col);
+		if(col.tag == "iceArrowSwitcher"){
+			ChangeToNewArrow (iceArrow);
+		} else if(col.tag == "fireArrowSwitcher"){
+			ChangeToNewArrow (fireArrow);
+		} else if(col.tag == "lightningArrowSwitcher"){
+			ChangeToNewArrow (lightningArrow);
+		} else{
+			if (currentArrow != null) {
+				currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+			}
+		}
     }
 
     void OnTriggerStay(Collider col) {
-        Debug.Log(col.gameObject.name);
-        if (currentArrow != null) {
+		if (currentArrow != null && col.tag == "Untagged") {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }

@@ -8,16 +8,25 @@ public class TowerCombat : MonoBehaviour {
 
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
+	public GameObject shootingRangeIndicator;
 	public float towerDamage;
 	public float shootingSpeed, timeSinceLastShot = float.MaxValue;
 	private GameObject shootingModule;
 	private TowerSpawn towerSpawn;
 
+	public AudioClip shootSound;
+	private AudioSource source;
+
 	void Start() {
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		//InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
-        Debug.Log(nearbyEnemies.Count);
+		shootingRangeIndicator.SetActive(true);
+		// transform.Find("ShootingRadiusIndicator").gameObject.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
+	}
+
+	void Awake() {
+		source = GetComponent<AudioSource>();
 	}
 
 	void Update() {
@@ -31,7 +40,6 @@ public class TowerCombat : MonoBehaviour {
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
-        Debug.Log("Adding nearby enemy "+enemy.name);
 		nearbyEnemies.Add (enemy);
 	}
 
@@ -88,6 +96,9 @@ public class TowerCombat : MonoBehaviour {
 		bulletMovement.target = closestEnemy;
 		bulletMovement.speed = 30.0f;
 		projectileDamage.damage = towerDamage;
+		//Play sound
+		float vol = Random.Range (0.7f, 1f);
+		source.PlayOneShot(shootSound,vol);
 	}
 
 	void checkForDead() {
