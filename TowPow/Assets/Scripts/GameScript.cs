@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
@@ -13,10 +14,17 @@ public class GameScript : NetworkBehaviour {
     public Text HealthText;
 
     public int creepsPerWave;
+
+//	public SyncListInt towerLevels;
+//
+//	public List<string> towerTypes = new List<string>();
+
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
+
 	[SyncVar (hook = "OnKillChange")]
 	public int killCounter = 0;
+
 	[SyncVar (hook = "OnMoneyChange")]
 	public int moneyCounter = 0;
 
@@ -33,17 +41,31 @@ public class GameScript : NetworkBehaviour {
 
     public bool GameStarted = false;
 
-    IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
+
+	void Awake() {
+		PlayerHealth = PlayerStartingHealth;
+//		if (isServer) {
+//			for (int i = 0; i < 4; i++) {
+//				towerLevels.Add (1);
+//			}
+//		}
+//		towerTypes.Add ("black");
+//		towerTypes.Add ("blue");
+//		towerTypes.Add ("red");
+//		towerTypes.Add ("white");
+	}
+
+	void Start() {
+	
+	}
+
+	IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
 		}
 		yield return true;
-	}
-
-	void Awake() {
-		PlayerHealth = PlayerStartingHealth;
 	}
 	
 	// Update is called once per frame

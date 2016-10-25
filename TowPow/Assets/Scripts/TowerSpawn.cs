@@ -25,6 +25,7 @@ public class TowerSpawn : NetworkBehaviour {
 
 	private IEnumerator fillBuildProgressEnumerator;
 	private IEnumerator buildTowerOverTimeEnumerator;
+	private IEnumerator attachButtonWhenTowerSpawned;
 
 	private TouchScript.TouchTest touchTest;
 
@@ -60,6 +61,11 @@ public class TowerSpawn : NetworkBehaviour {
 	}
 
 	public void Despawn() {
+		// If tower never fully spawned, no upgrade button has been assigned.
+		if (upgradeButton != null) {
+			upgradeButton.GetComponent<UpgradeTower> ().DestroyMe ();
+		}
+
 		isActive = false;
 		//Stop all coroutines
 		if(isBuildingTower) {
@@ -67,6 +73,7 @@ public class TowerSpawn : NetworkBehaviour {
 			StopCoroutine (buildTowerOverTimeEnumerator);
 			if (!DeterminePlayerType.isVive){
 				StopCoroutine(fillBuildProgressEnumerator);
+				StopCoroutine (attachButtonWhenTowerSpawned);
 			}
 		}
 
@@ -116,11 +123,24 @@ public class TowerSpawn : NetworkBehaviour {
             StartCoroutine(fillBuildProgressEnumerator);
         }
 
+		if (!DeterminePlayerType.isVive) {
+			attachButtonWhenTowerSpawned = AttachButtonWhenTowerSpawned ();
+			StartCoroutine (attachButtonWhenTowerSpawned);
+		}
+
+	}
+
+	IEnumerator AttachButtonWhenTowerSpawned(){
+		yield return new WaitForSeconds(spawnDuration);
+		// Attach upgrade button now that the tower has spawned
+		AttachUpgradeButtonToTower();
 	}
 
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
 		isActive = true;
+		// Attach upgrade button now that the tower has spawned
+		AttachUpgradeButtonToTower();
 	}
 
 	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
@@ -156,8 +176,6 @@ public class TowerSpawn : NetworkBehaviour {
 		}
 		isBuildingTower = false;
 
-		// Attach upgrade button now that the tower has spawned
-		AttachUpgradeButtonToTower();
 	}
 
 	void AttachUpgradeButtonToTower(){
@@ -165,12 +183,6 @@ public class TowerSpawn : NetworkBehaviour {
 		upgradeButtonPos.y -= 30;
 		upgradeButton = (GameObject)Instantiate(upgradeButtonPrefab, upgradeButtonPos, Quaternion.identity);
 		upgradeButton.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-
 		upgradeButton.GetComponent<UpgradeTower>().tower = gameObject;
 	}
-//
-//	public void AddTowerController(TouchScript.TouchTest tt) {
-//		touchTest = tt;
-//	}
-
 }
