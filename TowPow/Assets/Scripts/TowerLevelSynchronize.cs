@@ -17,19 +17,19 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 	[SyncVar (hook = "BlackLevelUp")]
 	public int towerBlackLevel = 1;
 
-	public void LevelUp(string towerName){
-		if (towerName == "red") {
-			towerRedLevel += 1;
-		} else if (towerName == "blue") {
-			towerBlueLevel += 1;
-		} else if (towerName == "white") {
-			towerWhiteLevel += 1;
-		} else if (towerName == "black") {
-			towerBlackLevel += 1;
-		} else {
-			Debug.Log ("Invalid tower upgrade name " + towerName);
-		}
-	}
+//	public void LevelUp(string towerName){
+//		if (towerName == "red") {
+//			towerRedLevel += 1;
+//		} else if (towerName == "blue") {
+//			towerBlueLevel += 1;
+//		} else if (towerName == "white") {
+//			towerWhiteLevel += 1;
+//		} else if (towerName == "black") {
+//			towerBlackLevel += 1;
+//		} else {
+//			Debug.Log ("Invalid tower upgrade name " + towerName);
+//		}
+//	}
 
 	void RedLevelUp(int level) {
 		towerRedLevel = level;
