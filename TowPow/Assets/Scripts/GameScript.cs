@@ -12,12 +12,9 @@ public class GameScript : NetworkBehaviour {
 
     public Slider HealthSlider;
     public Text HealthText;
+    private spawnEnemy enemySpawner;
 
     public int creepsPerWave;
-
-//	public SyncListInt towerLevels;
-//
-//	public List<string> towerTypes = new List<string>();
 
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
@@ -41,26 +38,19 @@ public class GameScript : NetworkBehaviour {
 
     public bool GameStarted = false;
 
+    [Space(10)]
+    [Header("Arcade Mode")]
+    public bool ArcadeModeStarted = false;
+    public int ArcadeStartAmount = 5;
+    public int ArcadeMultiplier = 2;
 
-	void Awake() {
+    void Awake() {
 		PlayerHealth = PlayerStartingHealth;
-//		if (isServer) {
-//			for (int i = 0; i < 4; i++) {
-//				towerLevels.Add (1);
-//			}
-//		}
-//		towerTypes.Add ("black");
-//		towerTypes.Add ("blue");
-//		towerTypes.Add ("red");
-//		towerTypes.Add ("white");
-	}
+        enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
+    }
+    
 
-	void Start() {
-	
-	}
-
-	IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
-		spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
+    IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
@@ -75,7 +65,12 @@ public class GameScript : NetworkBehaviour {
        * TODO: Make prettier!
        */
 
-        if (isServer && Input.GetKeyUp(KeyCode.S))
+        if (isServer && Input.GetKeyUp(KeyCode.A))
+        {
+            ArcadeModeStarted = true;
+            ArcadeSpawn(ArcadeStartAmount);
+        }
+        else if (isServer && Input.GetKeyUp(KeyCode.S))
 
         {
             GameStarted = true;
@@ -138,23 +133,34 @@ public class GameScript : NetworkBehaviour {
         }
         //Reset game values
         GameStarted = false;
+        ArcadeModeStarted = false;
         waveNr = 0;
         waveIsRunning = false;
         GameOver = false;
-        //killCounter = 0;
-        //moneyCounter = 0;
+        killCounter = 0;
+        moneyCounter = 0;
         PlayerHealth = PlayerStartingHealth;
-        //Update GUI as well
-
-
-        //GameObject.Find("target").GetComponent<OnEnemyReachGoal>().HealthSliderValue = PlayerStartingHealth;
     }
 
+    void ArcadeSpawn(int newEnemies)
+    {
+        
+        //spawnEnemy enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
+        for (int i = 0; i < newEnemies; i++)
+        {
+            enemySpawner.spawnSingleEnemy();
+        }
+    }
     void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
 		KillText.text = kills.ToString();
+        if (ArcadeModeStarted)
+        {
+            //spawn new enemies.
+            ArcadeSpawn(ArcadeMultiplier);
+        }
 	}
 	void OnMoneyChange(int money){
 		MoneyText.text = money.ToString();
