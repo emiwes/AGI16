@@ -60,8 +60,9 @@ namespace TouchScript
 
 		private void touchesBeganHandler(object sender, TouchEventArgs e) {
 			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
-				return; 
+				return;
 			}
+				
 
 			foreach (var point in e.Touches) {
 //				Debug.Log ("pointHit: " + point.Hit);
@@ -92,6 +93,13 @@ namespace TouchScript
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 16f));
 			spawnPosition.y = 16f;
 
+			// UGLY HACK FOR TESTING WITHOUT PIXELSENSE
+			if (tags.HasTag("Mouse")) {
+				if(Input.GetKey(KeyCode.D)) {
+					tags = new Tags("red");
+				}
+			}
+
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
@@ -100,8 +108,9 @@ namespace TouchScript
 					break;
 				}
 			}
+
 			if(towerTag == null) {
-				if (tags.HasTag ("Touch")) {
+				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
 					PointerEventData ped = new PointerEventData (null);
 					ped.position = position;
 					List<RaycastResult> results = new List<RaycastResult> ();

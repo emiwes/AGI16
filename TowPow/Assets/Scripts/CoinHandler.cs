@@ -13,6 +13,11 @@ public class CoinHandler : NetworkBehaviour {
 		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter += 10;
 	}
 
+	[Command]
+	public void CmdDecrementMoney(int cash){
+		GameObject.Find ("GameHandler").GetComponent<GameScript> ().moneyCounter -= cash;
+	}
+
 	public void DestroyCoin (GameObject coin){
 		Destroy (coin);
 	}

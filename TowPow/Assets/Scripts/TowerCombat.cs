@@ -3,7 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
+
 public class TowerCombat : NetworkBehaviour {
+
+//	[System.Serializable]
+	public struct TowerLevelInfo {
+		public int level;
+		public float damage;
+//		public float range;
+		public float speed;
+		public int costToUpgrade;
+
+		public TowerLevelInfo(int l, float d, float s, int c){
+			level = l;
+			damage = d;
+			speed = s;
+			costToUpgrade = c;
+		}
+	}
+	
+	public List<TowerLevelInfo> levelInfo = new List<TowerLevelInfo>();
+
 	public TowerLevelSynchronize towerLevelSynchronize;
 
 	public List<GameObject> nearbyEnemies = new List<GameObject>();
@@ -23,11 +43,15 @@ public class TowerCombat : NetworkBehaviour {
 	private AudioSource source;
 
 	void Start() {
+		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
+		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.7f, 200));
+		levelInfo.Add (new TowerLevelInfo (3, 30f, 1.0f, 350));
+
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
 		towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize>();
-		SyncTowerLevel ();
+		SetLevel (level);
 	}
 
 	void Awake() {
@@ -116,10 +140,17 @@ public class TowerCombat : NetworkBehaviour {
 
 	public void LevelUp(){
 		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
+		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (levelInfo [level-1].costToUpgrade);
 		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
 	}
 
-	public void SyncTowerLevel() {
-		level = towerLevelSynchronize.GetLevel (gameObject.tag);
+	public void SetLevel(int newLevel) {
+		level = newLevel;
+		towerDamage = levelInfo [level - 1].damage;
+		shootingSpeed = levelInfo [level - 1].speed;
+
+		Debug.Log ("Tower level set to " + level);
+		Debug.Log ("Tower speed set to " + shootingSpeed);
+		Debug.Log ("Tower damage set to " + towerDamage);
 	}
 }

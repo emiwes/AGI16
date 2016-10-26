@@ -5,8 +5,10 @@ public class UpgradeTower : MonoBehaviour {
 	public GameObject tower;
 	private TowerSpawn towerSpawn;
 	private TowerCombat towerCombat;
+	public GameScript gameScript;
 
 	void Start () {
+		gameScript = GameObject.Find ("GameHandler").GetComponent<GameScript>();
 		towerSpawn = tower.GetComponent<TowerSpawn>();
 		towerCombat = tower.GetComponent<TowerCombat>();
 	}
@@ -20,7 +22,16 @@ public class UpgradeTower : MonoBehaviour {
 	}
 
 	public void Upgrade(){
-		towerCombat.LevelUp ();
+		int maxLevel = towerCombat.levelInfo.Count;
+
+		if (towerCombat.level == maxLevel) {
+			return;
+		}
+
+		if (gameScript.moneyCounter >= towerCombat.levelInfo [towerCombat.level - 1].costToUpgrade) {
+			
+			towerCombat.LevelUp ();
+		} 
 	}
 
 
