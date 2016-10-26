@@ -5,7 +5,11 @@ public class ProjectileDamage : MonoBehaviour {
 
 	public AudioClip hitSound;
 	private AudioSource source;
-	public float damage;
+	public float damage = 30;
+	public float damageOverTime = 0;
+	public float speedMultiplier = 1;
+	public float speedOverTime = 0;
+	public Material morphEnemyToMaterial;
 
 	void Awake(){
 		source = gameObject.GetComponent<AudioSource> ();
@@ -13,7 +17,8 @@ public class ProjectileDamage : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
-			other.gameObject.GetComponent<EnemyCombat> ().takeDamage(damage);
+			// other.gameObject.GetComponent<EnemyCombat> ().takeDamage(damage);
+			other.gameObject.GetComponent<EnemyCombat> ().HandleIncomingProjectile(this);
             
             //if it has trailing smoke remove it after the removal of the projectile
             if (gameObject.transform.FindChild("movingSmoke"))

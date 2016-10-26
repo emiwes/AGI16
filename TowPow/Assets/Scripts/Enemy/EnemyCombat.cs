@@ -18,6 +18,9 @@ public class EnemyCombat : NetworkBehaviour {
 	private float volHighRange = .5f;
 
 	private GameObject localPlayer;
+	private float initialEnemySpeed;
+	private Material initialMaterial;
+	private SkinnedMeshRenderer smr;
 
 	void Start () {
 		HPSlider.maxValue = health;
@@ -28,6 +31,67 @@ public class EnemyCombat : NetworkBehaviour {
 
 	void Awake() {
 		source = GetComponent<AudioSource>();
+
+		// Save the initial speed of the enemy
+		initialEnemySpeed = GetComponent<NavMeshAgent>().speed;
+
+		// Get the SkinnedMeshRenderer of the enemy
+		smr = transform.FindChild("Pirate").gameObject.GetComponent<SkinnedMeshRenderer>();
+
+		// Save the initial material of the pirate
+		initialMaterial = smr.material;
+		Debug.Log(initialMaterial);
+		
+		// initialEnemySpeed = GetComponent<Material>().mainTexture;
+	}
+
+
+	public void HandleIncomingProjectile(ProjectileDamage projectile){
+		ProjectileDamage p = projectile;
+		
+		if(p.damage != 0){
+			// Take damage from projectile
+			takeDamage(p.damage);
+		}
+
+		
+		if(p.speedMultiplier != 1){
+			// Slow down enemy
+			StartCoroutine(AffectOverSeconds(p.speedOverTime, 0, p.speedMultiplier));
+		}
+
+		if(p.morphEnemyToMaterial != null){
+			// Change the material to the material of the arrow
+			smr.material = p.morphEnemyToMaterial;
+		}
+
+	}
+
+	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1) {
+		float elapsedTime = 0;
+
+		// The NavMeshAgent of this enemy
+		NavMeshAgent nma = gameObject.GetComponent<NavMeshAgent>();
+
+		// The most slowed the enemy will be, which is right when the projectile hits
+		float peakSlow = -1;
+		if(speedMultiplier != -1){
+			peakSlow = initialEnemySpeed * speedMultiplier;
+		}
+
+		while (elapsedTime < time) {
+			// If we have a speed multiplier, change the speed over time
+			if(speedMultiplier != -1){
+				nma.speed = peakSlow + (initialEnemySpeed - (peakSlow)) * (elapsedTime/time);
+			}
+
+			elapsedTime += Time.deltaTime;
+			yield return new WaitForEndOfFrame ();
+		}
+
+		// Reset the enemy speed to the normal value
+		nma.speed = initialEnemySpeed;
+		smr.material = initialMaterial;
 	}
 
 	public void takeDamage (float damage) {
