@@ -52,23 +52,23 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 
 	void SyncTowers(string tag) {
 		GameObject[] towers = GameObject.FindGameObjectsWithTag (tag);
-		int level;
 		foreach (GameObject tower in towers) {
+			tower.GetComponent<TowerCombat> ().SyncTowerLevel ();
+		}
+	}
 
-			if (tag == "red") {
-				 level = towerRedLevel;
-			} else if (tag == "blue") {
-				level = towerBlueLevel;
-			} else if (tag == "white") {
-				level = towerWhiteLevel;
-			} else if (tag == "black") {
-				level = towerBlackLevel;
-			} else {
-				level = 0;
-				Debug.Log ("Couldn't get level for " + tag);
-			}
-			
-			tower.GetComponent<TowerCombat> ().SetLevel (level);
+	public int GetLevel(string towerTag) {
+		if (towerTag == "red") {
+			return towerRedLevel;
+		} else if (towerTag == "blue") {
+			return towerBlueLevel;
+		} else if (towerTag == "white") {
+			return towerWhiteLevel;
+		} else if (towerTag == "black") {
+			return towerBlackLevel;
+		} else {
+			Debug.Log ("Couldn't get level for " + towerTag);
+			return 0;
 		}
 	}
 }

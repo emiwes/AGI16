@@ -44,14 +44,14 @@ public class TowerCombat : NetworkBehaviour {
 
 	void Start() {
 		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
-		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.7f, 200));
+		levelInfo.Add (new TowerLevelInfo (2, 20f, 100f, 200));
 		levelInfo.Add (new TowerLevelInfo (3, 30f, 1.0f, 350));
 
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
 		towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize>();
-		SetLevel (level);
+		SyncTowerLevel ();
 	}
 
 	void Awake() {
@@ -144,8 +144,8 @@ public class TowerCombat : NetworkBehaviour {
 		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
 	}
 
-	public void SetLevel(int newLevel) {
-		level = newLevel;
+	public void SyncTowerLevel() {
+		level = towerLevelSynchronize.GetLevel (gameObject.tag);
 		towerDamage = levelInfo [level - 1].damage;
 		shootingSpeed = levelInfo [level - 1].speed;
 
