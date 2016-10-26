@@ -7,7 +7,7 @@ public class TowerHandler : NetworkBehaviour {
 	[Command]
 	public void CmdLevelUp(string towerTag){
 		TowerLevelSynchronize towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize> ();
-
+		Debug.Log ("CmdLevelUp called");
 		if (towerTag == "red") {
 			towerLevelSynchronize.towerRedLevel += 1;
 		} else if (towerTag == "blue") {

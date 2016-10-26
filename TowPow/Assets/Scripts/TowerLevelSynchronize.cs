@@ -45,6 +45,7 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 		SyncTowers ("black");
 	}
 	void WhiteLevelUp(int level) {
+		Debug.Log ("setting white level to: " + level);
 		towerWhiteLevel = level;
 		SyncTowers ("white");
 	}
