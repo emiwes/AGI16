@@ -67,6 +67,8 @@ public class EnemyCombat : NetworkBehaviour {
 
 	}
 
+	// Affects the enemy over time. For instance, slow or damage it over time.
+	// Damage over time currently not done
 	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1) {
 		float elapsedTime = 0;
 
@@ -95,16 +97,11 @@ public class EnemyCombat : NetworkBehaviour {
 	}
 
 	public void takeDamage (float damage) {
-		
 		if (isServer && health > 0) {
 			health -= damage;
 			if (health <= 0) {
-				//dead = true;
-
 				Destroy (HPSlider.gameObject);
 				GameObject.Find ("GameHandler").GetComponent<GameScript> ().killCounter += 1;
-
-
 			}
 		}
 	}

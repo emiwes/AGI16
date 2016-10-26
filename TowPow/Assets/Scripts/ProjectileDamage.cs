@@ -17,7 +17,7 @@ public class ProjectileDamage : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
-			// other.gameObject.GetComponent<EnemyCombat> ().takeDamage(damage);
+			// Do the projectile damage/effects on the target
 			other.gameObject.GetComponent<EnemyCombat> ().HandleIncomingProjectile(this);
             
             //if it has trailing smoke remove it after the removal of the projectile
