@@ -59,7 +59,7 @@ namespace TouchScript
 		}
 
 		private void touchesBeganHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
 				return; 
 			}
 
@@ -77,7 +77,7 @@ namespace TouchScript
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
 				return; 
 			}
 
@@ -101,7 +101,7 @@ namespace TouchScript
 				}
 			}
 			if(towerTag == null) {
-				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
+				if (tags.HasTag ("Touch")) {
 					PointerEventData ped = new PointerEventData (null);
 					ped.position = position;
 					List<RaycastResult> results = new List<RaycastResult> ();
