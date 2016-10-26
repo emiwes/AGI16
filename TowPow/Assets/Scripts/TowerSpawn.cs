@@ -12,6 +12,7 @@ public class TowerSpawn : MonoBehaviour {
     public GameObject TowerCanvasPrefab;
     //public GameObject TowerPrefab;
 
+    private TerrainSurface terrainScript;
 
     private GameObject towerCanvas;
 	private Camera topCamera;
@@ -44,6 +45,9 @@ public class TowerSpawn : MonoBehaviour {
 		isActive = false;
 		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
 
+        //get script on terrain
+        terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
+
         if (!DeterminePlayerType.isVive){
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
@@ -61,9 +65,26 @@ public class TowerSpawn : MonoBehaviour {
         towerCanvas.transform.SetParent(gameObject.transform);
 
         //start spawn tower
-        Debug.Log(gameObject.transform.position);
-        Spawn ();
-	}
+        
+        //Check if valid placement otherwise add UI element.
+        //Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(gameObject.transform.position));
+        if (terrainScript.validTowerPlacement(transform.position))
+        {
+            Spawn();
+        }
+        else
+        {
+            //Debug.Log("invalid Placement of tower");
+            if (!DeterminePlayerType.isVive)
+            {
+                buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+                buildProgress.transform.SetParent(towerCanvas.transform);
+
+                StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
+            }
+            
+        }
+    }
 
 	void Update () {
 		if(despawning) {
@@ -163,8 +184,10 @@ public class TowerSpawn : MonoBehaviour {
 	IEnumerator FillBuildProgress(float time, Color startColor, Color endColor, float startValue, float endValue) {
 		Image image = buildProgress.GetComponent<Image> ();
 		image.fillAmount = startValue;
-		image.color = startColor;
-		Debug.Log ("FillBuildProgress");
+        startColor = image.color;
+        //image.color = startColor;
+        endColor = (startColor == Color.red) ? Color.red : Color.clear;
+		//Debug.Log ("FillBuildProgress");
 		float elapsedTime = 0f;
 		while (elapsedTime < time) {
 			image.fillAmount =  Mathf.Lerp(startValue, endValue, elapsedTime/time);
@@ -176,9 +199,30 @@ public class TowerSpawn : MonoBehaviour {
 		image.fillAmount = endValue;
 		isBuildingTower = false;
 	}
-//
-//	public void AddTowerController(TouchScript.TouchTest tt) {
-//		touchTest = tt;
-//	}
+
+    IEnumerator AlertBuildProgress(float blinkPeriod, Color startColor, Color endColor)
+    {
+        Image image = buildProgress.GetComponent<Image>();
+        image.fillAmount = 1;
+        
+        float elapsedTime = 0f;
+        while (true)
+        {
+            if (elapsedTime >= blinkPeriod)
+                elapsedTime = 0f;
+
+            if (elapsedTime <= (blinkPeriod/2))
+                image.color = Color.Lerp(startColor, endColor, (elapsedTime / (blinkPeriod/2)));
+            else
+                image.color = Color.Lerp(endColor, startColor, ((elapsedTime- (blinkPeriod / 2)) / (blinkPeriod/2)));
+
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+    //
+    //	public void AddTowerController(TouchScript.TouchTest tt) {
+    //		touchTest = tt;
+    //	}
 
 }

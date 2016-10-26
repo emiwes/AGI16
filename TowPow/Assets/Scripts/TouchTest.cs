@@ -24,19 +24,35 @@ namespace TouchScript
 
 		private Camera topCamera;
 		private GraphicRaycaster hudCanvasRaycaster;
-        private TerrainSurface terrainScript;
+        
 
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
+
+        void Update()
+        {
+            /*if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = topCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    //draw invisible ray cast/vector
+                    Debug.DrawLine(ray.origin, hit.point);
+                    //log hit area to the console
+                    Debug.Log(hit.point);
+
+                }
+                Debug.Log("World point " + hit.point);
+                CmdInstantiateTower("blue", hit.point, Quaternion.identity);
+            }*/
+        }
 
 		void Start(){
 			towerTypes.Add(RedPrefab);
 			towerTypes.Add(WhitePrefab);
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
-
-            //get script on terrain
-            terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
 
             if (!DeterminePlayerType.isVive) {
 				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
@@ -176,12 +192,6 @@ namespace TouchScript
 			// Figure out what towertype we are dealing with
 			GameObject towerPrefab = null;
 
-            //check if valid placement
-            
-
-            
-
-			
 			foreach(GameObject tp in towerTypes) {
 				if(tp.tag == tag) {
 					towerPrefab = tp;
@@ -193,13 +203,11 @@ namespace TouchScript
 				return;
 			}
 
-            Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(position));
-            if (terrainScript.validTowerPlacement(position))
-            {
-                GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-                NetworkServer.Spawn(t);
-            }
-		}
+            
+            
+            GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
+            NetworkServer.Spawn(t);
+     		}
 			
 		public void DestroyMe(NetworkInstanceId id, float time) {
 			StartCoroutine (DestroyTowerInSeconds (id, time));
