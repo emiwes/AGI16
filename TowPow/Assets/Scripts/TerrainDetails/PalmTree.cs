@@ -44,7 +44,7 @@ public class PalmTree: MonoBehaviour {
 			windOffset [i] += speed [i];
 		}
 		//windOffset = windOffset * 0.8f;
-		Debug.Log (speed);
+		// Debug.Log (speed);
 		return windOffset;
 	}
 
