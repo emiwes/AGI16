@@ -44,8 +44,8 @@ public class TowerCombat : NetworkBehaviour {
 
 	void Start() {
 		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
-		levelInfo.Add (new TowerLevelInfo (2, 20f, 100f, 200));
-		levelInfo.Add (new TowerLevelInfo (3, 30f, 1.0f, 350));
+		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
+		levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
 
 		shootingModule = transform.Find ("ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
