@@ -7,7 +7,7 @@ public class TowerTriggerActions : MonoBehaviour {
 	TowerCombat towerCombat;
 
 	void Start() {
-		tower = gameObject.transform.parent.gameObject;
+		tower = gameObject.transform.parent.transform.parent.gameObject;
 		towerCombat = tower.GetComponent<TowerCombat> ();
 	}
 

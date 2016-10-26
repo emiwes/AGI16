@@ -18,7 +18,7 @@ public class TowerCombat : MonoBehaviour {
 	private AudioSource source;
 
 	void Start() {
-		shootingModule = transform.Find ("ShootingModule").gameObject;
+		shootingModule = transform.Find ("Model/ShootingModule").gameObject;
 		//InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
 		shootingRangeIndicator.SetActive(true);
 		// transform.Find("ShootingRadiusIndicator").gameObject.SetActive(true);

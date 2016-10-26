@@ -9,6 +9,11 @@ public class TowerSpawn : MonoBehaviour {
 	public float spawnDuration = 2f;
 	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
+    public GameObject TowerCanvasPrefab;
+    //public GameObject TowerPrefab;
+
+
+    private GameObject towerCanvas;
 	private Camera topCamera;
 
 	public bool despawning = false;
@@ -16,7 +21,6 @@ public class TowerSpawn : MonoBehaviour {
 	private float despawnTime = 0.5f;
 
 	private GameObject buildProgress;
-    private GameObject towerCanvas;
 
     private bool isBuildingTower = false;
 
@@ -26,6 +30,15 @@ public class TowerSpawn : MonoBehaviour {
 	private IEnumerator buildTowerOverTimeEnumerator;
 
 	private TouchScript.TouchTest touchTest;
+
+    void Awake()
+    {
+        if (gameObject.transform.localScale != Vector3.one)
+        {
+            gameObject.transform.localScale = Vector3.one;
+            Debug.LogWarning("You tried to change the scale on towers the wrong way.");
+        }
+    }
 
 	void Start () {
 		isActive = false;
@@ -41,8 +54,15 @@ public class TowerSpawn : MonoBehaviour {
         Canvas c = towerCanvas.AddComponent<Canvas>();
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         towerCanvas.AddComponent<CanvasGroup>();
-        towerCanvas.AddComponent<GraphicRaycaster>();
+        CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
+        //scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
 
+        towerCanvas.AddComponent<GraphicRaycaster>();
+        RectTransform rectT = towerCanvas.GetComponent<RectTransform>();
+        rectT.sizeDelta = new Vector2(0.5f, 0.5f);
+        //rectT.localScale = new Vector3 (1 / (transform.localScale.x), 1 / (transform.localScale.y), 1 / (transform.localScale.z));
+
+        //Debug.Log(rectT.localScale);
         towerCanvas.transform.SetParent(gameObject.transform);
         Spawn ();
 	}
