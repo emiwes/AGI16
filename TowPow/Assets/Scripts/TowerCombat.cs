@@ -55,7 +55,11 @@ public class TowerCombat : MonoBehaviour {
 	public void updateClosestEnemy(){
 		// Check if any enemies have been killed since last iteration, remove null references. 
 		checkForDead ();
+
+        if (nearbyEnemies[0] == null) nearbyEnemies.RemoveAt(0);// why need double?
+
         if (nearbyEnemies.Count == 0) return;
+        
 
 		float minDist = Vector3.Distance(transform.position, nearbyEnemies[0].transform.position);
 		GameObject closestInList = nearbyEnemies[0];
