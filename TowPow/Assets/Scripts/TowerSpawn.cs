@@ -55,15 +55,13 @@ public class TowerSpawn : MonoBehaviour {
         c.renderMode = RenderMode.ScreenSpaceOverlay;
         towerCanvas.AddComponent<CanvasGroup>();
         CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
-        //scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-
         towerCanvas.AddComponent<GraphicRaycaster>();
-        RectTransform rectT = towerCanvas.GetComponent<RectTransform>();
-        rectT.sizeDelta = new Vector2(0.5f, 0.5f);
-        //rectT.localScale = new Vector3 (1 / (transform.localScale.x), 1 / (transform.localScale.y), 1 / (transform.localScale.z));
 
-        //Debug.Log(rectT.localScale);
+        //set parent
         towerCanvas.transform.SetParent(gameObject.transform);
+
+        //start spawn tower
+        Debug.Log(gameObject.transform.position);
         Spawn ();
 	}
 
@@ -108,8 +106,8 @@ public class TowerSpawn : MonoBehaviour {
 
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
 
-		//Destroy buildProgress
-		Destroy(buildProgress, serverDespawnTime);
+		//Destroy buildProgress Not needed destroys when tower destroys
+		//Destroy(buildProgress, serverDespawnTime);
 	}
 
 	void Spawn() {
