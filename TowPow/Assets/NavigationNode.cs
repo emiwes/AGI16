@@ -18,22 +18,25 @@ public class NavigationNode : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        //change to one of the childs of the node
-        // Get EnemyMovmenetScript
-        EnemyMovement em = col.gameObject.GetComponent<EnemyMovement>();
-        //check if it is the target Node of the enemy
-        if (transform == em.target)
-        {
-            //Correct Node
-            //changes target to a random of the childs
-            int RandomChild = Random.Range(0, childs.Count);
-            em.target = childs[RandomChild];
-            //Debug.Log("entered rigth node");
-        }
-        /*else
-        {
-            Debug.Log("entered wrong node");
-        }*/
+
+		if (col.gameObject.tag == "Enemy") {
+			
+			//change to one of the childs of the node
+			// Get EnemyMovmenetScript
+			EnemyMovement em = col.gameObject.GetComponent<EnemyMovement> ();
+			//check if it is the target Node of the enemy
+			if (transform == em.target) {
+				//Correct Node
+				//changes target to a random of the childs
+				int RandomChild = Random.Range (0, childs.Count);
+				em.target = childs [RandomChild];
+				//Debug.Log("entered rigth node");
+			}
+			/*else
+	        {
+	            Debug.Log("entered wrong node");
+	        }*/
+		}
 
         
     }

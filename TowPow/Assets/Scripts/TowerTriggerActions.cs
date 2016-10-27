@@ -12,6 +12,7 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
+		Debug.Log (other.gameObject.name);
         if ((!towerCombat.nearbyEnemies.Contains(other.gameObject)) && (other.gameObject.tag == "Enemy"))
         {
             towerCombat.addNearbyEnemy(other.gameObject);
@@ -19,7 +20,9 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
-		towerCombat.updateClosestEnemy ();
+		if (towerCombat.nearbyEnemies.Count > 0) {
+			towerCombat.updateClosestEnemy ();
+		}
 	}
 
 	void OnTriggerExit(Collider other) {
