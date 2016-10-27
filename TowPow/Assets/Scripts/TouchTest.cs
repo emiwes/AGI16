@@ -167,7 +167,11 @@ namespace TouchScript
 				
 		}
 
-		void TouchEnd(Vector2 position, Tags tags) {
+        void TouchMove(Vector2 position, Tags tags)
+        {
+            Debug.Log("Something moves");
+        }
+        void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("TouchEnd");
 
 			string towerTag = null;
