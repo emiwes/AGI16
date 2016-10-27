@@ -66,6 +66,7 @@ namespace TouchScript
 			{
 				TouchManager.Instance.TouchesBegan += touchesBeganHandler;
 				TouchManager.Instance.TouchesEnded += touchesEndedHandler;
+                TouchManager.Instance.TouchesMoved += touchesMoveHandler;
 			}
 		}
 
@@ -84,19 +85,24 @@ namespace TouchScript
 			}
 
 			foreach (var point in e.Touches) {
-//				Debug.Log ("pointHit: " + point.Hit);
-//				Debug.Log ("pointID: " + point.Id);
-//				Debug.Log ("pointSource: " + point.InputSource);
-//				Debug.Log ("pointProps: " + point.Properties.Keys);
-//				Debug.Log ("pointTags: " + point.Tags.HasTag("blue"));
-//				Debug.Log ("pointTarget: " + point.Target);
-//				Debug.Log ("sender: " + sender);
-//				Debug.Log ("e: " + e);
 				TouchBegin(point.Position, point.Tags);
 			}
 		}
 
-		private void touchesEndedHandler(object sender, TouchEventArgs e) {
+        private void touchesMoveHandler(object sender, TouchEventArgs e)
+        {
+            if (DeterminePlayerType.isVive)
+            {
+                return;
+            }
+
+            foreach (var point in e.Touches)
+            {
+                TouchMove(point.Position, point.Tags);
+            }
+        }
+
+        private void touchesEndedHandler(object sender, TouchEventArgs e) {
 			if (DeterminePlayerType.isVive) { 
 				return; 
 			}
