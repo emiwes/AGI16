@@ -50,6 +50,8 @@ public class ArrowManager : MonoBehaviour {
 	private void PullString (){
 		if (isAttached) {
 
+			AimBow ();
+
             Vector3 direction = stringStartPoint.transform.position - trackedObj.transform.position;
             float dist = direction.magnitude;
 
@@ -82,7 +84,9 @@ public class ArrowManager : MonoBehaviour {
 
 	// TODO(Arvod): Test this!
 	private void AimBow() {
-		bow.transform.rotation = Quaternion.LookRotation(stringAttachPoint.transform.position - bow.transform.position, bow.transform.up);
+		bow.transform.LookAt (transform.position);
+		bow.transform.forward *= -1;
+		//bow.transform.rotation = Quaternion.LookRotation(stringAttachPoint.transform.position - trackedObj.transform.position, trackedObj.transform.up);
 	}
 
 	private void Fire(){
