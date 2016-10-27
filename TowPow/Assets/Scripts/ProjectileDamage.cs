@@ -27,8 +27,18 @@ public class ProjectileDamage : MonoBehaviour {
 			if(areaOfEffectRadius > 0){
 				// Instantiate the AoE prefab (it grows by itself)
 				GameObject projectileAoe = (GameObject)Instantiate(projectileAoePrefab, other.transform.position, Quaternion.identity);
-				projectileAoe.GetComponent<SphereScript> ().sphereRadius = areaOfEffectRadius;
-				projectileAoe.GetComponent<SphereScript>().spawnedByProjectile = gameObject;
+				SphereScript ss = projectileAoe.GetComponent<SphereScript> ();
+				ss.sphereRadius = areaOfEffectRadius;
+				ss.spawnedByProjectile = gameObject;
+				ss.damage = damage;
+				ss.damageOverTimeSeconds = damageOverTimeSeconds;
+				ss.speedMultiplier = speedMultiplier;
+				ss.speedOverTimeSeconds = speedOverTimeSeconds;
+				ss.morphEnemyToMaterial = morphEnemyToMaterial;
+				ss.areaOfEffectRadius = areaOfEffectRadius;
+				ss.areaOfEffectExpandTime = areaOfEffectExpandTime;
+				ss.projectileAoePrefab = projectileAoePrefab;
+
 			} else{
 				// Otherwise, do the projectile damage/effects on the target
 				other.gameObject.GetComponent<EnemyCombat> ().HandleIncomingProjectile(this);

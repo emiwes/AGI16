@@ -68,7 +68,8 @@ public class EnemyCombat : NetworkBehaviour {
 		// Vector3 closestPoint = aoeObject.GetComponent<SphereCollider>().ClosestPointOnBounds(explosionPos);
 		
 		SphereScript ss = aoeObject.GetComponent<SphereScript>();
-		ProjectileDamage pd = ss.spawnedByProjectile.GetComponent<ProjectileDamage>();
+		//Debug.Log (ss.spawnedByProjectile);
+		//ProjectileDamage pd = ss.spawnedByProjectile.GetComponent<ProjectileDamage>();
 
 		// Distance form the center of the AoE to the enemy
 		float distFromCenter = Vector3.Distance(aoeObject.transform.position, transform.position);
@@ -78,24 +79,27 @@ public class EnemyCombat : NetworkBehaviour {
 		Debug.Log("AoE multiplier: " + effectMultiplier);
 
 		// Calculate the damage and effects with the effect multiplier
-		float aoeDmg = pd.damage * effectMultiplier;
-		float aoeSlow = pd.speedMultiplier * effectMultiplier;
-		float slowTime = pd.speedOverTimeSeconds * effectMultiplier;
+		float aoeDmg = ss.damage * effectMultiplier;
+		float aoeSlow = ss.speedMultiplier * effectMultiplier;
+		float slowTime = ss.speedOverTimeSeconds * effectMultiplier;
 
 		// Take direct damage
 		takeDamage(aoeDmg);
 
-		if(pd.morphEnemyToMaterial != null){
+		if(ss.morphEnemyToMaterial != null){
 			// Change the material to the material of the arrow
-			smr.material = pd.morphEnemyToMaterial;
+			smr.material = ss.morphEnemyToMaterial;
+			Debug.Log ("Should change material");
 		}
 
 		// Slow over time
+		Debug.Log ("Starting slow over time, aweSlow: " + aoeSlow + " over " + slowTime);
 		StartCoroutine(AffectOverSeconds(slowTime, 0, aoeSlow));
 
 		// Unfortunately, right now we can't both slow and damage over time with one method call
 		// so we have to do the DoT separately
-		StartCoroutine(AffectOverSeconds(pd.damageOverTimeSeconds, pd.damage));
+		//Debug.Log ("Starting damage over time");
+		//StartCoroutine(AffectOverSeconds(pd.damageOverTimeSeconds, pd.damage));
 
 	}
 

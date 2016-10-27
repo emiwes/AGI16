@@ -6,6 +6,15 @@ public class SphereScript : MonoBehaviour {
 	public float sphereRadius = 1;
 	public GameObject spawnedByProjectile = null;
 
+	public float damage;
+	public float damageOverTimeSeconds;
+	public float speedMultiplier;
+	public float speedOverTimeSeconds;
+	public Material morphEnemyToMaterial;
+	public float areaOfEffectRadius;
+	public float areaOfEffectExpandTime;
+	public GameObject projectileAoePrefab;
+
 	// Use this for initialization
 	void Start () {
 		// GetComponent<SphereCollider>().radius = sphereRadius;
