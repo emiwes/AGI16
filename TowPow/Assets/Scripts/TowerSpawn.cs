@@ -17,7 +17,8 @@ public class TowerSpawn : MonoBehaviour {
     private GameObject towerCanvas;
 	private Camera topCamera;
 
-	public bool despawning = false;
+    public bool validPlacement;
+    public bool despawning = false;
 	private float despawnTimer;
 	private float despawnTime = 0.5f;
 
@@ -70,11 +71,13 @@ public class TowerSpawn : MonoBehaviour {
         //Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(gameObject.transform.position));
         if (terrainScript.validTowerPlacement(transform.position))
         {
+            validPlacement = true;
             Spawn();
         }
         else
         {
             //Debug.Log("invalid Placement of tower");
+            validPlacement = false;
             if (!DeterminePlayerType.isVive)
             {
                 buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
