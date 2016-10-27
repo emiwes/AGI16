@@ -125,6 +125,7 @@ public class TowerSpawn : MonoBehaviour {
             {
 				runningAlert = true;
 
+				towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint (transform.position);
 				towerPlacementAlert.SetActive (true);
                 StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
             }
@@ -265,7 +266,7 @@ public class TowerSpawn : MonoBehaviour {
 
     public void moveAlertTo(Vector3 newPos)
     {
-		towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(transform.position);
+		towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(newPos);
 		//buildProgress.transform.position = topCamera.WorldToScreenPoint(transform.position);
     	
 	}
