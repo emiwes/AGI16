@@ -6,7 +6,7 @@ public class PalmTree: MonoBehaviour {
 	Renderer renderer;
 
 	Vector3 speed;
-	float acc = 0.05f;
+	//float acc = 0.05f;
 
 	Vector4 wind;
 	float windForce;

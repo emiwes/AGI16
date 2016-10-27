@@ -13,13 +13,9 @@ public class OnEnemyReachGoal : MonoBehaviour {
     }
 
 	void OnTriggerEnter(Collider other) {
-        //if (!GameScriptRef)
-        //{
-        //    GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
-        //}
+
 		if (other.gameObject.tag == "Enemy") {
-			Destroy(other.gameObject);
-            GameScriptRef.EnemyReachedGoal();
+			GameScriptRef.EnemyReachedGoal(other.gameObject);
 		}
 	}
 

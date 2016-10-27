@@ -103,13 +103,14 @@ public class GameScript : NetworkBehaviour {
 		}
 	}
 
-    public void EnemyReachedGoal()
-    {
+    public void EnemyReachedGoal(GameObject enemy){
 
         //GameScriptRef.PlayerHealth -= 1;
         if ( isServer && PlayerHealth > 0)
         {
             PlayerHealth -= 1;
+			NetworkServer.Destroy(enemy);
+
             //Debug.Log("PlayerHealth: " + PlayerHealth);
             //update GUI
         }

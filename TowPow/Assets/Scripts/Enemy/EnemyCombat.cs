@@ -40,7 +40,6 @@ public class EnemyCombat : NetworkBehaviour {
 
 		// Save the initial material of the pirate
 		initialMaterial = smr.material;
-		Debug.Log(initialMaterial);
 		
 		// initialEnemySpeed = GetComponent<Material>().mainTexture;
 	}

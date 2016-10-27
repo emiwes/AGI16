@@ -106,7 +106,7 @@ public class TowerSpawn : NetworkBehaviour {
 		//SPAWN THE TOWER WITH PROGRESS
 		isBuildingTower = true;
 
-		Vector3 pos = gameObject.transform.position;
+		//Vector3 pos = gameObject.transform.position;
 //		pos.y = pos.y + 1.5f;
 		// GameObject indicator = (GameObject)Instantiate(shootingRadiusIndicator, pos, Quaternion.identity);
 		// indicator.transform.parent = gameObject.transform;
