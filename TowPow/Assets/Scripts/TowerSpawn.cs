@@ -184,10 +184,9 @@ public class TowerSpawn : MonoBehaviour {
 	IEnumerator FillBuildProgress(float time, Color startColor, Color endColor, float startValue, float endValue) {
 		Image image = buildProgress.GetComponent<Image> ();
 		image.fillAmount = startValue;
-        startColor = image.color;
-        //image.color = startColor;
-        endColor = (startColor == Color.red) ? Color.red : Color.clear;
-		//Debug.Log ("FillBuildProgress");
+        
+        image.color = startColor;
+        
 		float elapsedTime = 0f;
 		while (elapsedTime < time) {
 			image.fillAmount =  Mathf.Lerp(startValue, endValue, elapsedTime/time);
