@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
-public class OnEnemyReachGoal : NetworkBehaviour {
+public class OnEnemyReachGoal : MonoBehaviour {
 
 
     private GameScript GameScriptRef;
@@ -18,7 +17,7 @@ public class OnEnemyReachGoal : NetworkBehaviour {
         //{
         //    GameScriptRef = GameObject.Find("GameHandler").GetComponent<GameScript>();
         //}
-		if (isServer && other.gameObject.tag == "Enemy") {
+		if (other.gameObject.tag == "Enemy") {
 			Destroy(other.gameObject);
             GameScriptRef.EnemyReachedGoal();
 		}

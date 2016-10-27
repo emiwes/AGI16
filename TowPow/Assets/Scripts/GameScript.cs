@@ -107,7 +107,7 @@ public class GameScript : NetworkBehaviour {
     {
 
         //GameScriptRef.PlayerHealth -= 1;
-        if (PlayerHealth > 0)
+        if ( isServer && PlayerHealth > 0)
         {
             PlayerHealth -= 1;
             //Debug.Log("PlayerHealth: " + PlayerHealth);
