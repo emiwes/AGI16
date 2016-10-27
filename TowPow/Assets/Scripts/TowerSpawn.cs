@@ -78,13 +78,6 @@ public class TowerSpawn : MonoBehaviour {
         {
             //Debug.Log("invalid Placement of tower");
             validPlacement = false;
-            if (!DeterminePlayerType.isVive)
-            {
-                buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
-                buildProgress.transform.SetParent(towerCanvas.transform);
-
-                StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
-            }
             
         }
     }
@@ -99,7 +92,8 @@ public class TowerSpawn : MonoBehaviour {
 		}
         if (validPlacement)
         {
-            //Destroy old
+			Debug.Log ("ValidPlacment");
+			//Destroy old
             touchTest.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
             //spawn new
             Spawn();
@@ -108,7 +102,7 @@ public class TowerSpawn : MonoBehaviour {
         {
             if (!DeterminePlayerType.isVive && !runningAlert)
             {
-                runningAlert = false;
+                runningAlert = true;
                 buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
                 buildProgress.transform.SetParent(towerCanvas.transform);
 
