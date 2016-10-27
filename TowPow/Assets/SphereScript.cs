@@ -4,16 +4,19 @@ using System.Collections;
 public class SphereScript : MonoBehaviour {
 
 	public float sphereRadius = 1;
+	public GameObject spawnedByProjectile = null;
 
 	// Use this for initialization
 	void Start () {
 		// GetComponent<SphereCollider>().radius = sphereRadius;
-		StartCoroutine(GrowProjectileColliderOverSeconds(2.0f, gameObject, sphereRadius));
+		StartCoroutine(GrowProjectileColliderOverSeconds(spawnedByProjectile.GetComponent<ProjectileDamage>().areaOfEffectExpandTime, gameObject, sphereRadius));
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		// GetComponent<SphereCollider>().radius = sphereRadius;
+	void OnTriggerEnter (Collider other){
+		if (other.gameObject.tag == "Enemy"){
+			// Do the projectile damage/effects on the targets that collide with the AoE-collider
+			other.gameObject.GetComponent<EnemyCombat> ().AffectByAoE(gameObject);
+		}
 	}
 
 
@@ -23,7 +26,6 @@ public class SphereScript : MonoBehaviour {
 
 		while (elapsedTime < time) {
 			growingSphere.GetComponent<SphereCollider>().radius = endRadius * (elapsedTime/time);
-			Debug.Log (growingSphere.GetComponent<SphereCollider> ().radius);
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
@@ -32,6 +34,6 @@ public class SphereScript : MonoBehaviour {
 		growingSphere.GetComponent<SphereCollider>().radius = endRadius;
 
 		// Finally destroy the sphere when it has finished expanding
-		Destroy(gameObject);
+		Destroy(gameObject); // Comment out for eternal AoE (debugging)
 	}
 }
