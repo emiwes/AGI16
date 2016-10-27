@@ -32,13 +32,13 @@ public class ProjectileDamage : MonoBehaviour {
 				// SphereCollider aoeCollider = projectileAoe.AddComponent<SphereCollider>() as SphereCollider;
 				
 				// Get the SphereCollider of the AoE Prefab
-				SphereCollider aoeCollider = projectileAoe.GetComponent<SphereCollider>();
+				// SphereCollider aoeCollider = projectileAoe.GetComponent<SphereCollider>();
 				
 				// Set the initial radius of the collider
-				aoeCollider.radius = 0;
+				// aoeCollider.radius = 0;
 
 				// Grow the sphere over a set time
-				StartCoroutine(GrowProjectileColliderOverSeconds(1.0f, projectileAoe, areaOfEffectRadius));
+				StartCoroutine(GrowProjectileColliderOverSeconds(5.0f, projectileAoe, areaOfEffectRadius));
 			}
             
             //if it has trailing smoke remove it after the removal of the projectile
@@ -64,16 +64,17 @@ public class ProjectileDamage : MonoBehaviour {
 
 	IEnumerator GrowProjectileColliderOverSeconds(float time, GameObject go, float endRadius) {
 		float elapsedTime = 0;
+		GameObject growingSphere = go;
 
 		while (elapsedTime < time) {
-			go.GetComponent<SphereCollider>().radius = endRadius * (elapsedTime/time);
+			growingSphere.GetComponent<SphereCollider>().radius = endRadius * (elapsedTime/time);
 
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
 
 		// Set the radius to the final one without any weird decimals
-		go.GetComponent<SphereCollider>().radius = endRadius;
+		growingSphere.GetComponent<SphereCollider>().radius = endRadius;
 		
 	}
 }
