@@ -176,7 +176,61 @@ namespace TouchScript
         void TouchMove(Vector2 position, Tags tags)
         {
             Debug.Log("Something moves");
+
+            Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
+            spawnPosition.y = 10f;
+
+
+            string towerTag = null;
+            foreach (GameObject tp in towerTypes)
+            {
+                if (tags.HasTag(tp.tag))
+                {
+                    towerTag = tp.tag;
+                    break;
+                }
+            }
+            // Check if the tower is already placed and get the reference.
+            // Get first active tower sorted by tags.
+            GameObject[] activeTowers = GameObject.FindGameObjectsWithTag(towerTag);
+            GameObject activeTower = null;
+
+            if (activeTowers.Length > 0)
+            {
+                activeTower = activeTowers[0];
+            }
+
+
+            // Check if we found anything
+            if (activeTower == null)
+            {
+                // The tower is not placed
+                // Create and spawn the tower
+                Debug.Log("should have been initialized");
+                CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
+            }
+            else
+            {
+                // The tower is placed
+                // Check if it's close to the last position
+                TowerSpawn spawnScript = activeTower.GetComponent<TowerSpawn>();
+
+
+
+                if (Vector3.Distance(activeTower.transform.position, spawnPosition) < distanceThreshold)
+                {
+                    // It's close
+                    activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
+                }
+                else
+                {
+                    // It's a new position
+                    activeTower.GetComponent<TowerSpawn>().Despawn();
+                    CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
+                }
+            }
         }
+
         void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("TouchEnd");
 

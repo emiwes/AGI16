@@ -18,6 +18,7 @@ public class TowerSpawn : MonoBehaviour {
 	private Camera topCamera;
 
     public bool validPlacement;
+    private bool runningAlert;
     public bool despawning = false;
 	private float despawnTimer;
 	private float despawnTime = 0.5f;
@@ -72,7 +73,6 @@ public class TowerSpawn : MonoBehaviour {
         if (terrainScript.validTowerPlacement(transform.position))
         {
             validPlacement = true;
-            Spawn();
         }
         else
         {
@@ -97,6 +97,24 @@ public class TowerSpawn : MonoBehaviour {
 				Despawn();
 			}
 		}
+        if (validPlacement)
+        {
+            //Destroy old
+            touchTest.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
+            //spawn new
+            Spawn();
+        }
+        else
+        {
+            if (!DeterminePlayerType.isVive && !runningAlert)
+            {
+                runningAlert = false;
+                buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+                buildProgress.transform.SetParent(towerCanvas.transform);
+
+                StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
+            }
+        }
 	}
 
 	public void StartDespawnTimer() {
@@ -110,23 +128,30 @@ public class TowerSpawn : MonoBehaviour {
 
 	public void Despawn() {
 		isActive = false;
-		//Stop all coroutines
-		if(isBuildingTower) {
-			isBuildingTower = false;
-			StopCoroutine (buildTowerOverTimeEnumerator);
-            if (!DeterminePlayerType.isVive){
-                StopCoroutine(fillBuildProgressEnumerator);
-            }
-		}
 
-		// Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
-		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
-
-        if (!DeterminePlayerType.isVive)
+        if (validPlacement)
         {
-            StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
+            //Stop all coroutines
+            if (isBuildingTower)
+            {
+                isBuildingTower = false;
+                StopCoroutine(buildTowerOverTimeEnumerator);
+                if (!DeterminePlayerType.isVive)
+                {
+                    StopCoroutine(fillBuildProgressEnumerator);
+                }
+            }
+
+            // Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+            Vector3 endPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
+
+            if (!DeterminePlayerType.isVive)
+            {
+                StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
+            }
         }
+		
 
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
 
@@ -208,7 +233,7 @@ public class TowerSpawn : MonoBehaviour {
         image.fillAmount = 1;
         
         float elapsedTime = 0f;
-        while (true)
+        while (!validPlacement)
         {
             if (elapsedTime >= blinkPeriod)
                 elapsedTime = 0f;
