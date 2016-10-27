@@ -20,13 +20,13 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
-		if (towerCombat.nearbyEnemies.Count > 0) {
+		if (towerCombat.nearbyEnemies.Count > 0 && (other.gameObject.tag == "Enemy")) {
 			towerCombat.updateClosestEnemy ();
 		}
 	}
 
 	void OnTriggerExit(Collider other) {
-		if(towerCombat.nearbyEnemies.Contains(other.gameObject))
+		if(towerCombat.nearbyEnemies.Contains(other.gameObject) && (other.gameObject.tag == "Enemy"))
 			towerCombat.nearbyEnemies.Remove(other.gameObject);
 
 		towerCombat.checkLastLeave ();

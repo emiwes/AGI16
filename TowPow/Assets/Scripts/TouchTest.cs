@@ -121,7 +121,7 @@ namespace TouchScript
 			Debug.Log ("Touch Start");
 
 			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-			spawnPosition.y = 10f;
+			spawnPosition.y = 16;
 
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
@@ -180,10 +180,10 @@ namespace TouchScript
 
         void TouchMove(Vector2 position, Tags tags)
         {
-            //Debug.Log("Something moves");
+            //Debug.Log("TouchMove");
 
             Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-            spawnPosition.y = 10f;
+            spawnPosition.y = 16f;
 
 
             string towerTag = null;
@@ -202,7 +202,7 @@ namespace TouchScript
             if (activeTower == null) {
 					// The tower is not placed
 					// Create and spawn the tower
-					Debug.Log ("should have been initialized");
+					//Debug.Log ("should have been initialized");
 					CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
