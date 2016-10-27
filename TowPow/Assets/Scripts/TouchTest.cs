@@ -122,7 +122,7 @@ namespace TouchScript
 							break;
 						}
 
-						else if(r.gameObject.name == "UpgradeTowerButton(Clone)"){
+						else if(r.gameObject.tag == "upgradeButton"){
 							r.gameObject.GetComponent<UpgradeTower>().Upgrade();
 						}
 					}

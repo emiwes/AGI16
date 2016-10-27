@@ -10,7 +10,9 @@ public class GameScript : NetworkBehaviour {
 	public Text MoneyText;
 	public Text KillText;
 
-    public Slider HealthSlider;
+//    public Slider HealthSlider;
+//	public Image HealthIndicator;
+	public Image[] healthIndicators;
     public Text HealthText;
     private spawnEnemy enemySpawner;
 
@@ -170,11 +172,18 @@ public class GameScript : NetworkBehaviour {
     void OnChangeHealth(int health)
     {
         HealthText.text = health.ToString();
-        HealthSlider.value = health;
-        if(health <= 0)
-        {
-            GameOver = true;
-            HealthText.text = "GAME OVER";
-        }
+		float fillAmount;
+		
+		if (health > 0) {
+			fillAmount = (float)health / (float)PlayerStartingHealth;
+		} else {
+			fillAmount = 0;
+			GameOver = true;
+			HealthText.text = "GAME OVER";
+		}
+
+		foreach(Image healthIndicator in healthIndicators){
+			healthIndicator.fillAmount = fillAmount;
+		}
     }
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-
 public class TowerCombat : NetworkBehaviour {
 
 //	[System.Serializable]
@@ -138,11 +137,11 @@ public class TowerCombat : NetworkBehaviour {
 		}
 	}
 
-	public void LevelUp(){
-		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
-		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (levelInfo [level-1].costToUpgrade);
-		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
-	}
+//	public void LevelUp(){
+//		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
+//		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (levelInfo [level-1].costToUpgrade);
+//		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
+//	}
 
 	public void SyncTowerLevel() {
 		level = towerLevelSynchronize.GetLevel (gameObject.tag);

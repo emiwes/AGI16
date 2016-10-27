@@ -62,9 +62,9 @@ public class TowerSpawn : NetworkBehaviour {
 
 	public void Despawn() {
 		// If tower never fully spawned, no upgrade button has been assigned.
-		if (upgradeButton != null) {
-			upgradeButton.GetComponent<UpgradeTower> ().DestroyMe ();
-		}
+//		if (upgradeButton != null) {
+//			upgradeButton.GetComponent<UpgradeTower> ().DestroyMe ();
+//		}
 
 		isActive = false;
 		//Stop all coroutines
@@ -123,24 +123,24 @@ public class TowerSpawn : NetworkBehaviour {
             StartCoroutine(fillBuildProgressEnumerator);
         }
 
-		if (!DeterminePlayerType.isVive) {
-			attachButtonWhenTowerSpawned = AttachButtonWhenTowerSpawned ();
-			StartCoroutine (attachButtonWhenTowerSpawned);
-		}
+//		if (!DeterminePlayerType.isVive) {
+//			attachButtonWhenTowerSpawned = AttachButtonWhenTowerSpawned ();
+//			StartCoroutine (attachButtonWhenTowerSpawned);
+//		}
 
 	}
 
-	IEnumerator AttachButtonWhenTowerSpawned(){
-		yield return new WaitForSeconds(spawnDuration);
-		// Attach upgrade button now that the tower has spawned
-		AttachUpgradeButtonToTower();
-	}
+//	IEnumerator AttachButtonWhenTowerSpawned(){
+//		yield return new WaitForSeconds(spawnDuration);
+//		// Attach upgrade button now that the tower has spawned
+//		AttachUpgradeButtonToTower();
+//	}
 
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
 		isActive = true;
 		// Attach upgrade button now that the tower has spawned
-		AttachUpgradeButtonToTower();
+//		AttachUpgradeButtonToTower();
 	}
 
 	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
@@ -177,12 +177,12 @@ public class TowerSpawn : NetworkBehaviour {
 		isBuildingTower = false;
 
 	}
-
-	void AttachUpgradeButtonToTower(){
-		Vector3 upgradeButtonPos = topCamera.WorldToScreenPoint(gameObject.transform.position);
-		upgradeButtonPos.y -= 30;
-		upgradeButton = (GameObject)Instantiate(upgradeButtonPrefab, upgradeButtonPos, Quaternion.identity);
-		upgradeButton.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-		upgradeButton.GetComponent<UpgradeTower>().tower = gameObject;
-	}
+//
+//	void AttachUpgradeButtonToTower(){
+//		Vector3 upgradeButtonPos = topCamera.WorldToScreenPoint(gameObject.transform.position);
+//		upgradeButtonPos.y -= 30;
+//		upgradeButton = (GameObject)Instantiate(upgradeButtonPrefab, upgradeButtonPos, Quaternion.identity);
+//		upgradeButton.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+//		upgradeButton.GetComponent<UpgradeTower>().tower = gameObject;
+//	}
 }
