@@ -94,7 +94,7 @@ public class TowerSpawn : MonoBehaviour {
         {
 			Debug.Log ("ValidPlacment");
 			//Destroy old
-            touchTest.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
+            //touchTest.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
             //spawn new
             Spawn();
         }
@@ -240,6 +240,12 @@ public class TowerSpawn : MonoBehaviour {
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+    }
+
+
+    public void moveAlertTo(Vector3 newPos)
+    {
+        buildProgress.transform.position = topCamera.WorldToScreenPoint(transform.position);
     }
     //
     //	public void AddTowerController(TouchScript.TouchTest tt) {

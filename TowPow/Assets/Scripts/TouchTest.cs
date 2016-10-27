@@ -195,44 +195,38 @@ namespace TouchScript
                     break;
                 }
             }
-            // Check if the tower is already placed and get the reference.
-            // Get first active tower sorted by tags.
-			if (towerTag != null) {
-				GameObject[] activeTowers = GameObject.FindGameObjectsWithTag (towerTag);
-				GameObject activeTower = null;
-
-				if (activeTowers.Length > 0) {
-					activeTower = activeTowers [0];
-				}
+            GameObject activeTower = GetActiveTower(towerTag);
 
 
-				// Check if we found anything
-				if (activeTower == null) {
+            // Check if we found anything
+            if (activeTower == null) {
 					// The tower is not placed
 					// Create and spawn the tower
 					Debug.Log ("should have been initialized");
 					CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
+			} else {
+				// The tower is placed
+				// Check if it's close to the last position
+				TowerSpawn spawnScript = activeTower.GetComponent<TowerSpawn> ();
+
+
+
+				if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
+                    // It's close
+                    spawnScript.StopDespawnTimer ();
 				} else {
-					// The tower is placed
-					// Check if it's close to the last position
-					TowerSpawn spawnScript = activeTower.GetComponent<TowerSpawn> ();
+                    // It's a new position
 
+                    //check if valid.
+                    spawnScript.validPlacement = terrainScript.validTowerPlacement(spawnPosition);
+                    activeTower.transform.position = spawnPosition;
+                    spawnScript.moveAlertTo(spawnPosition);
 
-
-					if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
-                        // It's close
-                        spawnScript.StopDespawnTimer ();
-					} else {
-                        // It's a new position
-
-                        //check if valid.
-                        spawnScript.validPlacement = terrainScript.validTowerPlacement(spawnPosition);
-
-                        //spawnScript.Despawn ();
-						//CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
-					}
+                    //spawnScript.Despawn ();
+					//CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
 				}
-			}
+				}
+			//}
         }
 
         void TouchEnd(Vector2 position, Tags tags) {
@@ -295,5 +289,20 @@ namespace TouchScript
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
 		}
+
+        GameObject GetActiveTower(string towerTag)
+        {
+            if (towerTag == null) return null;
+            GameObject[] activeTowers = GameObject.FindGameObjectsWithTag(towerTag);
+            GameObject activeTower = null;
+
+            if (activeTowers.Length > 0)
+            {
+                activeTower = activeTowers[0];
+            }
+
+            return activeTower;
+            
+        }
 	}
 }
