@@ -9,6 +9,8 @@ public class ArrowManager : MonoBehaviour {
 
     private GameObject currentArrow;
 
+	public GameObject bow;
+
 	public GameObject stringAttachPoint;
 	public GameObject arrowStartPoint;
 	public GameObject stringStartPoint;
@@ -76,7 +78,11 @@ public class ArrowManager : MonoBehaviour {
                 }
 			}
 		}
-			
+	}
+
+	// TODO(Arvod): Test this!
+	private void AimBow() {
+		bow.transform.rotation = Quaternion.LookRotation(stringAttachPoint.transform.position - bow.transform.position, bow.transform.up);
 	}
 
 	private void Fire(){
