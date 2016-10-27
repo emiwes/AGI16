@@ -29,6 +29,9 @@ namespace TouchScript
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
 
+        private TerrainSurface terrainScript;
+        
+
         void Update()
         {
             /*if (Input.GetMouseButtonDown(0))
@@ -53,6 +56,8 @@ namespace TouchScript
 			towerTypes.Add(WhitePrefab);
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
+
+            terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
 
             if (!DeterminePlayerType.isVive) {
 				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
@@ -215,12 +220,16 @@ namespace TouchScript
 
 
 					if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
-						// It's close
-						activeTower.GetComponent<TowerSpawn> ().StopDespawnTimer ();
+                        // It's close
+                        spawnScript.StopDespawnTimer ();
 					} else {
-						// It's a new position
-						activeTower.GetComponent<TowerSpawn> ().Despawn ();
-						CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
+                        // It's a new position
+
+                        //check if valid.
+                        spawnScript.validPlacement = terrainScript.validTowerPlacement(spawnPosition);
+
+                        //spawnScript.Despawn ();
+						//CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
 					}
 				}
 			}
