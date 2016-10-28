@@ -181,7 +181,7 @@ namespace TouchScript
 
         void TouchMove(Vector2 position, Tags tags)
         {
-            //Debug.Log("TouchMove");
+            Debug.Log("TouchMove");
 
             Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
             spawnPosition.y = 16f;
@@ -214,29 +214,30 @@ namespace TouchScript
 
 				if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
                     // It's close
+					Debug.Log("it is to close");
                     spawnScript.StopDespawnTimer ();
 				} else {
                     // It's a new position
 
                     //check if valid.
                     bool validPlace = terrainScript.validTowerPlacement(spawnPosition);
+					spawnScript.validPlacement = validPlace;
 
-                    if (validPlace)
-                    {
-                        spawnScript.validPlacement = validPlace;
-                        //activeTower.transform.position = spawnPosition;
-                        activeTower.GetComponent<TowerSpawn>().Despawn();
-                        CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
+					//if (validPlace && !spawnScript.spawnedTower) {
+					//	Debug.Log ("new tower");
+						//activeTower.transform.position = spawnPosition;
+						//activeTower.GetComponent<TowerSpawn> ().Despawn ();
+						//CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
 
 
-                    }
-                    spawnScript.moveAlertTo(spawnPosition);
-
+					//} else {
+					if(!validPlace){	
+						spawnScript.moveAlertTo (spawnPosition);
+					}
                     //spawnScript.Despawn ();
 					//CmdInstantiateTower (towerTag, spawnPosition, Quaternion.identity);
 				}
-				}
-			//}
+			}
         }
 
         void TouchEnd(Vector2 position, Tags tags) {

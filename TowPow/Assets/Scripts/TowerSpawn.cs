@@ -18,7 +18,7 @@ public class TowerSpawn : MonoBehaviour {
 	private Camera topCamera;
 
     public bool validPlacement;
-	private bool spawnedTower = false;
+	public bool spawnedTower = false;
     private bool runningAlert;
     public bool despawning = false;
 	private float despawnTimer;
@@ -106,7 +106,13 @@ public class TowerSpawn : MonoBehaviour {
 				Despawn();
 			}
 		}
-        if (validPlacement && !spawnedTower)
+
+		if (!validPlacement) {
+			towerModel.SetActive (false);
+			Despawn (false);
+		}
+
+        else if (validPlacement && !spawnedTower)
         {
 			spawnedTower = true;
 			towerModel.SetActive (true);
@@ -141,7 +147,11 @@ public class TowerSpawn : MonoBehaviour {
 		despawning = false;
 	}
 
-	public void Despawn() {
+	public void Despawn(){
+		Despawn (true);
+	}
+
+	public void Despawn(bool remove) {
 		isActive = false;
 
 		if (spawnedTower) {
@@ -160,10 +170,13 @@ public class TowerSpawn : MonoBehaviour {
 			if (!DeterminePlayerType.isVive) {
 				StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
 			}
-			touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
-
+			if (remove) {
+				touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
+			}
 		} else {
-			touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 0f);
+			if (remove) {
+				touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, 0f);
+			}
 		}
 		
 
@@ -267,6 +280,7 @@ public class TowerSpawn : MonoBehaviour {
     public void moveAlertTo(Vector3 newPos)
     {
 		towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(newPos);
+		transform.position = newPos;
 		//buildProgress.transform.position = topCamera.WorldToScreenPoint(transform.position);
     	
 	}
