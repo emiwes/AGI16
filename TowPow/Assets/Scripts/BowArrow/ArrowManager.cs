@@ -21,6 +21,7 @@ public class ArrowManager : MonoBehaviour {
 	public GameObject iceArrow;
 	public GameObject fireArrow;
 	public GameObject lightningArrow;
+	public GameObject normalArrow;
 //	public Material iceArrowMaterial;
 
 	public AudioClip shootSound;
@@ -171,6 +172,8 @@ public class ArrowManager : MonoBehaviour {
 		} else if(col.tag == "fireArrowSwitcher"){
 			ChangeToNewArrow (fireArrow);
 		} else if(col.tag == "lightningArrowSwitcher"){
+			ChangeToNewArrow (lightningArrow);
+		} else if(col.tag == " normalArrowSwitcher"){
 			ChangeToNewArrow (lightningArrow);
 		} else{
 			if (currentArrow != null) {
