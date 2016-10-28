@@ -19,7 +19,8 @@ public class TowerSpawn : NetworkBehaviour {
 
     [SyncVar (hook = "OnValidPlacedChanged")]
     public bool validPlacement;
-	public bool spawnedTower = false;
+    [SyncVar(hook = "OnSpawnedTowerChanged")]
+    public bool spawnedTower = false;
     private bool runningAlert;
 
 	
@@ -119,15 +120,17 @@ public class TowerSpawn : NetworkBehaviour {
             if (spawnedTower)
             {
                 Despawn(false);
-				spawnedTower = false;
+                //spawnedTower = false;
+                touchTest.CmdUpdateSpawnedTower(gameObject, false);
             }
             startAlert();
 		}
 
         else if (validPlacement && !spawnedTower)
         {
-			spawnedTower = true;
-			towerModel.SetActive (true);
+			//spawnedTower = true;
+            touchTest.CmdUpdateSpawnedTower(gameObject, true);
+            towerModel.SetActive (true);
 			runningAlert = false;
 			if (!DeterminePlayerType.isVive) {
 				towerPlacementAlert.SetActive (false);
@@ -290,5 +293,10 @@ public class TowerSpawn : NetworkBehaviour {
     private void OnValidPlacedChanged(bool value)
     {
         validPlacement = value;
+    }
+
+    private void OnSpawnedTowerChanged(bool value)
+    {
+        spawnedTower = value;
     }
 }

@@ -307,5 +307,11 @@ namespace TouchScript
         {
             tower.GetComponent<TowerSpawn>().validPlacement = value;
         }
-	}
+
+        [Command]
+        public void CmdUpdateSpawnedTower(GameObject tower, bool value)
+        {
+            tower.GetComponent<TowerSpawn>().spawnedTower = value;
+        }
+    }
 }
