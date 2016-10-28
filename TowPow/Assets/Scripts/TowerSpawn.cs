@@ -131,10 +131,10 @@ public class TowerSpawn : MonoBehaviour {
 
     private void startAlert()
     {
-        if (!DeterminePlayerType.isVive && !runningAlert && !spawnedTower)
+		if (!DeterminePlayerType.isVive && !runningAlert) //  && !spawnedTower
         {
             runningAlert = true;
-
+			Debug.Log("start alert");
             towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(transform.position);
             towerPlacementAlert.SetActive(true);
             StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
