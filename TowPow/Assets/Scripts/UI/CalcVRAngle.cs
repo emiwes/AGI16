@@ -21,7 +21,7 @@ public class CalcVRAngle : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (serverStarted) {
-			setFOVPosition (FOVhandler);
+			FOVhandler.VRPosition = transform.position;
 			//Get new transform for VR Headset
 			//Get transform.eulerAngles.y (for world position)
 			yAngle = -(transform.eulerAngles.y);
