@@ -81,7 +81,8 @@ namespace TouchScript
 			{
 				TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
 				TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
-			}
+				TouchManager.Instance.TouchesMoved -= touchesMoveHandler;
+            }
 		}
 
 		private void touchesBeganHandler(object sender, TouchEventArgs e) {
@@ -218,8 +219,17 @@ namespace TouchScript
                     // It's a new position
 
                     //check if valid.
-                    spawnScript.validPlacement = terrainScript.validTowerPlacement(spawnPosition);
-                    activeTower.transform.position = spawnPosition;
+                    bool validPlace = terrainScript.validTowerPlacement(spawnPosition);
+
+                    if (validPlace)
+                    {
+                        spawnScript.validPlacement = validPlace;
+                        //activeTower.transform.position = spawnPosition;
+                        activeTower.GetComponent<TowerSpawn>().Despawn();
+                        CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
+
+
+                    }
                     spawnScript.moveAlertTo(spawnPosition);
 
                     //spawnScript.Despawn ();
