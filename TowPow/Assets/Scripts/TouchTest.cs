@@ -210,9 +210,11 @@ namespace TouchScript
 
                     //check if valid.
                     bool validPlace = terrainScript.validTowerPlacement(spawnPosition);
-					spawnScript.validPlacement = validPlace;
+					//spawnScript.validPlacement = validPlace;
+                    CmdUpdateValidatePlacement(activeTower, validPlace);
 
-					if(!validPlace){	
+
+                    if (!validPlace){	
 						spawnScript.moveAlertTo (spawnPosition);
 					}
 				}
@@ -299,5 +301,11 @@ namespace TouchScript
 		void CmdStartDespawning(GameObject tower){
 			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
+
+        [Command]
+        void CmdUpdateValidatePlacement(GameObject tower, bool value)
+        {
+            tower.GetComponent<TowerSpawn>().validPlacement = value;
+        }
 	}
 }

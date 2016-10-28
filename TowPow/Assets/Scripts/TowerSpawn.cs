@@ -17,6 +17,7 @@ public class TowerSpawn : NetworkBehaviour {
 	private GameObject towerModel;
 	private Camera topCamera;
 
+    [SyncVar (hook = "OnValidPlacedChanged")]
     public bool validPlacement;
 	public bool spawnedTower = false;
     private bool runningAlert;
@@ -285,4 +286,9 @@ public class TowerSpawn : NetworkBehaviour {
 		transform.position = newPos;
     	
 	}
+
+    private void OnValidPlacedChanged(bool value)
+    {
+        validPlacement = value;
+    }
 }
