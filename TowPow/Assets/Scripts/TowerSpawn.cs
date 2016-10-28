@@ -3,34 +3,45 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class TowerSpawn : MonoBehaviour {
+public class TowerSpawn : NetworkBehaviour {
 
-	public bool isActive;
-	public float spawnDuration = 2f;
-	public GameObject shootingRadiusIndicator;
-	public GameObject circleProgressPrefab;
-    public GameObject TowerCanvasPrefab;
-    //public GameObject TowerPrefab;
+    //objects/script references
+    public GameObject shootingRadiusIndicator;
+    public GameObject circleProgressPrefab;
 
+    private TouchScript.PixelSenseInputScript PSInputScript;
     private TerrainSurface terrainScript;
 
+    private Camera topCamera;
+
     private GameObject towerCanvas;
-	private Camera topCamera;
+    private GameObject buildProgress;
+    private GameObject towerPlacementIndicator;
+    private GameObject physicalTower;
 
-	public bool despawning = false;
-	private float despawnTimer;
+    //SyncVars
+    [SyncVar]
+    public bool despawning = false;
+
+
+    //Public primitives
+    public bool isActive = false;
+    public float spawnDuration = 2f;
+    public bool noActiveOfThatKind = false;
+    public bool validPlacement = false;
+
+
+    //Private Primitives
+    private float despawnTimer;
 	private float despawnTime = 0.5f;
-
-	private GameObject buildProgress;
-
     private bool isBuildingTower = false;
+    private float serverDespawnTime = 2f;
+    private bool NonValidPlacementIndicatorRunning = false;
 
-	private float serverDespawnTime = 2f;
-
-	private IEnumerator fillBuildProgressEnumerator;
+    //Enumerators (who needs to be saved and accessed later
+    private IEnumerator fillBuildProgressEnumerator;
 	private IEnumerator buildTowerOverTimeEnumerator;
 
-	private TouchScript.TouchTest touchTest;
 
     void Awake()
     {
@@ -41,70 +52,64 @@ public class TowerSpawn : MonoBehaviour {
         }
     }
 
-	void Start () {
-		isActive = false;
-		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
-
-        //get script on terrain
+    void Start () {
+        //refernces to scripts
+        PSInputScript = FindObjectOfType<TouchScript.PixelSenseInputScript>();
         terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
+        physicalTower = transform.FindChild("Tower").gameObject;
+        physicalTower.SetActive(false);
 
-        if (!DeterminePlayerType.isVive){
+        if (!DeterminePlayerType.isVive)
+        {
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
 
-        //instatiate canvas
-        towerCanvas = new GameObject("towerCanvas");
-        towerCanvas.layer = 5; //UI layer
-        Canvas c = towerCanvas.AddComponent<Canvas>();
-        c.renderMode = RenderMode.ScreenSpaceOverlay;
-        towerCanvas.AddComponent<CanvasGroup>();
-        CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
-        towerCanvas.AddComponent<GraphicRaycaster>();
+        //initial values 
+        isActive = false;
 
-        //set parent
-        towerCanvas.transform.SetParent(gameObject.transform);
+        //setup function calls
+        createTowerCanvas();
 
-        //start spawn tower
-        
-        //Check if valid placement otherwise add UI element.
-        //Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(gameObject.transform.position));
-        if (terrainScript.validTowerPlacement(transform.position))
-        {
-            Spawn();
-        }
-        else
-        {
-            //Debug.Log("invalid Placement of tower");
-            if (!DeterminePlayerType.isVive)
-            {
-                buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
-                buildProgress.transform.SetParent(towerCanvas.transform);
+        //check intial Position
 
-                StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
-            }
-            
-        }
+        validPlacement = terrainScript.validTowerPlacement(transform.position);
     }
 
-	void Update () {
+    void Update () {
+
+        if (!validPlacement)
+        {
+            if (!DeterminePlayerType.isVive && !NonValidPlacementIndicatorRunning)//start the indicator
+            {
+                towerPlacementIndicator.SetActive(true);
+                StartCoroutine(NonValidPlacmentIndicator(0.5f, Color.clear, Color.red));
+
+            }
+        }
+
+        if(validPlacement && (PSInputScript.numbersOfActiveTowersWithTag(gameObject.tag) == 0))
+        {
+            activateTower();
+        }
+
 		if(despawning) {
 			despawnTimer += Time.deltaTime;
 			if(despawnTimer > despawnTime) {
 				despawning = false;
 				Despawn();
+
 			}
 		}
 	}
 
+    //Public Functions
 	public void StartDespawnTimer() {
 		despawning = true;
 		despawnTimer = 0;
 	}
-
 	public void StopDespawnTimer() {
 		despawning = false;
 	}
-
 	public void Despawn() {
 		isActive = false;
 		//Stop all coroutines
@@ -125,50 +130,66 @@ public class TowerSpawn : MonoBehaviour {
             StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
         }
 
-		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
+        PSInputScript.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
 
 		//Destroy buildProgress Not needed destroys when tower destroys
 		//Destroy(buildProgress, serverDespawnTime);
 	}
+    public void removeTower()
+    {
 
-	void Spawn() {
-		Vector3 endPoint = transform.position;
+    }
+    //Private Functions
+    private void activateTower()
+    {
+        Debug.Log("Activate Tower");
+        Vector3 endPoint = transform.position;
 
-//		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
-		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-		buildTowerOverTimeEnumerator = MoveOverSeconds (endPoint, spawnDuration);
-		StartCoroutine(buildTowerOverTimeEnumerator);
-		//SPAWN THE TOWER WITH PROGRESS
-		isBuildingTower = true;
+        transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+        physicalTower.SetActive(true);
+        buildTowerOverTimeEnumerator = MoveOverSeconds(endPoint, spawnDuration);
+        StartCoroutine(buildTowerOverTimeEnumerator);
+        //SPAWN THE TOWER WITH PROGRESS
+        isBuildingTower = true;
 
-		Vector3 pos = gameObject.transform.position;
-//		pos.y = pos.y + 1.5f;
-		// GameObject indicator = (GameObject)Instantiate(shootingRadiusIndicator, pos, Quaternion.identity);
-		// indicator.transform.parent = gameObject.transform;
-
-        if (!DeterminePlayerType.isVive){
-            buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
-            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-
-
-            buildProgress.transform.SetParent(towerCanvas.transform);
-            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-        }
-
-        //buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
         if (!DeterminePlayerType.isVive)
         {
+            //Start build-up tower
             fillBuildProgressEnumerator = FillBuildProgress(spawnDuration, Color.red, Color.green, 0f, 1f);
             StartCoroutine(fillBuildProgressEnumerator);
+            buildProgress.SetActive(true);
         }
 
-	}
+    }
+    private void createTowerCanvas() //creates a canvas and content
+    {
+        towerCanvas = new GameObject("towerCanvas");
+        towerCanvas.layer = 5; //UI layer
+        Canvas c = towerCanvas.AddComponent<Canvas>();
+        c.renderMode = RenderMode.ScreenSpaceOverlay;
+        //towerCanvas.AddComponent<CanvasGroup>();
+        //CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
+        towerCanvas.AddComponent<GraphicRaycaster>();
 
+        //add components
+        buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+        buildProgress.transform.SetParent(towerCanvas.transform);
+        buildProgress.SetActive(false);
+
+        towerPlacementIndicator = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+        towerPlacementIndicator.transform.SetParent(towerCanvas.transform);
+        towerPlacementIndicator.SetActive(false);
+
+
+        //set parent
+        towerCanvas.transform.SetParent(gameObject.transform);
+    }
+
+    //Enumerators
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
 		isActive = true;
 	}
-
 	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
 		float elapsedTime = 0;
 		Vector3 startingPos = transform.position;
@@ -180,7 +201,6 @@ public class TowerSpawn : MonoBehaviour {
 		transform.position = endPoint;
 		isActive = true;
 	}
-
 	IEnumerator FillBuildProgress(float time, Color startColor, Color endColor, float startValue, float endValue) {
 		Image image = buildProgress.GetComponent<Image> ();
 		image.fillAmount = startValue;
@@ -199,14 +219,13 @@ public class TowerSpawn : MonoBehaviour {
 		image.fillAmount = endValue;
 		isBuildingTower = false;
 	}
-
-    IEnumerator AlertBuildProgress(float blinkPeriod, Color startColor, Color endColor)
+    IEnumerator NonValidPlacmentIndicator(float blinkPeriod, Color startColor, Color endColor)
     {
-        Image image = buildProgress.GetComponent<Image>();
+        Image image = towerPlacementIndicator.GetComponent<Image>();
         image.fillAmount = 1;
         
         float elapsedTime = 0f;
-        while (true)
+        while (!validPlacement)
         {
             if (elapsedTime >= blinkPeriod)
                 elapsedTime = 0f;
@@ -219,10 +238,8 @@ public class TowerSpawn : MonoBehaviour {
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+        towerPlacementIndicator.SetActive(false);
     }
-    //
-    //	public void AddTowerController(TouchScript.TouchTest tt) {
-    //		touchTest = tt;
-    //	}
+
 
 }
