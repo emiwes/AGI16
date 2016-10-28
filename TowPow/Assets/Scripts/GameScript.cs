@@ -166,6 +166,7 @@ public class GameScript : NetworkBehaviour {
         }
 	}
 	void OnMoneyChange(int money){
+		moneyCounter = money;
 		MoneyText.text = money.ToString();
 	}
 
