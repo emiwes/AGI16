@@ -39,20 +39,21 @@ namespace TouchScript
 
         void Update()
         {
+            Tags black = new Tags("black");
+
             if (Input.GetKeyDown(KeyCode.D))
             {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Tags blue = new Tags("black");
-                    TouchBegin(Input.mousePosition, blue);
-                    //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
-                    //if (Input.GetMouseButtonUp(0))
-                    //{
-                    //    TouchEnd(Input.mousePosition, blue);
-                    //}
-                }
+                
+                TouchBegin(Input.mousePosition, black);
+                //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
+                
+             
             }
-            
+            if (Input.GetKeyUp(KeyCode.D))
+            {
+                TouchEnd(Input.mousePosition, black);
+            }
+
         }
 
 		void Start(){
@@ -109,7 +110,7 @@ namespace TouchScript
 
 		void TouchBegin(Vector2 position, Tags tags) //Detects start of touches 
         {
-			Debug.Log ("Touch Start");
+			Debug.Log ("Touch Begin");
 
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
@@ -160,6 +161,7 @@ namespace TouchScript
                 //despawn all towers of that type
 				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
 					if (!tower.GetComponent<TowerSpawn> ().despawning) {
+                        CmdStartDespawning(tower);
 						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 					}
 				}
@@ -200,7 +202,7 @@ namespace TouchScript
         }
         private void touchAndMouseInput(Tags tags, Vector2 position)
         {
-            if (tags.HasTag("Touch"))// || tags.HasTag("Mouse"))
+            if (tags.HasTag("Touch") || tags.HasTag("Mouse"))
             {
                 PointerEventData ped = new PointerEventData(null);
                 ped.position = position;
@@ -213,6 +215,11 @@ namespace TouchScript
                     {
                         r.gameObject.GetComponent<CoinClick>().DestroyCoin();
                         break;
+                    }
+
+                    else if (r.gameObject.tag == "upgradeButton")
+                    {
+                        r.gameObject.GetComponent<UpgradeTower>().Upgrade();
                     }
                 }
             }
@@ -265,7 +272,13 @@ namespace TouchScript
             GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
             NetworkServer.Spawn(t);
      		}
-		[Command]
+        [Command]
+        void CmdStartDespawning(GameObject tower)
+        {
+            //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
+            tower.GetComponent<TowerSpawn>().Despawn();
+        }
+        [Command]
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
 		}

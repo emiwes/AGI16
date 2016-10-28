@@ -46,7 +46,7 @@ public class TowerCombat : NetworkBehaviour {
 		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
 		levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
 
-		shootingModule = transform.Find ("ShootingModule").gameObject;
+		shootingModule = transform.Find ("Tower/ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
 		towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize>();
@@ -148,8 +148,8 @@ public class TowerCombat : NetworkBehaviour {
 		towerDamage = levelInfo [level - 1].damage;
 		shootingSpeed = levelInfo [level - 1].speed;
 
-		Debug.Log ("Tower level set to " + level);
+		/*Debug.Log ("Tower level set to " + level);
 		Debug.Log ("Tower speed set to " + shootingSpeed);
-		Debug.Log ("Tower damage set to " + towerDamage);
+		Debug.Log ("Tower damage set to " + towerDamage);*/
 	}
 }
