@@ -59,9 +59,10 @@ namespace TouchScript
 		}
 
 		private void touchesBeganHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
-				return; 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
+				return;
 			}
+				
 
 			foreach (var point in e.Touches) {
 //				Debug.Log ("pointHit: " + point.Hit);
@@ -77,7 +78,7 @@ namespace TouchScript
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
 				return; 
 			}
 
@@ -89,8 +90,15 @@ namespace TouchScript
 		void TouchBegin(Vector2 position, Tags tags) {
 			Debug.Log ("Touch Start");
 
-			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-			spawnPosition.y = 10f;
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 16f));
+			spawnPosition.y = 16f;
+
+			// UGLY HACK FOR TESTING WITHOUT PIXELSENSE
+			if (tags.HasTag("Mouse")) {
+				if(Input.GetKey(KeyCode.D)) {
+					tags = new Tags("red");
+				}
+			}
 
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
@@ -100,6 +108,7 @@ namespace TouchScript
 					break;
 				}
 			}
+
 			if(towerTag == null) {
 				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
 					PointerEventData ped = new PointerEventData (null);
@@ -111,6 +120,10 @@ namespace TouchScript
 						if (r.gameObject.name == "CoinSprite(Clone)") {
 							r.gameObject.GetComponent<CoinClick> ().DestroyCoin ();
 							break;
+						}
+
+						else if(r.gameObject.tag == "upgradeButton"){
+							r.gameObject.GetComponent<UpgradeTower>().Upgrade();
 						}
 					}
 				}
@@ -161,7 +174,8 @@ namespace TouchScript
 			if (towerTag != null) {
 				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
 					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+						CmdStartDespawning(tower);
+						// tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 					}
 				}
 			}
@@ -205,6 +219,11 @@ namespace TouchScript
 		[Command]
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+		}
+
+		[Command]
+		void CmdStartDespawning(GameObject tower){
+			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
 	}
 }

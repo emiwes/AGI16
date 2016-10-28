@@ -19,7 +19,9 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
-		towerCombat.updateClosestEnemy ();
+		if (other.gameObject.tag == "Enemy") {
+			towerCombat.updateClosestEnemy ();
+		}
 	}
 
 	void OnTriggerExit(Collider other) {
