@@ -63,48 +63,44 @@ public class TowerSpawn : NetworkBehaviour {
 
         if (!DeterminePlayerType.isVive){
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
+
+			//instatiate canvas
+			towerCanvas = new GameObject("towerCanvas");
+			towerCanvas.layer = 5; //UI layer
+			Canvas c = towerCanvas.AddComponent<Canvas>();
+			c.renderMode = RenderMode.ScreenSpaceOverlay;
+			towerCanvas.AddComponent<CanvasGroup>();
+			CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
+			towerCanvas.AddComponent<GraphicRaycaster>();
+
+			buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+			buildProgress.transform.SetParent(towerCanvas.transform);
+			buildProgress.SetActive (false);
+
+			towerPlacementAlert = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
+			towerPlacementAlert.transform.SetParent(towerCanvas.transform);
+			towerPlacementAlert.SetActive (false);
+
+			//set parent
+			towerCanvas.transform.SetParent(gameObject.transform);
+
         }
+		if (terrainScript.validTowerPlacement(transform.position))
+		{
+			validPlacement = true;
+		}
+		else
+		{
+			//Debug.Log("invalid Placement of tower");
+			validPlacement = false;
+
+		}
 
 		//get the model of the tower and set it to inactive
 		towerModel = transform.FindChild("Model").gameObject;
 		towerModel.SetActive (false);
 
-        //instatiate canvas
-        towerCanvas = new GameObject("towerCanvas");
-        towerCanvas.layer = 5; //UI layer
-        Canvas c = towerCanvas.AddComponent<Canvas>();
-        c.renderMode = RenderMode.ScreenSpaceOverlay;
-        towerCanvas.AddComponent<CanvasGroup>();
-        CanvasScaler scaler = towerCanvas.AddComponent<CanvasScaler>();
-        towerCanvas.AddComponent<GraphicRaycaster>();
-
-		buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
-		buildProgress.transform.SetParent(towerCanvas.transform);
-		buildProgress.SetActive (false);
-
-		towerPlacementAlert = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(transform.position), Quaternion.identity);
-		towerPlacementAlert.transform.SetParent(towerCanvas.transform);
-		towerPlacementAlert.SetActive (false);
-
-        //set parent
-        towerCanvas.transform.SetParent(gameObject.transform);
-
-
-
-        //start spawn tower
         
-        //Check if valid placement otherwise add UI element.
-        //Debug.Log("Valid placement?!: " + terrainScript.validTowerPlacement(gameObject.transform.position));
-        if (terrainScript.validTowerPlacement(transform.position))
-        {
-            validPlacement = true;
-        }
-        else
-        {
-            //Debug.Log("invalid Placement of tower");
-            validPlacement = false;
-            
-        }
     }
 
 	void Update () {
@@ -131,8 +127,9 @@ public class TowerSpawn : NetworkBehaviour {
 			spawnedTower = true;
 			towerModel.SetActive (true);
 			runningAlert = false;
-			towerPlacementAlert.SetActive (false);
-
+			if (!DeterminePlayerType.isVive) {
+				towerPlacementAlert.SetActive (false);
+			}
             //spawn new
             Spawn();
         }
