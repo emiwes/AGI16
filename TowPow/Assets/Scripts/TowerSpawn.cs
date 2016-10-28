@@ -118,6 +118,7 @@ public class TowerSpawn : NetworkBehaviour {
             if (spawnedTower)
             {
                 Despawn(false);
+				spawnedTower = false;
             }
             startAlert();
 		}
