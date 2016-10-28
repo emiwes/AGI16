@@ -3,13 +3,13 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class TowerSpawn : MonoBehaviour {
+public class TowerSpawn : NetworkBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
 	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
-    //public GameObject TowerPrefab;
+    public GameObject upgradeButtonPrefab;
 
     private TerrainSurface terrainScript;
 
@@ -20,21 +20,30 @@ public class TowerSpawn : MonoBehaviour {
     public bool validPlacement;
 	public bool spawnedTower = false;
     private bool runningAlert;
-    public bool despawning = false;
-	private float despawnTimer;
-	private float despawnTime = 0.5f;
+
+	
+	
+
+	[SyncVar]
+	public bool despawning = false;
+	private float despawnTimer = 0f;
+	private float despawnTime = 1.0f;
 
 	private GameObject buildProgress;
-	private GameObject towerPlacementAlert;
+    private GameObject towerPlacementAlert;
 
-    private bool isBuildingTower = false;
+    private GameObject upgradeButton;
+	private bool isBuildingTower = false;
 
 	private float serverDespawnTime = 2f;
 
 	private IEnumerator fillBuildProgressEnumerator;
 	private IEnumerator buildTowerOverTimeEnumerator;
+	private IEnumerator attachButtonWhenTowerSpawned;
+    //private IEnumerator alertBuildProgress;
 
-	private TouchScript.TouchTest touchTest;
+
+    private TouchScript.TouchTest touchTest;
 
     void Awake()
     {
@@ -103,6 +112,7 @@ public class TowerSpawn : MonoBehaviour {
 			despawnTimer += Time.deltaTime;
 			if(despawnTimer > despawnTime) {
 				despawning = false;
+				despawnTimer = 0;
 				Despawn();
 			}
 		}
@@ -134,21 +144,21 @@ public class TowerSpawn : MonoBehaviour {
 		if (!DeterminePlayerType.isVive && !runningAlert) //  && !spawnedTower
         {
             runningAlert = true;
-			Debug.Log("start alert");
             towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(transform.position);
             towerPlacementAlert.SetActive(true);
             StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
         }
     }
 
+
 	public void StartDespawnTimer() {
 		despawning = true;
-		despawnTimer = 0;
 	}
 
 	public void StopDespawnTimer() {
 		despawning = false;
 	}
+
 
 	public void Despawn(){
 		Despawn (true);
@@ -167,12 +177,13 @@ public class TowerSpawn : MonoBehaviour {
 				}
 			}
 
-			Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+			Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
 			StartCoroutine (MoveOverSeconds (endPoint, spawnDuration));
 
 			if (!DeterminePlayerType.isVive) {
 				StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
 			}
+
 			if (remove) {
 				touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
 			}
@@ -182,36 +193,19 @@ public class TowerSpawn : MonoBehaviour {
 			}
 		}
 		
-
-
-		//Destroy buildProgress Not needed destroys when tower destroys
-		//Destroy(buildProgress, serverDespawnTime);
 	}
 
 	void Spawn() {
 		Vector3 endPoint = transform.position;
 
-		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+
+		transform.position = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
 		buildTowerOverTimeEnumerator = MoveOverSeconds (endPoint, spawnDuration);
 		StartCoroutine(buildTowerOverTimeEnumerator);
 		//SPAWN THE TOWER WITH PROGRESS
 		isBuildingTower = true;
 
-		//Vector3 pos = gameObject.transform.position;
-//		pos.y = pos.y + 1.5f;
-		// GameObject indicator = (GameObject)Instantiate(shootingRadiusIndicator, pos, Quaternion.identity);
-		// indicator.transform.parent = gameObject.transform;
-
-        if (!DeterminePlayerType.isVive){
-            //buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
-            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-
-
-            //buildProgress.transform.SetParent(towerCanvas.transform);
-            //buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
-        }
-
-        //buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
+        
         if (!DeterminePlayerType.isVive)
         {
 			buildProgress.transform.position = topCamera.WorldToScreenPoint (transform.position);
@@ -221,6 +215,7 @@ public class TowerSpawn : MonoBehaviour {
         }
 
 	}
+
 
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
@@ -247,14 +242,20 @@ public class TowerSpawn : MonoBehaviour {
         
 		float elapsedTime = 0f;
 		while (elapsedTime < time) {
+			if(image == null){
+				break;
+			}
 			image.fillAmount =  Mathf.Lerp(startValue, endValue, elapsedTime/time);
 			image.color = Color.Lerp (startColor, endColor, (elapsedTime / time));
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
-		image.color = endColor;
-		image.fillAmount = endValue;
+		if(image != null){
+			image.color = endColor;
+			image.fillAmount = endValue;
+		}
 		isBuildingTower = false;
+
 	}
 
     IEnumerator AlertBuildProgress(float blinkPeriod, Color startColor, Color endColor)
@@ -284,12 +285,6 @@ public class TowerSpawn : MonoBehaviour {
     {
 		towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(newPos);
 		transform.position = newPos;
-		//buildProgress.transform.position = topCamera.WorldToScreenPoint(transform.position);
     	
 	}
-    //
-    //	public void AddTowerController(TouchScript.TouchTest tt) {
-    //		touchTest = tt;
-    //	}
-
 }
