@@ -1,8 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class TowerCombat : MonoBehaviour {
+public class TowerCombat : NetworkBehaviour {
+
+//	[System.Serializable]
+	public struct TowerLevelInfo {
+		public int level;
+		public float damage;
+//		public float range;
+		public float speed;
+		public int costToUpgrade;
+
+		public TowerLevelInfo(int l, float d, float s, int c){
+			level = l;
+			damage = d;
+			speed = s;
+			costToUpgrade = c;
+		}
+	}
+	
+	public List<TowerLevelInfo> levelInfo = new List<TowerLevelInfo>();
+
+	public TowerLevelSynchronize towerLevelSynchronize;
+
 	public List<GameObject> nearbyEnemies = new List<GameObject>();
 	GameObject closestEnemy = null;
 
@@ -14,15 +36,21 @@ public class TowerCombat : MonoBehaviour {
 	private GameObject shootingModule;
 	private TowerSpawn towerSpawn;
 
+	public int level;
+
 	public AudioClip shootSound;
 	private AudioSource source;
 
 	void Start() {
+		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
+		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
+		levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
+
 		shootingModule = transform.Find ("ShootingModule").gameObject;
-		//InvokeRepeating ("fireAtClosestEnemy", 0.5f, shootingSpeed);
 		shootingRangeIndicator.SetActive(true);
-		// transform.Find("ShootingRadiusIndicator").gameObject.SetActive(true);
 		towerSpawn = GetComponent<TowerSpawn> ();
+		towerLevelSynchronize = GameObject.Find ("GameHandler").GetComponent<TowerLevelSynchronize>();
+		SyncTowerLevel ();
 	}
 
 	void Awake() {
@@ -40,7 +68,6 @@ public class TowerCombat : MonoBehaviour {
 	}
 
 	public void addNearbyEnemy(GameObject enemy){
-        Debug.Log("Adding nearby enemy "+enemy.name);
 		nearbyEnemies.Add (enemy);
 	}
 
@@ -108,5 +135,21 @@ public class TowerCombat : MonoBehaviour {
 				nearbyEnemies.RemoveAt (i);
 			}
 		}
+	}
+
+//	public void LevelUp(){
+//		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
+//		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (levelInfo [level-1].costToUpgrade);
+//		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (gameObject.tag);
+//	}
+
+	public void SyncTowerLevel() {
+		level = towerLevelSynchronize.GetLevel (gameObject.tag);
+		towerDamage = levelInfo [level - 1].damage;
+		shootingSpeed = levelInfo [level - 1].speed;
+
+		Debug.Log ("Tower level set to " + level);
+		Debug.Log ("Tower speed set to " + shootingSpeed);
+		Debug.Log ("Tower damage set to " + towerDamage);
 	}
 }

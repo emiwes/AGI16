@@ -1,10 +1,21 @@
 fileFormatVersion: 2
 guid: c1959c51f92e84440ad429dd57f29c7e
-timeCreated: 1474382528
+timeCreated: 1477657905
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - trackedObj: {instanceID: 0}
+  - stringAttachPoint: {instanceID: 0}
+  - arrowStartPoint: {instanceID: 0}
+  - stringStartPoint: {instanceID: 0}
+  - iceArrow: {fileID: 1000014014429852, guid: d062a9b750ce0b941ae29b95d87624b7, type: 2}
+  - fireArrow: {instanceID: 0}
+  - lightningArrow: {instanceID: 0}
+  - normalArrow: {fileID: 1000014014429852, guid: 46fd1a27c3ec9cf4fb3a5e7b57df0a7d,
+      type: 2}
+  - shootSound: {instanceID: 0}
+  - Arrow: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

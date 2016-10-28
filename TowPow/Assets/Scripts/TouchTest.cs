@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace TouchScript
 {
@@ -21,6 +23,7 @@ namespace TouchScript
 		private TowerSpawn blackTower;
 
 		private Camera topCamera;
+		private GraphicRaycaster hudCanvasRaycaster;
 
 		public List<GameObject> towerTypes;
 		public List<GameObject> towers;
@@ -31,12 +34,14 @@ namespace TouchScript
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
 
-			topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+			if (!DeterminePlayerType.isVive) {
+				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
+			}
+			hudCanvasRaycaster = GameObject.Find ("HUDCanvas").GetComponent<GraphicRaycaster>();
 		}
 
 		private void OnEnable()
 		{
-			Debug.Log ("start");
 			if (TouchManager.Instance != null)
 			{
 				TouchManager.Instance.TouchesBegan += touchesBeganHandler;
@@ -53,9 +58,12 @@ namespace TouchScript
 			}
 		}
 
-		private void touchesBeganHandler(object sender, TouchEventArgs e)
-		{
-			
+		private void touchesBeganHandler(object sender, TouchEventArgs e) {
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
+				return;
+			}
+				
+
 			foreach (var point in e.Touches) {
 //				Debug.Log ("pointHit: " + point.Hit);
 //				Debug.Log ("pointID: " + point.Id);
@@ -70,7 +78,10 @@ namespace TouchScript
 		}
 
 		private void touchesEndedHandler(object sender, TouchEventArgs e) {
-			Debug.Log ("End handler");
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
+				return; 
+			}
+
 			foreach (var point in e.Touches) {
 				TouchEnd (point.Position, point.Tags);
 			}
@@ -79,30 +90,44 @@ namespace TouchScript
 		void TouchBegin(Vector2 position, Tags tags) {
 			Debug.Log ("Touch Start");
 
-			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-			spawnPosition.y = 10f;
+			Vector3 spawnPosition = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 16f));
+			spawnPosition.y = 16f;
+
+			// UGLY HACK FOR TESTING WITHOUT PIXELSENSE
+			if (tags.HasTag("Mouse")) {
+				if(Input.GetKey(KeyCode.D)) {
+					tags = new Tags("red");
+				}
+			}
 
 			// Figure out what towertype we are dealing with
 			string towerTag = null;
 			foreach(GameObject tp in towerTypes) {
-				Debug.Log (tp.tag);
 				if(tags.HasTag(tp.tag)) {
 					towerTag = tp.tag;
 					break;
 				}
 			}
-			if(towerTag == null) {
-				Debug.Log("The fiducial does not represent a tower");
 
-				// CHECK FOR TOUCH INPUT
-				if (tags.HasTag ("Touch")) {
-					Vector3 down = new Vector3 (0, -1, 0);
-					if (Physics.Raycast (spawnPosition, down, 10)) {
-						Debug.Log ("Something was hit!");
+			if(towerTag == null) {
+				if (tags.HasTag ("Touch") || tags.HasTag("Mouse")) {
+					PointerEventData ped = new PointerEventData (null);
+					ped.position = position;
+					List<RaycastResult> results = new List<RaycastResult> ();
+					hudCanvasRaycaster.Raycast (ped, results);
+
+					foreach (RaycastResult r in results) {
+						if (r.gameObject.name == "CoinSprite(Clone)") {
+							r.gameObject.GetComponent<CoinClick> ().DestroyCoin ();
+							break;
+						}
+
+						else if(r.gameObject.tag == "upgradeButton"){
+							r.gameObject.GetComponent<UpgradeTower>().Upgrade();
+						}
 					}
-				} else {
-					return;
 				}
+				return;
 			}
 			
 			// Check if the tower is already placed and get the reference.
@@ -119,7 +144,6 @@ namespace TouchScript
 			if(activeTower == null) {
 				// The tower is not placed
 				// Create and spawn the tower
-				Debug.Log("instantiating tower to CMD");
 				CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 			} else {
 				// The tower is placed
@@ -129,7 +153,6 @@ namespace TouchScript
 					activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
 				} else {
 					// It's a new position
-					Debug.Log(activeTower);
 					activeTower.GetComponent<TowerSpawn>().Despawn();
 					CmdInstantiateTower(towerTag, spawnPosition, Quaternion.identity);
 				}
@@ -151,7 +174,8 @@ namespace TouchScript
 			if (towerTag != null) {
 				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
 					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+						CmdStartDespawning(tower);
+						// tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 					}
 				}
 			}
@@ -173,10 +197,8 @@ namespace TouchScript
 				Debug.Log("The fiducial does not represent a tower");
 				return;
 			}
-			//Debug.Log("Towerprefab vi fick in: " + towerPrefab.ToString());
-			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 
-			//Debug.Log("Ska spawna torn på server");
+			GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
 			NetworkServer.Spawn(t);
 		}
 			
@@ -189,8 +211,6 @@ namespace TouchScript
 
 			yield return new WaitForSeconds (time);
 
-			Debug.Log("Ready to destroy");
-
 			if (!goId.IsEmpty()) {
 				CmdDestroyTowerByNetId (goId);
 			}
@@ -199,6 +219,11 @@ namespace TouchScript
 		[Command]
 		void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
 			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+		}
+
+		[Command]
+		void CmdStartDespawning(GameObject tower){
+			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
 	}
 }

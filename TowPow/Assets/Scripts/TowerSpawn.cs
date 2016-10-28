@@ -3,54 +3,57 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class TowerSpawn : MonoBehaviour {
+public class TowerSpawn : NetworkBehaviour {
 
 	public bool isActive;
 	public float spawnDuration = 2f;
 	public GameObject shootingRadiusIndicator;
 	public GameObject circleProgressPrefab;
+	public GameObject upgradeButtonPrefab;
 	private Camera topCamera;
 
+	[SyncVar]
 	public bool despawning = false;
-	private float despawnTimer;
-	private float despawnTime = 0.5f;
+	private float despawnTimer = 0f;
+	private float despawnTime = 1.0f;
 
 	private GameObject buildProgress;
+	private GameObject upgradeButton;
 	private bool isBuildingTower = false;
 
 	private float serverDespawnTime = 2f;
 
 	private IEnumerator fillBuildProgressEnumerator;
 	private IEnumerator buildTowerOverTimeEnumerator;
+	private IEnumerator attachButtonWhenTowerSpawned;
 
 	private TouchScript.TouchTest touchTest;
 
-	// Use this for initialization
 	void Start () {
 		isActive = false;
 		touchTest = FindObjectOfType<TouchScript.TouchTest> ();
-        if (!NetworkServer.active){
-			// Vi fick ett fel här
+
+        if (!DeterminePlayerType.isVive){
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
         }
+
 		Spawn ();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		if(despawning) {
 			despawnTimer += Time.deltaTime;
 			if(despawnTimer > despawnTime) {
 				despawning = false;
+				despawnTimer = 0;
 				Despawn();
 			}
 		}
 	}
 
+
 	public void StartDespawnTimer() {
-		//isBuildingTower = false;
 		despawning = true;
-		despawnTimer = 0;
 	}
 
 	public void StopDespawnTimer() {
@@ -58,56 +61,86 @@ public class TowerSpawn : MonoBehaviour {
 	}
 
 	public void Despawn() {
+		// If tower never fully spawned, no upgrade button has been assigned.
+//		if (upgradeButton != null) {
+//			upgradeButton.GetComponent<UpgradeTower> ().DestroyMe ();
+//		}
+
 		isActive = false;
 		//Stop all coroutines
 		if(isBuildingTower) {
 			isBuildingTower = false;
 			StopCoroutine (buildTowerOverTimeEnumerator);
-            if (!NetworkServer.active){
-                StopCoroutine(fillBuildProgressEnumerator);
-            }
+			if (!DeterminePlayerType.isVive){
+				StopCoroutine(fillBuildProgressEnumerator);
+				StopCoroutine (attachButtonWhenTowerSpawned);
+			}
 		}
-		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+
+		
+		Vector3 endPoint = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
+		// Vector3 endPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		
+		// Start the despawning animation
+
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
-        if (!NetworkServer.active)
+
+        if (!DeterminePlayerType.isVive)
         {
             StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
         }
+
 		touchTest.DestroyMe (GetComponent<NetworkIdentity> ().netId, serverDespawnTime);
+
 		//Destroy buildProgress
 		Destroy(buildProgress, serverDespawnTime);
 	}
 
 	void Spawn() {
 		Vector3 endPoint = transform.position;
-		transform.position = new Vector3(transform.position.x, transform.position.y - 5, transform.position.z);
+
+		transform.position = new Vector3(transform.position.x, transform.position.y - 11, transform.position.z);
+		// transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 		buildTowerOverTimeEnumerator = MoveOverSeconds (endPoint, spawnDuration);
 		StartCoroutine(buildTowerOverTimeEnumerator);
 		//SPAWN THE TOWER WITH PROGRESS
 		isBuildingTower = true;
 
-		Vector3 pos = gameObject.transform.position;
-		pos.y = pos.y + 1.5f;
+		//Vector3 pos = gameObject.transform.position;
+//		pos.y = pos.y + 1.5f;
 		// GameObject indicator = (GameObject)Instantiate(shootingRadiusIndicator, pos, Quaternion.identity);
 		// indicator.transform.parent = gameObject.transform;
 
-        if (!NetworkServer.active){
+        if (!DeterminePlayerType.isVive){
             buildProgress = (GameObject)Instantiate(circleProgressPrefab, topCamera.WorldToScreenPoint(endPoint), Quaternion.identity);
             buildProgress.transform.SetParent(GameObject.Find("HUDCanvas").transform);
         }
 
         //buildProgress.transform.position = topCamera.WorldToScreenPoint(endPoint);
-        if (!NetworkServer.active)
+        if (!DeterminePlayerType.isVive)
         {
             fillBuildProgressEnumerator = FillBuildProgress(spawnDuration, Color.red, Color.green, 0f, 1f);
             StartCoroutine(fillBuildProgressEnumerator);
         }
 
+//		if (!DeterminePlayerType.isVive) {
+//			attachButtonWhenTowerSpawned = AttachButtonWhenTowerSpawned ();
+//			StartCoroutine (attachButtonWhenTowerSpawned);
+//		}
+
 	}
+
+//	IEnumerator AttachButtonWhenTowerSpawned(){
+//		yield return new WaitForSeconds(spawnDuration);
+//		// Attach upgrade button now that the tower has spawned
+//		AttachUpgradeButtonToTower();
+//	}
 
 	IEnumerator SpawnTimer() {
 		yield return new WaitForSeconds(spawnDuration);
 		isActive = true;
+		// Attach upgrade button now that the tower has spawned
+//		AttachUpgradeButtonToTower();
 	}
 
 	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
@@ -129,21 +162,27 @@ public class TowerSpawn : MonoBehaviour {
 		Debug.Log ("FillBuildProgress");
 		float elapsedTime = 0f;
 		while (elapsedTime < time) {
+			if(image == null){
+				break;
+			}
 			image.fillAmount =  Mathf.Lerp(startValue, endValue, elapsedTime/time);
 			image.color = Color.Lerp (startColor, endColor, (elapsedTime / time));
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame ();
 		}
-		image.color = endColor;
-		image.fillAmount = endValue;
+		if(image != null){
+			image.color = endColor;
+			image.fillAmount = endValue;
+		}
 		isBuildingTower = false;
-	}
 
-	public void AddTowerController(TouchScript.TouchTest tt) {
-		touchTest = tt;
 	}
-
-	private void updateBuildProgress() {
-		
-	}
+//
+//	void AttachUpgradeButtonToTower(){
+//		Vector3 upgradeButtonPos = topCamera.WorldToScreenPoint(gameObject.transform.position);
+//		upgradeButtonPos.y -= 30;
+//		upgradeButton = (GameObject)Instantiate(upgradeButtonPrefab, upgradeButtonPos, Quaternion.identity);
+//		upgradeButton.transform.SetParent(GameObject.Find("HUDCanvas").transform);
+//		upgradeButton.GetComponent<UpgradeTower>().tower = gameObject;
+//	}
 }
