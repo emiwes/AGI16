@@ -10,6 +10,10 @@ public class ArrowManager : MonoBehaviour {
     private GameObject currentArrow;
 
 	public GameObject bow;
+	private Quaternion baseRotation;
+	private Quaternion releaseRotation;
+	private bool fired = false;
+	private float fireOffset = 0f;
 
 	public GameObject stringAttachPoint;
 	public GameObject arrowStartPoint;
@@ -34,6 +38,8 @@ public class ArrowManager : MonoBehaviour {
 		source = GetComponent<AudioSource>();
 		if (Instance == null)
 			Instance = this;
+		baseRotation = transform.rotation;
+		releaseRotation = transform.rotation;
 	}
 
 	void OnDestroy() {
@@ -52,41 +58,48 @@ public class ArrowManager : MonoBehaviour {
 
 			AimBow ();
 
-            Vector3 direction = stringStartPoint.transform.position - trackedObj.transform.position;
-            float dist = direction.magnitude;
+			Vector3 direction = stringStartPoint.transform.position - trackedObj.transform.position;
+			float dist = direction.magnitude;
 
-			if (dist <= 0.5f ) {
-                //If distance not greater than a certain value
-                //Possibly have new Vector3 (5f*dist, 0f, dist);
-                stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
-                //Fix rotation of arrow
-                //Debug.Log(dist * 100 % 5);
-			    float hapticStep = dist * 100 % 5;
+			if (dist <= 0.5f) {
+				//If distance not greater than a certain value
+				//Possibly have new Vector3 (5f*dist, 0f, dist);
+				stringAttachPoint.transform.localPosition = stringStartPoint.transform.localPosition + new Vector3 (10f * dist, 0f, 0f);
+				//Fix rotation of arrow
+				//Debug.Log(dist * 100 % 5);
+				float hapticStep = dist * 100 % 5;
 				if (hapticStep <= 0.7 && hapticStep >= 0) {
 					//Possibly use an interval in which there is a vibration
-					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse(3000);
+					SteamVR_Controller.Input ((int)trackedObj.index).TriggerHapticPulse (3000);
 				}
 			}
 			var device = SteamVR_Controller.Input ((int)trackedObj.index);
 			if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-                if (dist >= 0.3f)
-                    Fire();
-                else
-                {
-                    Destroy(currentArrow);
-                    currentArrow = null;
-                    stringAttachPoint.transform.position = stringStartPoint.transform.position;
-                    isAttached = false;
-                }
+				if (dist >= 0.3f)
+					Fire ();
+				else {
+					Destroy (currentArrow);
+					currentArrow = null;
+					stringAttachPoint.transform.position = stringStartPoint.transform.position;
+					isAttached = false;
+				}
+			}
+		} else {
+			if (fired)
+			{
+				fired = false;
+				fireOffset = Time.time;
+			}
+			if (!releaseRotation.Equals(baseRotation))
+			{
+				transform.rotation = Quaternion.Lerp(releaseRotation, baseRotation, (Time.time - fireOffset) * 8);
 			}
 		}
 	}
-
-	// TODO(Arvod): Test this!
+		
 	private void AimBow() {
 		bow.transform.LookAt (transform.position);
 		bow.transform.forward *= -1;
-		//bow.transform.rotation = Quaternion.LookRotation(stringAttachPoint.transform.position - trackedObj.transform.position, trackedObj.transform.up);
 	}
 
 	private void Fire(){
@@ -96,6 +109,7 @@ public class ArrowManager : MonoBehaviour {
         {
             dist = 0.5f;
         }
+
 
         SteamVR_Controller.Input((int)gameObject.GetComponent<SteamVR_TrackedObject>().index).TriggerHapticPulse(3000);
 
@@ -118,7 +132,8 @@ public class ArrowManager : MonoBehaviour {
 		source.PlayOneShot(shootSound,vol);
 
 		isAttached = false;
-	
+		releaseRotation = bow.transform.rotation;
+		fired = true;
 	}
 
 	// Spawn a new arrow
