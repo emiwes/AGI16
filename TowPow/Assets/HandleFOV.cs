@@ -11,6 +11,7 @@ public class HandleFOV : NetworkBehaviour {
 	public Vector3 VRPosition;
 
 	private GameObject FOV;
+	private float targetYAngle;
 
 	void Start() {
 		FOV = GameObject.Find ("FOV");
@@ -23,9 +24,16 @@ public class HandleFOV : NetworkBehaviour {
 		}
 	}
 
+	void Update() {
+		//On update lerp rotation
+		FOV.transform.eulerAngles = new Vector3(0f, 0f, Mathf.LerpAngle(FOV.transform.eulerAngles.z, targetYAngle, 0.5f));
+	}
+
 	void OnYAngleChange(float yAngle) {
-		//Update rotation of FOV
-		FOV.transform.eulerAngles = new Vector3(0f, 0f, yAngle);
+		//Update target rotation
+		targetYAngle = yAngle;
+		//Mathf.Lerp(FOV.transform.eulerAngles, new Vector3(0f, 0f, yAngle), Time.deltaTime);
+		//FOV.transform.eulerAngles = new Vector3(0f, 0f, yAngle);
 	}
 
 	void OnVRPosChange(Vector3 VRPosition) {

@@ -7,7 +7,7 @@ public class TowerTriggerActions : MonoBehaviour {
 	TowerCombat towerCombat;
 
 	void Start() {
-		tower = gameObject.transform.parent.transform.parent.gameObject;
+		tower = gameObject.transform.parent.gameObject;
 		towerCombat = tower.GetComponent<TowerCombat> ();
 	}
 
@@ -19,11 +19,10 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
-        if (other.gameObject.tag == "Enemy")
-        {
-            towerCombat.updateClosestEnemy();
-        }
-    }
+		if (other.gameObject.tag == "Enemy") {
+			towerCombat.updateClosestEnemy ();
+		}
+	}
 
 	void OnTriggerExit(Collider other) {
 		if(towerCombat.nearbyEnemies.Contains(other.gameObject))

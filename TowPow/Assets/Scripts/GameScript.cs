@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
@@ -9,15 +10,20 @@ public class GameScript : NetworkBehaviour {
 	public Text MoneyText;
 	public Text KillText;
 
-    public Slider HealthSlider;
+//    public Slider HealthSlider;
+//	public Image HealthIndicator;
+	public Image[] healthIndicators;
     public Text HealthText;
     private spawnEnemy enemySpawner;
 
     public int creepsPerWave;
+
 	[SyncVar (hook = "OnWaveChange")]
 	public int waveNr = 0;
+
 	[SyncVar (hook = "OnKillChange")]
 	public int killCounter = 0;
+
 	[SyncVar (hook = "OnMoneyChange")]
 	public int moneyCounter = 0;
 
@@ -40,20 +46,19 @@ public class GameScript : NetworkBehaviour {
     public int ArcadeStartAmount = 5;
     public int ArcadeMultiplier = 2;
 
+    void Awake() {
+		PlayerHealth = PlayerStartingHealth;
+        enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
+    }
+    
+
     IEnumerator RunWaves(float spawnWaitTime, int nrOfCreeps) {
-		//spawnEnemy enemySpawner = GameObject.Find ("spawner").GetComponent<spawnEnemy> ();
 		for (int i = 0; i < nrOfCreeps; i++) {
 			enemySpawner.spawnSingleEnemy();
 			yield return new WaitForSeconds (spawnWaitTime);
 		}
 		yield return true;
 	}
-
-	void Awake() {
-		PlayerHealth = PlayerStartingHealth;
-        enemySpawner = GameObject.Find("spawner").GetComponent<spawnEnemy>();
-
-    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -100,13 +105,14 @@ public class GameScript : NetworkBehaviour {
 		}
 	}
 
-    public void EnemyReachedGoal()
-    {
+    public void EnemyReachedGoal(GameObject enemy){
 
         //GameScriptRef.PlayerHealth -= 1;
-        if (PlayerHealth > 0)
+        if ( isServer && PlayerHealth > 0)
         {
             PlayerHealth -= 1;
+			NetworkServer.Destroy(enemy);
+
             //Debug.Log("PlayerHealth: " + PlayerHealth);
             //update GUI
         }
@@ -160,17 +166,25 @@ public class GameScript : NetworkBehaviour {
         }
 	}
 	void OnMoneyChange(int money){
+		moneyCounter = money;
 		MoneyText.text = money.ToString();
 	}
 
     void OnChangeHealth(int health)
     {
         HealthText.text = health.ToString();
-        HealthSlider.value = health;
-        if(health <= 0)
-        {
-            GameOver = true;
-            HealthText.text = "GAME OVER";
-        }
+		float fillAmount;
+		
+		if (health > 0) {
+			fillAmount = (float)health / (float)PlayerStartingHealth;
+		} else {
+			fillAmount = 0;
+			GameOver = true;
+			HealthText.text = "GAME OVER";
+		}
+
+		foreach(Image healthIndicator in healthIndicators){
+			healthIndicator.fillAmount = fillAmount;
+		}
     }
 }
