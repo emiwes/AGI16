@@ -173,8 +173,8 @@ public class ArrowManager : MonoBehaviour {
 			ChangeToNewArrow (fireArrow);
 		} else if(col.tag == "lightningArrowSwitcher"){
 			ChangeToNewArrow (lightningArrow);
-		} else if(col.tag == " normalArrowSwitcher"){
-			ChangeToNewArrow (lightningArrow);
+		} else if(col.tag == "normalArrowSwitcher"){
+			ChangeToNewArrow (normalArrow);
 		} else{
 			if (currentArrow != null) {
 				currentArrow.GetComponent<Arrow>().AttachArrowToBow();
