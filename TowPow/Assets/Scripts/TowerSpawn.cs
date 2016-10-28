@@ -109,34 +109,37 @@ public class TowerSpawn : MonoBehaviour {
 
 		if (!validPlacement) {
 			towerModel.SetActive (false);
-			Despawn (false);
+            if (spawnedTower)
+            {
+                Despawn(false);
+            }
+            startAlert();
 		}
 
         else if (validPlacement && !spawnedTower)
         {
 			spawnedTower = true;
 			towerModel.SetActive (true);
-			//Debug.Log ("ValidPlacment");
 			runningAlert = false;
 			towerPlacementAlert.SetActive (false);
-			//Destroy old
 
-            //touchTest.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
             //spawn new
             Spawn();
         }
-        else
-        {
-			if (!DeterminePlayerType.isVive && !runningAlert && !spawnedTower)
-            {
-				runningAlert = true;
-
-				towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint (transform.position);
-				towerPlacementAlert.SetActive (true);
-                StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
-            }
-        }
+       
 	}
+
+    private void startAlert()
+    {
+        if (!DeterminePlayerType.isVive && !runningAlert && !spawnedTower)
+        {
+            runningAlert = true;
+
+            towerPlacementAlert.transform.position = topCamera.WorldToScreenPoint(transform.position);
+            towerPlacementAlert.SetActive(true);
+            StartCoroutine(AlertBuildProgress(0.5f, Color.clear, Color.red));
+        }
+    }
 
 	public void StartDespawnTimer() {
 		despawning = true;
