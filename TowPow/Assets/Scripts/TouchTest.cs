@@ -223,7 +223,8 @@ namespace TouchScript
 
 		[Command]
 		void CmdStartDespawning(GameObject tower){
-			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+            Debug.Log("CmdStartDespawning");
+            tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
 	}
 }

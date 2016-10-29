@@ -23,17 +23,16 @@ public class TowerSpawn : NetworkBehaviour {
     [SyncVar]
     public bool despawning = false;
 
-
     //Public primitives
     public bool isActive = false;
     public float spawnDuration = 2f;
-    public bool noActiveOfThatKind = false;
     public bool validPlacement = false;
+    public bool startDespawning = false;
 
 
     //Private Primitives
-    private float despawnTimer;
-	private float despawnTime = 0.5f;
+    private float startDespawnTimer;
+	private float StartdespawnTime = 0.5f;
     private bool isBuildingTower = false;
     private float serverDespawnTime = 2f;
     private bool NonValidPlacementIndicatorRunning = false;
@@ -101,33 +100,34 @@ public class TowerSpawn : NetworkBehaviour {
             activateTower();
         }
 
-        //if (despawning)
-        //{
-        //    despawnTimer += Time.deltaTime;
-        //    if (despawnTimer > despawnTime)
-        //    {
-        //        Despawn();
+        if (startDespawning)
+        {
+            startDespawnTimer += Time.deltaTime;
+            if (startDespawnTimer > StartdespawnTime)
+            {
+                startDespawning = false;
+                //Debug.Log("Calling DEspawn from TS");
+                //Despawn();
 
-        //        despawning = false;
-
-        //    }
-        //    return;
-        //}
+            }
+            return;
+        }
 
 
     }
 
     //Public Functions
 	public void StartDespawnTimer() {
-		despawning = true;
-		despawnTimer = 0;
+		startDespawning = true;
+		startDespawnTimer = 0;
 	}
 	public void StopDespawnTimer() {
-		despawning = false;
+        startDespawning = false;
 	}
 	public void Despawn() {
         Debug.Log("Despawn");
 		isActive = false;
+        despawning = true;
 		//Stop all coroutines
 		if(isBuildingTower) {
 			isBuildingTower = false;
@@ -136,22 +136,21 @@ public class TowerSpawn : NetworkBehaviour {
                 StopCoroutine(fillBuildProgressEnumerator);
             }
 		}
-
+        //Move tower down
 		Vector3 endPoint = new Vector3(physicalTower.transform.position.x, physicalTower.transform.position.y - 5, physicalTower.transform.position.z);
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
 
-        if (!DeterminePlayerType.isVive)
+        if (!DeterminePlayerType.isVive && buildProgress.activeSelf)
         {
+            //Last line in Enumerator calls removeTower();
             StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
         }
-        if (!towerPlacementIndicator.activeSelf)
+        else if (!DeterminePlayerType.isVive && towerPlacementIndicator.activeSelf)
         {
-            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
+            removeTower();
         }
-        else
-        {
-            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, 0f);
-        }
+
+        
 
         //Destroy buildProgress Not needed destroys when tower destroys
         //Destroy(buildProgress, serverDespawnTime);
@@ -203,6 +202,17 @@ public class TowerSpawn : NetworkBehaviour {
         //set parent
         towerCanvas.transform.SetParent(gameObject.transform);
     }
+    private void removeTower()
+    {
+        if (!towerPlacementIndicator.activeSelf)
+        {
+            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
+        }
+        else
+        {
+            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, 0f);
+        }
+    }
 
     //Enumerators
 	IEnumerator MoveOverSeconds(Vector3 endPoint, float time) {
@@ -229,7 +239,12 @@ public class TowerSpawn : NetworkBehaviour {
 		image.color = endColor;
 		image.fillAmount = endValue;
 		isBuildingTower = false;
-	}
+        if (despawning)
+        {
+            removeTower();
+
+        }
+    }
     IEnumerator NonValidPlacmentIndicator(float blinkPeriod, Color startColor, Color endColor)
     {
         Image image = towerPlacementIndicator.GetComponent<Image>();
