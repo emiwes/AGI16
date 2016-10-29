@@ -146,7 +146,7 @@ namespace TouchScript
                 {
                     // It's a new position
                     //activeTower.GetComponent<TowerSpawn>().Despawn();
-					CmdStartDespawning (activeTower);
+					CmdDespawn (activeTower);
                     CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
                 }
             }
@@ -255,6 +255,7 @@ namespace TouchScript
         [Command]
 		void CmdInstantiateTower(string tag, Vector3 position, Quaternion rotation) {
 			// Figure out what towertype we are dealing with
+			Debug.Log("CMDINSTANTIATE TOWER");
 			GameObject towerPrefab = null;
 
 			foreach(GameObject tp in towerTypes) {
@@ -274,8 +275,9 @@ namespace TouchScript
             NetworkServer.Spawn(t);
      		}
         [Command]
-        public void CmdStartDespawning(GameObject tower)
+        public void CmdDespawn(GameObject tower)
         {
+			Debug.Log("CMD DESPAWN TOWER");
             //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
             tower.GetComponent<TowerSpawn>().Despawn();
         }

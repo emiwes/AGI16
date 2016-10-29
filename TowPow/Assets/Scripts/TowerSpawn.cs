@@ -107,7 +107,7 @@ public class TowerSpawn : NetworkBehaviour {
             if (startDespawnTimer > StartdespawnTime)
             {
                 startDespawning = false;
-				PSInputScript.CmdStartDespawning(gameObject);
+				PSInputScript.CmdDespawn(gameObject);
 
             }
             return;

@@ -12,7 +12,7 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
-        if ((!towerCombat.nearbyEnemies.Contains(other.gameObject)) && (other.gameObject.tag == "Enemy"))
+		if ((other.gameObject.tag == "Enemy") && (!towerCombat.nearbyEnemies.Contains(other.gameObject)))
         {
             towerCombat.addNearbyEnemy(other.gameObject);
         }

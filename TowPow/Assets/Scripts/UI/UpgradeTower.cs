@@ -13,16 +13,16 @@ public class UpgradeTower : MonoBehaviour {
 	}
 
 	public void Upgrade(){
-		Debug.Log ("Upgrade called!");
+		//Debug.Log ("Upgrade called!");
 		int maxLevel = towerLevelSynchronize.levelInfo.Count;
-		Debug.Log ("Max level: " + maxLevel);
+		//Debug.Log ("Max level: " + maxLevel);
 		int currentLevel = towerLevelSynchronize.towerLevelLookup [tag];
-		Debug.Log ("Current level: " + currentLevel);
+		//Debug.Log ("Current level: " + currentLevel);
 		if (towerLevelSynchronize.towerLevelLookup[tag] == maxLevel) {
 			return;
 		}
 
-		Debug.Log ("Cost to upgrade: "+towerLevelSynchronize.levelInfo [currentLevel - 1].costToUpgrade);
+		//Debug.Log ("Cost to upgrade: "+towerLevelSynchronize.levelInfo [currentLevel - 1].costToUpgrade);
 		if (gameScript.moneyCounter >= towerLevelSynchronize.levelInfo[currentLevel - 1].costToUpgrade) {
 			towerLevelSynchronize.LevelUp (tag);
 		} 
