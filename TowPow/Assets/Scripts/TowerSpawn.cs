@@ -183,6 +183,8 @@ public class TowerSpawn : NetworkBehaviour {
     private void activateTower()
     {
         Debug.Log("Activate Tower");
+		//Despawn all other towers with same tag
+		PSInputScript.despawnTowersWithtag(gameObject.tag);
 
         Vector3 endPoint = physicalTower.transform.position;
 
