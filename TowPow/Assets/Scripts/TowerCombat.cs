@@ -83,7 +83,10 @@ public class TowerCombat : NetworkBehaviour {
 	public void updateClosestEnemy(){
 		// Check if any enemies have been killed since last iteration, remove null references. 
 		checkForDead ();
-        if (nearbyEnemies.Count == 0) return;
+
+		if (nearbyEnemies.Count == 0) {
+			return;
+		}
 
 		float minDist = Vector3.Distance(transform.position, nearbyEnemies[0].transform.position);
 		GameObject closestInList = nearbyEnemies[0];
