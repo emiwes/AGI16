@@ -109,18 +109,32 @@ public class TowerSpawn : NetworkBehaviour {
             startDespawnTimer += Time.deltaTime;
             if (startDespawnTimer > StartdespawnTime)
             {
+				Debug.Log ("Despawn commencing");
                 startDespawning = false;
 				PSInputScript.CmdDespawn(gameObject);
 
             }
             return;
         }
+		if (despawning && isActive) {
+			isActive = false;
+
+			if (buildingProgresActive){
+				if (!DeterminePlayerType.isVive && buildProgress.activeSelf) {
+					//Last line in Enumerator calls removeTower();
+					StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
+				} else {
+					StartCoroutine(PSInputScript.DestroyTower(gameObject, spawnDuration));
+				}
+			}
+		}
 
 
     }
 
     //Public Functions
 	public void StartDespawnTimer() {
+		Debug.Log ("Starting Despawn timer");
 		startDespawning = true;
 		startDespawnTimer = 0;
 	}
