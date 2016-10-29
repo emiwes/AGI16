@@ -13,18 +13,17 @@ public class DeterminePlayerType : NetworkBehaviour {
 
 	public GameObject topCamera;
 
-	public GameObject ViveCamera;
-	public GameObject ViveController_Left;
-	public GameObject ViveController_Right;
-
 	public static bool isVive;
 
 	bool showUI = true;
 
+	 private Color activeButtonColor = new Color (0.1f, 0.8f, 0.2f, 1.0f);
+	 private Color defaultButtonColor = new Color (1.0f, 1.0f, 1.0f, 0.5f);
+
 	void Start() {
 		topCamera.SetActive (true);
-		viveComponents.SetActive (false);
 		hudCanvas.SetActive (true);
+		viveComponents.SetActive (false);
 	}
 
 	void Update() {
@@ -44,7 +43,6 @@ public class DeterminePlayerType : NetworkBehaviour {
 		pixelSenseButton.SetActive (showUI);
 		viveButton.SetActive (showUI);
 		GetComponent<NetworkManagerHUD> ().showGUI = showUI;
-
 	}
 
 	public void SetDeviceEnvironment(string type){
@@ -53,28 +51,21 @@ public class DeterminePlayerType : NetworkBehaviour {
 			viveComponents.SetActive(false);
 			pixelSenseComponents.SetActive (true);
 			hudCanvas.GetComponent<CanvasGroup> ().alpha = 1;
-            setHostInGameScript();
 
+			viveButton.gameObject.GetComponent<Image> ().color = defaultButtonColor;
+			pixelSenseButton.gameObject.GetComponent<Image> ().color = activeButtonColor;
         }
         else if (type == "Vive") {
 			isVive = true;
-			hudCanvas.GetComponent<CanvasGroup> ().alpha = 0;
 			viveComponents.SetActive(true);
-			//hudCanvas.SetActive(false);
 			pixelSenseComponents.SetActive(false);
-			setHostInGameScript();
+			hudCanvas.GetComponent<CanvasGroup> ().alpha = 0;
 
-        } else {
+			viveButton.gameObject.GetComponent<Image> ().color = activeButtonColor;
+			pixelSenseButton.gameObject.GetComponent<Image> ().color = defaultButtonColor;
+        } 
+		else {
 			Debug.LogError ("Invalid client type: "+type);
 		}
 	}
-
-    void setHostInGameScript()
-    {
-        //NetworkServer.active is a state that determines if it is a server running on this client
-        // isServer dosen't work on objects without networkIdentity like where this script is placed.
-        GameObject.Find("GameHandler").GetComponent<GameScript>().isHost = NetworkServer.active;
-		//Update host status on enemy spawner
-		GameObject.Find ("spawner").GetComponent<spawnEnemy> ().updateHostStatus (NetworkServer.active);
-    }
 }
