@@ -156,8 +156,16 @@ namespace TouchScript
 			Debug.Log ("TouchEnd");
 
 			string towerTag = getTowerTag(tags);
-			despawnTowersWithtag (towerTag);
 
+			if (towerTag != null) {
+                //despawn all towers of that type
+				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
+					if (!tower.GetComponent<TowerSpawn> ().despawning) {
+                        //CmdStartDespawning(tower);
+						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+					}
+				}
+			}
 		}
 
         //Public Functions
@@ -178,19 +186,6 @@ namespace TouchScript
             }
             return amount;
         }
-
-		public void despawnTowersWithtag(string towerTag){
-			if (towerTag != null) {
-				Debug.Log ("despawn multiple tower");
-				//despawn all towers of that type
-				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
-					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-						//CmdStartDespawning(tower);
-						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
-					}
-				}
-			}
-		}
 
         //Private Functions
         private string getTowerTag(Tags tags)
