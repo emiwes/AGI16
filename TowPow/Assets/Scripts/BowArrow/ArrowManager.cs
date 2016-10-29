@@ -39,8 +39,8 @@ public class ArrowManager : MonoBehaviour {
 		source = GetComponent<AudioSource>();
 		if (Instance == null)
 			Instance = this;
-		baseRotation = transform.rotation;
-		releaseRotation = transform.rotation;
+		baseRotation = bow.transform.localRotation;
+		releaseRotation = bow.transform.localRotation;
 	}
 
 	void OnDestroy() {
@@ -76,7 +76,7 @@ public class ArrowManager : MonoBehaviour {
 			}
 			var device = SteamVR_Controller.Input ((int)trackedObj.index);
 			if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-				if (dist >= 0.3f)
+				if (dist >= 0.2f)
 					Fire ();
 				else {
 					Destroy (currentArrow);
@@ -93,20 +93,21 @@ public class ArrowManager : MonoBehaviour {
 			}
 			if (!releaseRotation.Equals(baseRotation))
 			{
-				transform.rotation = Quaternion.Lerp(releaseRotation, baseRotation, (Time.time - fireOffset) * 8);
+				bow.transform.localRotation = Quaternion.Lerp(releaseRotation, baseRotation, (Time.time - fireOffset) * 4);
 			}
 		}
 	}
 		
 	private void AimBow() {
-		bow.transform.LookAt (transform.position);
-		bow.transform.forward *= -1;
+		Vector3 relativePos = bow.transform.position - transform.position;
+		Quaternion rotation = Quaternion.LookRotation(relativePos, bow.transform.TransformDirection(Vector3.up));
+		bow.transform.rotation = rotation;
 	}
 
 	private void Fire(){
 		float dist = (stringStartPoint.transform.position - trackedObj.transform.position).magnitude;
 
-        if (dist <= 0.5f)
+        if (dist >= 0.5f)
         {
             dist = 0.5f;
         }
@@ -133,7 +134,7 @@ public class ArrowManager : MonoBehaviour {
 		source.PlayOneShot(shootSound,vol);
 
 		isAttached = false;
-		releaseRotation = bow.transform.rotation;
+		releaseRotation = bow.transform.localRotation;
 		fired = true;
 	}
 
