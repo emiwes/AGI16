@@ -118,6 +118,9 @@ public class TowerSpawn : NetworkBehaviour {
         }
 		if (despawning && isActive) {
 			isActive = false;
+			Vector3 endPoint = new Vector3(physicalTower.transform.position.x, physicalTower.transform.position.y - 5, physicalTower.transform.position.z);
+
+			StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
 
 			if (buildingProgresActive){
 				if (!DeterminePlayerType.isVive && buildProgress.activeSelf) {
