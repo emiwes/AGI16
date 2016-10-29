@@ -169,11 +169,11 @@ namespace TouchScript
 		}
 
         //Public Functions
-        public void DestroyMe(NetworkInstanceId id, float time)
+        /*public void DestroyMe(NetworkInstanceId id, float time)
         {
             //StartCoroutine(DestroyTowerInSeconds(id, time));
             CmdDestroyTowerByNetId(id);
-        }
+        }*/
         public int numbersOfActiveTowersWithTag(string tag)
         {
             int amount = 0;
@@ -239,17 +239,17 @@ namespace TouchScript
         }
 
         //Enumerators
-        //IEnumerator DestroyTower(NetworkInstanceId goId)
-        //{
-        //    // Find reference in towers
-
+		public IEnumerator DestroyTower(GameObject tower, float time)
+        {
+			Debug.Log ("Destroy Tower");
+			yield return new WaitForSeconds(time);
     
-
-        //    if (!goId.IsEmpty())
-        //    {
-        //        CmdDestroyTowerByNetId(goId);
-        //    }
-        //}
+			Debug.Log (tower);
+            if (tower)
+            {
+                CmdDestroyTower(tower);
+            }
+        }
 
         //Commands
         [Command]
@@ -282,8 +282,10 @@ namespace TouchScript
             tower.GetComponent<TowerSpawn>().Despawn();
         }
         [Command]
-		public void CmdDestroyTowerByNetId(NetworkInstanceId networkId) {
-			NetworkServer.Destroy (NetworkServer.FindLocalObject (networkId));
+		public void CmdDestroyTower(GameObject tower) {
+			Debug.Log ("Cmd Destroy Tower");
+
+			NetworkServer.Destroy (tower);
 		}
 	}
 }

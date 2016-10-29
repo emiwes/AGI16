@@ -36,6 +36,7 @@ public class TowerSpawn : NetworkBehaviour {
     private bool isBuildingTower = false;
     private float serverDespawnTime = 2f;
     private bool NonValidPlacementIndicatorRunning = false;
+	private bool buildingProgresActive = false;
     private bool spawnedTower = false;
 
     //Enumerators (who needs to be saved and accessed later
@@ -63,13 +64,12 @@ public class TowerSpawn : NetworkBehaviour {
         if (!DeterminePlayerType.isVive)
         {
             topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
+			//setup function calls
+			createTowerCanvas();
         }
 
         //initial values 
         isActive = false;
-
-        //setup function calls
-        createTowerCanvas();
 
         //check intial Position
 
@@ -86,13 +86,16 @@ public class TowerSpawn : NetworkBehaviour {
 
         if (!validPlacement)
         {
-			if (!towerPlacementIndicator.activeSelf)// DeterminePlayerType.isVive && //start the indicator
+			if (!DeterminePlayerType.isVive && !towerPlacementIndicator.activeSelf)//  //start the indicator
             {
                 Debug.Log("Run alert");
                 towerPlacementIndicator.SetActive(true);
                 StartCoroutine(NonValidPlacmentIndicator(0.5f, Color.clear, Color.red));
 
             }
+			if (!NonValidPlacementIndicatorRunning) {
+				NonValidPlacementIndicatorRunning = true;
+			}
         }
 
         if(validPlacement && !isActive && !despawning)
@@ -140,12 +143,15 @@ public class TowerSpawn : NetworkBehaviour {
 		Vector3 endPoint = new Vector3(physicalTower.transform.position.x, physicalTower.transform.position.y - 5, physicalTower.transform.position.z);
 		StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
 
-        if (!DeterminePlayerType.isVive && buildProgress.activeSelf)
-        {
-            //Last line in Enumerator calls removeTower();
-            StartCoroutine(FillBuildProgress(spawnDuration, buildProgress.GetComponent<Image>().color, Color.red, buildProgress.GetComponent<Image>().fillAmount, 0f));
-        }
-        else if (!DeterminePlayerType.isVive && towerPlacementIndicator.activeSelf)
+		if (buildingProgresActive){
+			if (!DeterminePlayerType.isVive && buildProgress.activeSelf) {
+				//Last line in Enumerator calls removeTower();
+				StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
+			} else {
+				StartCoroutine(PSInputScript.DestroyTower(gameObject, spawnDuration));
+			}
+		}
+		else if (NonValidPlacementIndicatorRunning)
         {
             removeTower();
         }
@@ -160,6 +166,7 @@ public class TowerSpawn : NetworkBehaviour {
     private void activateTower()
     {
         Debug.Log("Activate Tower");
+
         Vector3 endPoint = physicalTower.transform.position;
 
         physicalTower.transform.position = new Vector3(physicalTower.transform.position.x, physicalTower.transform.position.y - 5, physicalTower.transform.position.z);
@@ -168,6 +175,9 @@ public class TowerSpawn : NetworkBehaviour {
         StartCoroutine(buildTowerOverTimeEnumerator);
         //SPAWN THE TOWER WITH PROGRESS
         isBuildingTower = true;
+
+		NonValidPlacementIndicatorRunning = false;
+		buildingProgresActive = true;
 
         if (!DeterminePlayerType.isVive)
         {
@@ -204,13 +214,13 @@ public class TowerSpawn : NetworkBehaviour {
     }
     private void removeTower()
     {
-        if (!towerPlacementIndicator.activeSelf)
+		if (!NonValidPlacementIndicatorRunning)
         {
-            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, serverDespawnTime);
+			StartCoroutine(PSInputScript.DestroyTower(gameObject, serverDespawnTime));
         }
         else
         {
-            PSInputScript.DestroyMe(GetComponent<NetworkIdentity>().netId, 0f);
+			StartCoroutine(PSInputScript.DestroyTower(gameObject, 0f));
         }
     }
 
