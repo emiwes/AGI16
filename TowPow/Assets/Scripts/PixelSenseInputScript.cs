@@ -244,7 +244,7 @@ namespace TouchScript
 			Debug.Log ("Destroy Tower");
 			yield return new WaitForSeconds(time);
     
-			Debug.Log (tower);
+			//Debug.Log (tower);
             if (tower)
             {
                 CmdDestroyTower(tower);
@@ -279,7 +279,10 @@ namespace TouchScript
         {
 			Debug.Log("CMD DESPAWN TOWER");
             //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
-            tower.GetComponent<TowerSpawn>().Despawn();
+            if (tower)
+            {
+                tower.GetComponent<TowerSpawn>().Despawn();
+            }
         }
         [Command]
 		public void CmdDestroyTower(GameObject tower) {
