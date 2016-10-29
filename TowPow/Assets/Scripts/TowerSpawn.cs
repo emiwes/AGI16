@@ -54,6 +54,7 @@ public class TowerSpawn : NetworkBehaviour {
 
     void Start () {
         //refernces to scripts
+		Debug.Log("Tower instantiated");
         PSInputScript = FindObjectOfType<TouchScript.PixelSenseInputScript>();
         terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
         physicalTower = transform.FindChild("Tower").gameObject;
@@ -106,8 +107,7 @@ public class TowerSpawn : NetworkBehaviour {
             if (startDespawnTimer > StartdespawnTime)
             {
                 startDespawning = false;
-                //Debug.Log("Calling DEspawn from TS");
-                //Despawn();
+				PSInputScript.CmdStartDespawning(gameObject);
 
             }
             return;
@@ -121,7 +121,7 @@ public class TowerSpawn : NetworkBehaviour {
 		startDespawning = true;
 		startDespawnTimer = 0;
 	}
-	public void StopDespawnTimer() {
+	public void StopStartDespawnTimer() {
         startDespawning = false;
 	}
 	public void Despawn() {

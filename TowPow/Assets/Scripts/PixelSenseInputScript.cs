@@ -123,7 +123,6 @@ namespace TouchScript
 				return;
 			}
 
-
             GameObject activeTower = getActiveTower(towerTag);
 
             // Check if we found anything
@@ -141,12 +140,13 @@ namespace TouchScript
                 if (Vector3.Distance(activeTower.transform.position, touchPositionInWorld) < distanceThreshold)
                 {
                     // It's close
-                    activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
+                    activeTower.GetComponent<TowerSpawn>().StopStartDespawnTimer();
                 }
                 else
                 {
                     // It's a new position
-                    activeTower.GetComponent<TowerSpawn>().Despawn();
+                    //activeTower.GetComponent<TowerSpawn>().Despawn();
+					CmdStartDespawning (activeTower);
                     CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
                 }
             }
@@ -161,7 +161,7 @@ namespace TouchScript
                 //despawn all towers of that type
 				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
 					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-                        CmdStartDespawning(tower);
+                        //CmdStartDespawning(tower);
 						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 					}
 				}
@@ -274,7 +274,7 @@ namespace TouchScript
             NetworkServer.Spawn(t);
      		}
         [Command]
-        void CmdStartDespawning(GameObject tower)
+        public void CmdStartDespawning(GameObject tower)
         {
             //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
             tower.GetComponent<TowerSpawn>().Despawn();
