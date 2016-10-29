@@ -241,10 +241,8 @@ namespace TouchScript
         //Enumerators
 		public IEnumerator DestroyTower(GameObject tower, float time)
         {
-			Debug.Log ("Destroy Tower");
 			yield return new WaitForSeconds(time);
     
-			//Debug.Log (tower);
             if (tower)
             {
                 CmdDestroyTower(tower);
@@ -255,7 +253,6 @@ namespace TouchScript
         [Command]
 		void CmdInstantiateTower(string tag, Vector3 position, Quaternion rotation) {
 			// Figure out what towertype we are dealing with
-			Debug.Log("CMDINSTANTIATE TOWER");
 			GameObject towerPrefab = null;
 
 			foreach(GameObject tp in towerTypes) {
@@ -277,7 +274,6 @@ namespace TouchScript
         [Command]
         public void CmdDespawn(GameObject tower)
         {
-			Debug.Log("CMD DESPAWN TOWER");
             //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
             if (tower)
             {
@@ -286,7 +282,6 @@ namespace TouchScript
         }
         [Command]
 		public void CmdDestroyTower(GameObject tower) {
-			Debug.Log ("Cmd Destroy Tower");
 
 			NetworkServer.Destroy (tower);
 		}

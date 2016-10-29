@@ -55,7 +55,6 @@ public class TowerSpawn : NetworkBehaviour {
 
     void Start () {
         //refernces to scripts
-		Debug.Log("Tower instantiated");
         PSInputScript = FindObjectOfType<TouchScript.PixelSenseInputScript>();
         terrainScript = GameObject.Find("Islands terrain").GetComponent<TerrainSurface>();
         physicalTower = transform.FindChild("Tower").gameObject;
@@ -88,9 +87,9 @@ public class TowerSpawn : NetworkBehaviour {
         {
 			if (!DeterminePlayerType.isVive && !towerPlacementIndicator.activeSelf)//  //start the indicator
             {
-                Debug.Log("Run alert");
                 towerPlacementIndicator.SetActive(true);
-				towerPlacementIndicator.transform.position = topCamera.WorldToScreenPoint (transform.position);
+				towerPlacementIndicator.transform.position = topCamera.WorldToScreenPoint(transform.position);
+
                 StartCoroutine(NonValidPlacmentIndicator(0.5f, Color.clear, Color.red));
 
             }
@@ -110,7 +109,6 @@ public class TowerSpawn : NetworkBehaviour {
             startDespawnTimer += Time.deltaTime;
             if (startDespawnTimer > StartdespawnTime)
             {
-				Debug.Log ("Despawn commencing");
                 startDespawning = false;
 				PSInputScript.CmdDespawn(gameObject);
 
@@ -138,7 +136,6 @@ public class TowerSpawn : NetworkBehaviour {
 
     //Public Functions
 	public void StartDespawnTimer() {
-		Debug.Log ("Starting Despawn timer");
 		startDespawning = true;
 		startDespawnTimer = 0;
 	}
@@ -146,7 +143,7 @@ public class TowerSpawn : NetworkBehaviour {
         startDespawning = false;
 	}
 	public void Despawn() {
-        Debug.Log("Despawn");
+        //Debug.Log("Despawn");
 		isActive = false;
         despawning = true;
 		//Stop all coroutines
@@ -183,7 +180,6 @@ public class TowerSpawn : NetworkBehaviour {
     //Private Functions
     private void activateTower()
     {
-        Debug.Log("Activate Tower");
 
         Vector3 endPoint = physicalTower.transform.position;
 
