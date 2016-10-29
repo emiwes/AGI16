@@ -86,7 +86,7 @@ public class TowerSpawn : NetworkBehaviour {
 
         if (!validPlacement)
         {
-            if (!DeterminePlayerType.isVive && !towerPlacementIndicator.activeSelf)//start the indicator
+			if (!towerPlacementIndicator.activeSelf)// DeterminePlayerType.isVive && //start the indicator
             {
                 Debug.Log("Run alert");
                 towerPlacementIndicator.SetActive(true);
