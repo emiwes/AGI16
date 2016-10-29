@@ -35,23 +35,32 @@ namespace TouchScript
         /*
         Observe that Input handlers only forward if we are not Vive
         */
-		
+
+        bool keyPressedInLastFrame = false;
+
+
 
         void Update()
         {
             Tags black = new Tags("black");
 
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
             {
-                
+                keyPressedInLastFrame = true;
                 TouchBegin(Input.mousePosition, black);
                 //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
                 
              
             }
-            if (Input.GetKeyUp(KeyCode.D))
+            else if(Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
+            {
+                TouchMove(Input.mousePosition, black);
+
+            }
+            else if (Input.GetMouseButtonUp(0))
             {
                 TouchEnd(Input.mousePosition, black);
+                keyPressedInLastFrame = false;
             }
 
         }
@@ -75,7 +84,8 @@ namespace TouchScript
 			if (TouchManager.Instance != null)
 			{
 				TouchManager.Instance.TouchesBegan += touchesBeganHandler;
-				TouchManager.Instance.TouchesEnded += touchesEndedHandler;
+				TouchManager.Instance.TouchesMoved += touchesMovedHandler;
+                TouchManager.Instance.TouchesEnded += touchesEndedHandler;
 			}
 		}
 
@@ -84,7 +94,8 @@ namespace TouchScript
 			if (TouchManager.Instance != null)
 			{
 				TouchManager.Instance.TouchesBegan -= touchesBeganHandler;
-				TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
+                TouchManager.Instance.TouchesMoved -= touchesMovedHandler;
+                TouchManager.Instance.TouchesEnded -= touchesEndedHandler;
 			}
 		}
 
@@ -98,7 +109,20 @@ namespace TouchScript
 			}
 		}
 
-		private void touchesEndedHandler(object sender, TouchEventArgs e) {
+        private void touchesMovedHandler(object sender, TouchEventArgs e)
+        {
+            if (DeterminePlayerType.isVive)
+            {
+                return;
+            }
+
+            foreach (var point in e.Touches)
+            {
+                TouchMove(point.Position, point.Tags);
+            }
+        }
+
+        private void touchesEndedHandler(object sender, TouchEventArgs e) {
 			if (DeterminePlayerType.isVive) { 
 				return; 
 			}
@@ -146,12 +170,46 @@ namespace TouchScript
                 {
                     // It's a new position
                     //activeTower.GetComponent<TowerSpawn>().Despawn();
-					CmdDespawn (activeTower);
+                    //CmdDespawn (activeTower);
+                    //despawn all towers of that type
+                    despawnAllTowersWithTag(towerTag);
                     CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
+                    Debug.Log("active towers in scene: " + numbersOfActiveTowersWithTag(towerTag));
                 }
             }
 		}
 
+        void TouchMove(Vector2 position, Tags tags)
+        {
+            ////////Debugging!!!!!//
+            tags = new Tags("black");
+
+            string towerTag = getTowerTag(tags);
+
+            if(towerTag!= null)
+            {
+                Debug.Log("TouchMove: " + position.x + ":" + position.y + "   " + towerTag);
+            }else
+            {
+                Debug.Log("TouchMove: " + position.x + ":" + position.y + " null" + tags);
+
+            }
+
+            if (towerTag == null) return;
+            GameObject activeTower = getActiveTower(towerTag);
+            if(activeTower != null)//we have moved a tower
+            {
+                Debug.Log("vi hittade torn");
+                Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
+                touchPositionInWorld.y = 16f;
+                if (Vector3.Distance(activeTower.transform.position, touchPositionInWorld) >= distanceThreshold)
+                {
+                    //we have moved the tower to a new position
+                    //trigger that a new position has ben started.
+                    TouchBegin(position, tags);
+                }
+            }
+        }
 		void TouchEnd(Vector2 position, Tags tags) {
 			Debug.Log ("TouchEnd");
 
@@ -159,12 +217,9 @@ namespace TouchScript
 
 			if (towerTag != null) {
                 //despawn all towers of that type
-				foreach (GameObject tower in GameObject.FindGameObjectsWithTag (towerTag)) {
-					if (!tower.GetComponent<TowerSpawn> ().despawning) {
-                        //CmdStartDespawning(tower);
-						tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
-					}
-				}
+                despawnAllTowersWithTag(towerTag);
+
+                
 			}
 		}
 
@@ -174,12 +229,24 @@ namespace TouchScript
             //StartCoroutine(DestroyTowerInSeconds(id, time));
             CmdDestroyTowerByNetId(id);
         }*/
+
+        public void despawnAllTowersWithTag(string towerTag)
+        {
+            foreach (GameObject tower in GameObject.FindGameObjectsWithTag(towerTag))
+            {
+                if (!tower.GetComponent<TowerSpawn>().despawning)
+                {
+                    //CmdStartDespawning(tower);
+                    tower.GetComponent<TowerSpawn>().StartDespawnTimer();
+                }
+            }
+        }
         public int numbersOfActiveTowersWithTag(string tag)
         {
             int amount = 0;
             foreach (GameObject tower in GameObject.FindGameObjectsWithTag(tag))
             {
-                if (!tower.GetComponent<TowerSpawn>().despawning)
+                if (!tower.GetComponent<TowerSpawn>().despawning || !tower.GetComponent<TowerSpawn>().startDespawning)
                 {
                     amount += 1;
                 }
