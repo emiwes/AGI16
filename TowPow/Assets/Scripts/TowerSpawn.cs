@@ -90,6 +90,7 @@ public class TowerSpawn : NetworkBehaviour {
             {
                 Debug.Log("Run alert");
                 towerPlacementIndicator.SetActive(true);
+				towerPlacementIndicator.transform.position = topCamera.WorldToScreenPoint (transform.position);
                 StartCoroutine(NonValidPlacmentIndicator(0.5f, Color.clear, Color.red));
 
             }
