@@ -9,11 +9,14 @@ public class GameScript : NetworkBehaviour {
 	public Text WaveNrText;
 	public Text MoneyText;
 	public Text KillText;
+	public Text VRKillText;
 
 //    public Slider HealthSlider;
 //	public Image HealthIndicator;
 	public Image[] healthIndicators;
     public Text HealthText;
+	public Image[] VRhealthIndicators;
+	public Text VRHealthText;
     private spawnEnemy enemySpawner;
 
     public int creepsPerWave;
@@ -159,6 +162,7 @@ public class GameScript : NetworkBehaviour {
 	}
 	void OnKillChange(int kills){
 		KillText.text = kills.ToString();
+		VRKillText.text = kills.ToString();
         if (ArcadeModeStarted)
         {
             //spawn new enemies.
@@ -173,6 +177,7 @@ public class GameScript : NetworkBehaviour {
     void OnChangeHealth(int health)
     {
         HealthText.text = health.ToString();
+		VRHealthText.text = health.ToString();
 		float fillAmount;
 		
 		if (health > 0) {
@@ -185,6 +190,10 @@ public class GameScript : NetworkBehaviour {
 
 		foreach(Image healthIndicator in healthIndicators){
 			healthIndicator.fillAmount = fillAmount;
+		}
+		//Same for VR
+		foreach(Image VRhealthIndicator in VRhealthIndicators){
+			VRhealthIndicator.fillAmount = fillAmount;
 		}
     }
 }
