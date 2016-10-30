@@ -42,26 +42,27 @@ namespace TouchScript
 
         void Update()
         {
-            Tags black = new Tags("black");
+            //DEBUGGING
+            //Tags black = new Tags("black");
 
-            if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
-            {
-                keyPressedInLastFrame = true;
-                TouchBegin(Input.mousePosition, black);
-                //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
+            //if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
+            //{
+            //    keyPressedInLastFrame = true;
+            //    TouchBegin(Input.mousePosition, black);
+            //    //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
                 
              
-            }
-            else if(Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
-            {
-                TouchMove(Input.mousePosition, black);
+            //}
+            //else if(Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
+            //{
+            //    TouchMove(Input.mousePosition, black);
 
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                TouchEnd(Input.mousePosition, black);
-                keyPressedInLastFrame = false;
-            }
+            //}
+            //else if (Input.GetMouseButtonUp(0))
+            //{
+            //    TouchEnd(Input.mousePosition, black);
+            //    keyPressedInLastFrame = false;
+            //}
 
         }
 
@@ -169,12 +170,10 @@ namespace TouchScript
                 else
                 {
                     // It's a new position
-                    //activeTower.GetComponent<TowerSpawn>().Despawn();
-                    //CmdDespawn (activeTower);
                     //despawn all towers of that type
                     despawnAllTowersWithTag(towerTag);
+                    //tell server to create new tower
                     CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
-                    Debug.Log("active towers in scene: " + numbersOfActiveTowersWithTag(towerTag));
                 }
             }
 		}
@@ -182,24 +181,14 @@ namespace TouchScript
         void TouchMove(Vector2 position, Tags tags)
         {
             ////////Debugging!!!!!//
-            tags = new Tags("black");
+            //tags = new Tags("black");
 
             string towerTag = getTowerTag(tags);
-
-            if(towerTag!= null)
-            {
-                Debug.Log("TouchMove: " + position.x + ":" + position.y + "   " + towerTag);
-            }else
-            {
-                Debug.Log("TouchMove: " + position.x + ":" + position.y + " null" + tags);
-
-            }
 
             if (towerTag == null) return;
             GameObject activeTower = getActiveTower(towerTag);
             if(activeTower != null)//we have moved a tower
             {
-                Debug.Log("vi hittade torn");
                 Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
                 touchPositionInWorld.y = 16f;
                 if (Vector3.Distance(activeTower.transform.position, touchPositionInWorld) >= distanceThreshold)
@@ -223,12 +212,7 @@ namespace TouchScript
 			}
 		}
 
-        //Public Functions
-        /*public void DestroyMe(NetworkInstanceId id, float time)
-        {
-            //StartCoroutine(DestroyTowerInSeconds(id, time));
-            CmdDestroyTowerByNetId(id);
-        }*/
+  
 
         public void despawnAllTowersWithTag(string towerTag)
         {
@@ -241,18 +225,18 @@ namespace TouchScript
                 }
             }
         }
-        public int numbersOfActiveTowersWithTag(string tag)
-        {
-            int amount = 0;
-            foreach (GameObject tower in GameObject.FindGameObjectsWithTag(tag))
-            {
-                if (!tower.GetComponent<TowerSpawn>().despawning || !tower.GetComponent<TowerSpawn>().startDespawning)
-                {
-                    amount += 1;
-                }
-            }
-            return amount;
-        }
+        //public int numbersOfActiveTowersWithTag(string tag)
+        //{
+        //    int amount = 0;
+        //    foreach (GameObject tower in GameObject.FindGameObjectsWithTag(tag))
+        //    {
+        //        if (!tower.GetComponent<TowerSpawn>().despawning || !tower.GetComponent<TowerSpawn>().startDespawning)
+        //        {
+        //            amount += 1;
+        //        }
+        //    }
+        //    return amount;
+        //}
 
         //Private Functions
         private string getTowerTag(Tags tags)
@@ -341,7 +325,6 @@ namespace TouchScript
         [Command]
         public void CmdDespawn(GameObject tower)
         {
-            //tower.GetComponent<TowerSpawn>().StartDespawnTimer();
             if (tower)
             {
                 tower.GetComponent<TowerSpawn>().Despawn();
