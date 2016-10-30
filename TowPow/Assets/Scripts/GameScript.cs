@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
+	public Text VRWaveNrText;
 	public Text MoneyText;
 	public Text KillText;
 	public Text VRKillText;
@@ -159,6 +160,7 @@ public class GameScript : NetworkBehaviour {
     }
     void OnWaveChange(int wave){
 		WaveNrText.text = wave.ToString();
+		VRWaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
 		KillText.text = kills.ToString();
@@ -186,6 +188,7 @@ public class GameScript : NetworkBehaviour {
 			fillAmount = 0;
 			GameOver = true;
 			HealthText.text = "GAME OVER";
+			VRHealthText.text = "GAME OVER";
 		}
 
 		foreach(Image healthIndicator in healthIndicators){
