@@ -333,8 +333,8 @@ namespace TouchScript
 				return;
 			}
 
-            
-            
+            despawnAllTowersWithTag(tag);
+
             GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
             NetworkServer.Spawn(t);
      		}
