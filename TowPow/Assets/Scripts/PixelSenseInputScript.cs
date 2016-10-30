@@ -290,7 +290,7 @@ namespace TouchScript
         }
 
         //Enumerators
-		public IEnumerator DestroyTower(GameObject tower, float time)
+		public IEnumerator DestroyTowerInSeconds(GameObject tower, float time)
         {
 			yield return new WaitForSeconds(time);
     
