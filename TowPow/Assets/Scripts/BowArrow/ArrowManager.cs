@@ -119,7 +119,7 @@ public class ArrowManager : MonoBehaviour {
 		currentArrow.GetComponent<Arrow> ().Fired ();
 
 		Rigidbody r = currentArrow.GetComponent<Rigidbody> ();
-		r.velocity = currentArrow.transform.forward * 80f * dist;
+		r.velocity = currentArrow.transform.forward * 100f * dist;
 		r.useGravity = true;
 
         currentArrow.GetComponent<BoxCollider>().enabled = true;
