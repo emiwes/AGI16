@@ -22,7 +22,10 @@ namespace TouchScript
         //Primitives
         public float distanceThreshold;
         public float moveThresholdInSec;
-        public float moveTimer = 0;
+        public float moveTimerWhite = 0;
+        public float moveTimerBlack = 0;
+        public float moveTimerRed = 0;
+        public float moveTimerBlue = 0;
 
         ////Private variables
         //Scripts/Objects
@@ -202,10 +205,10 @@ namespace TouchScript
                     //we have moved the tower to a new position
                     //trigger that a new position has ben started.
                      //Movetimer
-                    moveTimer += Time.deltaTime;
-                    if (moveTimer > moveThresholdInSec)
+                    addToTimer(towerTag);
+                    if (getTimer(towerTag) > moveThresholdInSec)
                     {
-                        moveTimer = 0;
+                        resetTimer(tag);
 						Debug.Log ("reset timer");
                         TouchBegin(position, tags);
                     }
@@ -288,6 +291,62 @@ namespace TouchScript
                     }
                 }
             }
+        }
+
+        private void addToTimer(string tag)
+        {
+            switch (tag)
+            {
+                case "blue":
+                    moveTimerBlue += Time.deltaTime;
+                    break;
+                case "black":
+                    moveTimerBlack += Time.deltaTime;
+                    break;
+                case "white":
+                    moveTimerWhite += Time.deltaTime;
+                    break;
+                case "red":
+                    moveTimerRed += Time.deltaTime;
+                    break;
+            }
+        }
+        private void resetTimer(string tag)
+        {
+            switch (tag)
+            {
+                case "blue":
+                    moveTimerBlue = 0;
+                    break;
+                case "black":
+                    moveTimerBlack = 0; ;
+                    break;
+                case "white":
+                    moveTimerWhite = 0;
+                    break;
+                case "red":
+                    moveTimerRed = 0;
+                    break;
+            }
+        }
+        private float getTimer(string tag)
+        {
+            switch (tag)
+            {
+                case "blue":
+                    return moveTimerBlue;
+                    break;
+                case "black":
+                    return moveTimerBlack;
+                    break;
+                case "white":
+                    return moveTimerWhite;
+                    break;
+                case "red":
+                    return moveTimerRed;
+                    break;
+            }
+            return 0;
         }
         private GameObject getActiveTower(string towerTag)
         {
