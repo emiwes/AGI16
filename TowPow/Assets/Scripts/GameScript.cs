@@ -148,6 +148,11 @@ public class GameScript : NetworkBehaviour {
         killCounter = 0;
         moneyCounter = 0;
         PlayerHealth = PlayerStartingHealth;
+		TowerLevelSynchronize towerSync = gameObject.GetComponent<TowerLevelSynchronize> ();
+		towerSync.towerRedLevel = 1;
+		towerSync.towerBlackLevel = 1;
+		towerSync.towerBlueLevel = 1;
+		towerSync.towerWhiteLevel = 1;
     }
 
     void ArcadeSpawn(int newEnemies)
@@ -160,10 +165,12 @@ public class GameScript : NetworkBehaviour {
         }
     }
     void OnWaveChange(int wave){
+		waveNr = wave;
 		WaveNrText.text = wave.ToString();
 		VRWaveNrText.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
+		killCounter = kills;
 		KillText.text = kills.ToString();
 		VRKillText.text = kills.ToString();
         if (ArcadeModeStarted)
