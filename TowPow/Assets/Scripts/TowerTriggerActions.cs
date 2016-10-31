@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TowerTriggerActions : MonoBehaviour {
-	GameObject tower;
 	TowerCombat towerCombat;
 
 	void Start() {
-		tower = gameObject.transform.parent.gameObject;
+		GameObject tower = gameObject.transform.parent.transform.parent.gameObject;
 		towerCombat = tower.GetComponent<TowerCombat> ();
 	}
 
 	void OnTriggerEnter (Collider other){
-        if ((!towerCombat.nearbyEnemies.Contains(other.gameObject)) && (other.gameObject.tag == "Enemy"))
+		if ((other.gameObject.tag == "Enemy") && (!towerCombat.nearbyEnemies.Contains(other.gameObject)))
         {
             towerCombat.addNearbyEnemy(other.gameObject);
         }
