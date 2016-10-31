@@ -150,7 +150,7 @@ namespace TouchScript
 				// Check if it's close to the last position
 				if (Vector3.Distance (activeTower.transform.position, spawnPosition) < distanceThreshold) {
 					// It's close
-					activeTower.GetComponent<TowerSpawn>().StopDespawnTimer();
+					activeTower.GetComponent<TowerSpawn>().StopStartDespawnTimer();
 				} else {
 					// It's a new position
 					activeTower.GetComponent<TowerSpawn>().Despawn();
@@ -223,7 +223,8 @@ namespace TouchScript
 
 		[Command]
 		void CmdStartDespawning(GameObject tower){
-			tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
+            Debug.Log("CmdStartDespawning");
+            tower.GetComponent<TowerSpawn> ().StartDespawnTimer ();
 		}
 	}
 }
