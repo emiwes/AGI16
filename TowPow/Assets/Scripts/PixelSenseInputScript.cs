@@ -45,7 +45,7 @@ namespace TouchScript
         void Update()
         {
             //DEBUGGING
-            Tags black = new Tags("black");
+            /*Tags black = new Tags("black");
 
             if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
             {
@@ -64,7 +64,7 @@ namespace TouchScript
             {
                 TouchEnd(Input.mousePosition, black);
                 keyPressedInLastFrame = false;
-            }
+            }*/
 
         }
 
@@ -187,7 +187,7 @@ namespace TouchScript
         void TouchMove(Vector2 position, Tags tags)
         {
             ////////Debugging!!!!!//
-            tags = new Tags("black");
+            //tags = new Tags("black");
 
             string towerTag = getTowerTag(tags);
 
@@ -206,6 +206,7 @@ namespace TouchScript
                     if (moveTimer > moveThresholdInSec)
                     {
                         moveTimer = 0;
+						Debug.Log ("reset timer");
                         TouchBegin(position, tags);
                     }
                 }
