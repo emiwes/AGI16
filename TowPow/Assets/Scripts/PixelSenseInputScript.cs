@@ -22,10 +22,10 @@ namespace TouchScript
         //Primitives
         public float distanceThreshold;
         public float moveThresholdInSec;
-        public float moveTimerWhite = 0;
-        public float moveTimerBlack = 0;
-        public float moveTimerRed = 0;
-        public float moveTimerBlue = 0;
+        public float moveTimerWhite = 1;
+        public float moveTimerBlack = 1;
+        public float moveTimerRed = 1;
+        public float moveTimerBlue = 1;
 
         ////Private variables
         //Scripts/Objects
@@ -43,9 +43,19 @@ namespace TouchScript
 
         bool keyPressedInLastFrame = false;
 
+		struct LastCall{
+			string tag;
+			Vector2 position;
+		}
+
+		Vector2 blueLastCallPos;
+		Vector2 blackLastCallPos;
+		Vector2 whiteLastCallPos;
+		Vector2 redLastCallPos;
 
 
-        void Update()
+
+        void FixedUpdate()
         {
             //DEBUGGING
             /*Tags black = new Tags("black");
@@ -68,6 +78,9 @@ namespace TouchScript
                 TouchEnd(Input.mousePosition, black);
                 keyPressedInLastFrame = false;
             }*/
+			addToTimers();
+			checkIfTimerReachedEnd ();
+			
 
         }
 
@@ -204,10 +217,13 @@ namespace TouchScript
                 {
                     //we have moved the tower to a new position
                     //trigger that a new position has ben started.
+					if (getTimer (tag) < moveThresholdInSec || getTimer (tag) == 1) {
+						startTimer (tag, position);
+					}
                      //Movetimer
-                    addToTimer(towerTag);
                     if (getTimer(towerTag) > moveThresholdInSec)
                     {
+						Debug.Log (getTimer (towerTag));
                         resetTimer(tag);
 						Debug.Log ("reset timer");
                         TouchBegin(position, tags);
@@ -293,42 +309,81 @@ namespace TouchScript
             }
         }
 
-        private void addToTimer(string tag)
+        private void addToTimers()
         {
-            switch (tag)
-            {
-                case "blue":
-                    moveTimerBlue += Time.deltaTime;
-                    break;
-                case "black":
-                    moveTimerBlack += Time.deltaTime;
-                    break;
-                case "white":
-                    moveTimerWhite += Time.deltaTime;
-                    break;
-                case "red":
-                    moveTimerRed += Time.deltaTime;
-                    break;
-            }
+			if (moveTimerBlack > moveThresholdInSec && moveTimerBlack != moveThresholdInSec) {
+				moveTimerBlack += Time.deltaTime;
+			}
+			if (moveTimerBlue > moveThresholdInSec && moveTimerBlue != moveThresholdInSec) {
+				moveTimerBlue += Time.deltaTime;
+			}
+			if (moveTimerRed > moveThresholdInSec && moveTimerRed != moveThresholdInSec) {
+				moveTimerRed += Time.deltaTime;
+			}
+			if (moveTimerWhite > moveThresholdInSec && moveTimerWhite != moveThresholdInSec) {
+				moveTimerWhite += Time.deltaTime;
+			}
         }
+		private void checkIfTimerReachedEnd(){
+			if (moveTimerBlack < moveThresholdInSec) {
+				Tags tag = new Tags("black"); 
+				TouchBegin (blackLastCallPos, tag);
+			}
+			if (moveTimerBlue > moveThresholdInSec) {
+				Tags tag = new Tags("blue"); 
+				TouchBegin (blueLastCallPos, tag);
+			}
+			if (moveTimerRed > moveThresholdInSec) {
+				Tags tag = new Tags("red"); 
+				TouchBegin (redLastCallPos, tag);
+			}
+			if (moveTimerWhite > moveThresholdInSec) {
+				Tags tag = new Tags("white"); 
+				TouchBegin (whiteLastCallPos, tag);
+			}
+		}
         private void resetTimer(string tag)
         {
             switch (tag)
             {
-                case "blue":
-                    moveTimerBlue = 0;
+				case "blue":
+					moveTimerBlue = 1;
+					Debug.Log ("reset blue timer:" +getTimer(tag));
                     break;
                 case "black":
-                    moveTimerBlack = 0; ;
+                    moveTimerBlack = 1; ;
                     break;
                 case "white":
-                    moveTimerWhite = 0;
+                    moveTimerWhite = 1;
                     break;
                 case "red":
-                    moveTimerRed = 0;
+                    moveTimerRed = 1;
                     break;
             }
         }
+		private void startTimer(string tag, Vector2 position)
+		{
+			switch (tag)
+			{
+			case "blue":
+				moveTimerBlue = 0;
+				Debug.Log ("reset blue timer:" + getTimer (tag));
+				blueLastCallPos = position;
+				break;
+			case "black":
+				moveTimerBlack = 0;
+				blackLastCallPos = position;
+				break;
+			case "white":
+				moveTimerWhite = 0;
+				whiteLastCallPos = position;
+				break;
+			case "red":
+				moveTimerRed = 0;
+				redLastCallPos = position;
+				break;
+			}
+		}
         private float getTimer(string tag)
         {
             switch (tag)
@@ -392,13 +447,6 @@ namespace TouchScript
             GameObject activeT = getActiveTower(tag);
             if (activeT == null || (activeT != null && Vector3.Distance(activeT.transform.position, position) >= distanceThreshold))
             {
-                if (activeT)
-                {
-                    Debug.Log("ndistance between towers: " + Vector3.Distance(activeT.transform.position, position) + ">=" + distanceThreshold + ")");
-                }else
-                {
-                    Debug.Log("no active tower");
-                }
                 despawnAllTowersWithTag(tag);
 
                 GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
