@@ -115,11 +115,11 @@ public class GameScript : NetworkBehaviour {
         if ( isServer && PlayerHealth > 0)
         {
             PlayerHealth -= 1;
-			NetworkServer.Destroy(enemy);
 
             //Debug.Log("PlayerHealth: " + PlayerHealth);
             //update GUI
         }
+		NetworkServer.Destroy(enemy);
     }
     
     private void resetGame()
