@@ -163,6 +163,13 @@ namespace TouchScript
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
 
+			// UGLY HACK FOR TESTING WITHOUT PIXELSENSE
+			if (tags.HasTag("Mouse")) {
+				if(Input.GetKey(KeyCode.D)) {
+					tags = new Tags("red");
+				}
+			}
+
 			// Figure out what towertype we are dealing with
 			string towerTag = getTowerTag(tags);
 			
