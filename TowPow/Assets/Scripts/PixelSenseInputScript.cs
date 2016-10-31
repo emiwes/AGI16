@@ -21,6 +21,8 @@ namespace TouchScript
         public List<GameObject> towers;
         //Primitives
         public float distanceThreshold;
+        public float moveThresholdInSec;
+        public float moveTimer = 0;
 
         ////Private variables
         //Scripts/Objects
@@ -43,26 +45,26 @@ namespace TouchScript
         void Update()
         {
             //DEBUGGING
-            //Tags black = new Tags("black");
+            Tags black = new Tags("black");
 
-            //if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
-            //{
-            //    keyPressedInLastFrame = true;
-            //    TouchBegin(Input.mousePosition, black);
-            //    //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
-                
-             
-            //}
-            //else if(Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
-            //{
-            //    TouchMove(Input.mousePosition, black);
+            if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
+            {
+                keyPressedInLastFrame = true;
+                TouchBegin(Input.mousePosition, black);
+                //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
 
-            //}
-            //else if (Input.GetMouseButtonUp(0))
-            //{
-            //    TouchEnd(Input.mousePosition, black);
-            //    keyPressedInLastFrame = false;
-            //}
+
+            }
+            else if (Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
+            {
+                TouchMove(Input.mousePosition, black);
+
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                TouchEnd(Input.mousePosition, black);
+                keyPressedInLastFrame = false;
+            }
 
         }
 
@@ -170,10 +172,14 @@ namespace TouchScript
                 else
                 {
                     // It's a new position
-                    //despawn all towers of that type
-                    despawnAllTowersWithTag(towerTag);
-                    //tell server to create new tower
-                    CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
+
+                   
+                        //despawn all towers of that type
+                        despawnAllTowersWithTag(towerTag);
+                        //tell server to create new tower
+                        CmdInstantiateTower(towerTag, touchPositionInWorld, Quaternion.identity);
+                    
+                    
                 }
             }
 		}
@@ -181,7 +187,7 @@ namespace TouchScript
         void TouchMove(Vector2 position, Tags tags)
         {
             ////////Debugging!!!!!//
-            //tags = new Tags("black");
+            tags = new Tags("black");
 
             string towerTag = getTowerTag(tags);
 
@@ -195,7 +201,13 @@ namespace TouchScript
                 {
                     //we have moved the tower to a new position
                     //trigger that a new position has ben started.
-                    TouchBegin(position, tags);
+                     //Movetimer
+                    moveTimer += Time.deltaTime;
+                    if (moveTimer > moveThresholdInSec)
+                    {
+                        moveTimer = 0;
+                        TouchBegin(position, tags);
+                    }
                 }
             }
         }
@@ -320,6 +332,13 @@ namespace TouchScript
             GameObject activeT = getActiveTower(tag);
             if (activeT == null || (activeT != null && Vector3.Distance(activeT.transform.position, position) >= distanceThreshold))
             {
+                if (activeT)
+                {
+                    Debug.Log("ndistance between towers: " + Vector3.Distance(activeT.transform.position, position) + ">=" + distanceThreshold + ")");
+                }else
+                {
+                    Debug.Log("no active tower");
+                }
                 despawnAllTowersWithTag(tag);
 
                 GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
