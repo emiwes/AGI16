@@ -22,10 +22,10 @@ namespace TouchScript
         //Primitives
         public float distanceThreshold;
         public float moveThresholdInSec;
-        public float moveTimerWhite = 1;
-        public float moveTimerBlack = 1;
-        public float moveTimerRed = 1;
-        public float moveTimerBlue = 1;
+        public float moveTimerWhite;
+        public float moveTimerBlack;
+        public float moveTimerRed;
+        public float moveTimerBlue;
 
         ////Private variables
         //Scripts/Objects
@@ -90,6 +90,11 @@ namespace TouchScript
 			towerTypes.Add(WhitePrefab);
 			towerTypes.Add(BluePrefab);
 			towerTypes.Add (BlackPrefab);
+
+			moveTimerBlack = moveThresholdInSec;
+			moveTimerBlue = moveThresholdInSec;
+			moveTimerRed = moveThresholdInSec;
+			moveTimerWhite = moveThresholdInSec;
 
             if (!DeterminePlayerType.isVive) {
 				topCamera = GameObject.FindGameObjectWithTag ("TopCamera").GetComponent<Camera>();
@@ -367,7 +372,6 @@ namespace TouchScript
 			{
 			case "blue":
 				moveTimerBlue = 0;
-				Debug.Log ("reset blue timer:" + getTimer (tag));
 				blueLastCallPos = position;
 				break;
 			case "black":
