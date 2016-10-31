@@ -72,7 +72,7 @@ public class TowerSpawn : NetworkBehaviour {
         validPlacement = terrainScript.validTowerPlacement(transform.position);
     }
 
-    void Update () {
+    void FixedUpdate () {
 
         if (!validPlacement)
         {

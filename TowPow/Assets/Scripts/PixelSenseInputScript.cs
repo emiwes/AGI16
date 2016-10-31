@@ -317,11 +317,16 @@ namespace TouchScript
 				return;
 			}
 
-            despawnAllTowersWithTag(tag);
+            GameObject activeT = getActiveTower(tag);
+            if (Vector3.Distance(activeT.transform.position, position) >= distanceThreshold)
+            {
+                despawnAllTowersWithTag(tag);
 
-            GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
-            NetworkServer.Spawn(t);
-     		}
+                GameObject t = (GameObject)Instantiate(towerPrefab, position, rotation);
+                NetworkServer.Spawn(t);
+            }
+                
+     	}
         [Command]
         public void CmdDespawn(GameObject tower)
         {
