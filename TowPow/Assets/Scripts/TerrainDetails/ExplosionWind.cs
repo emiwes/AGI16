@@ -5,21 +5,23 @@ using System.Collections.Generic;
 public class ExplosionWind : MonoBehaviour {
 	public float explosionForce = 1f;
 
+	private PalmTreeContainer container;
+
 	private PalmTree[] trees;
 
 	// Use this for initialization
 	void Start () {
-		trees = Object.FindObjectsOfType<PalmTree> ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyUp(KeyCode.Space)) {
+		container = Object.FindObjectOfType<PalmTreeContainer> ();
+		if (container != null) {
+			Debug.Log ("Den hittades");
 			Explosion ();
+		} else {
+			Debug.Log ("Containern kunde inte hittas");
 		}
 	}
 
 	void Explosion () {
+		trees = container.GetPalmTrees();
 		foreach (PalmTree tree in trees) {
 			GameObject go = tree.gameObject;
 			Vector3 blastVector = (go.transform.position - transform.position);
