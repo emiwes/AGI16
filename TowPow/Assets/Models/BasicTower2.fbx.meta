@@ -1,0 +1,137 @@
+fileFormatVersion: 2
+guid: 20163b9ba62414f2591eae4bb5b6d529
+timeCreated: 1477830196
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: banner1
+    100002: banner2
+    100004: banner3
+    100006: banner4
+    100008: //RootNode
+    100010: cannon
+    100012: door
+    100014: stairs
+    100016: banner
+    100018: cloth
+    100020: cloth 1
+    100022: cloth 2
+    100024: cloth 3
+    400000: banner1
+    400002: banner2
+    400004: banner3
+    400006: banner4
+    400008: //RootNode
+    400010: cannon
+    400012: door
+    400014: stairs
+    400016: banner
+    400018: cloth
+    400020: cloth 1
+    400022: cloth 2
+    400024: cloth 3
+    2300000: banner1
+    2300002: banner2
+    2300004: banner3
+    2300006: banner4
+    2300008: //RootNode
+    2300010: cannon
+    2300012: door
+    2300014: stairs
+    2300016: banner
+    2300018: cloth
+    2300020: cloth 1
+    2300022: cloth 2
+    2300024: cloth 3
+    3300000: banner1
+    3300002: banner2
+    3300004: banner3
+    3300006: banner4
+    3300008: //RootNode
+    3300010: cannon
+    3300012: door
+    3300014: stairs
+    3300016: banner
+    3300018: cloth
+    3300020: cloth 1
+    3300022: cloth 2
+    3300024: cloth 3
+    4300000: tower
+    4300002: stairs
+    4300004: door
+    4300006: banner1
+    4300008: banner2
+    4300010: banner3
+    4300012: banner4
+    4300014: cannon
+    4300016: banner
+    4300018: cloth
+    4300020: cloth
+    4300022: cloth
+    4300024: cloth
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
