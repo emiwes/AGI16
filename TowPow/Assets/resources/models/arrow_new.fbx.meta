@@ -13,6 +13,7 @@ ModelImporter:
     100010: Tip
     100012: transform1
     100014: transform2
+    100016: Arrow
     400000: //RootNode
     400002: Body
     400004: Feathers
@@ -21,6 +22,7 @@ ModelImporter:
     400010: Tip
     400012: transform1
     400014: transform2
+    400016: Arrow
     2300000: Body
     2300002: Feathers
     2300004: Tip
