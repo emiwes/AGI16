@@ -318,7 +318,7 @@ namespace TouchScript
 			}
 
             GameObject activeT = getActiveTower(tag);
-            if (Vector3.Distance(activeT.transform.position, position) >= distanceThreshold)
+            if (activeT == null || (activeT != null && Vector3.Distance(activeT.transform.position, position) >= distanceThreshold))
             {
                 despawnAllTowersWithTag(tag);
 
