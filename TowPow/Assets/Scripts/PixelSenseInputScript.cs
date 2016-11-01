@@ -211,7 +211,6 @@ namespace TouchScript
                 }
             }
 		}
-
         void TouchMove(Vector2 position, Tags tags)
         {
             ////////Debugging!!!!!//
@@ -235,9 +234,7 @@ namespace TouchScript
                      //Movetimer
                     if (getTimer(towerTag) > moveThresholdInSec)
                     {
-						Debug.Log (getTimer (towerTag));
                         resetTimer(tag);
-						Debug.Log ("reset timer");
                         TouchBegin(position, tags);
                     }
                 }
@@ -269,19 +266,7 @@ namespace TouchScript
                 }
             }
         }
-        //public int numbersOfActiveTowersWithTag(string tag)
-        //{
-        //    int amount = 0;
-        //    foreach (GameObject tower in GameObject.FindGameObjectsWithTag(tag))
-        //    {
-        //        if (!tower.GetComponent<TowerSpawn>().despawning || !tower.GetComponent<TowerSpawn>().startDespawning)
-        //        {
-        //            amount += 1;
-        //        }
-        //    }
-        //    return amount;
-        //}
-
+  
         //Private Functions
         private string getTowerTag(Tags tags)
         {
@@ -320,7 +305,6 @@ namespace TouchScript
                 }
             }
         }
-
         private void addToTimers()
         {
 			if (moveTimerBlack > moveThresholdInSec && moveTimerBlack != moveThresholdInSec) {
@@ -359,17 +343,16 @@ namespace TouchScript
             switch (tag)
             {
 				case "blue":
-					moveTimerBlue = 1;
-					Debug.Log ("reset blue timer:" +getTimer(tag));
+					moveTimerBlue = moveThresholdInSec;
                     break;
                 case "black":
-                    moveTimerBlack = 1; ;
+                    moveTimerBlack = moveThresholdInSec;
                     break;
                 case "white":
-                    moveTimerWhite = 1;
+                    moveTimerWhite = moveThresholdInSec;
                     break;
                 case "red":
-                    moveTimerRed = 1;
+                    moveTimerRed = moveThresholdInSec;
                     break;
             }
         }
