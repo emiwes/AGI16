@@ -76,7 +76,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 		// Calculate the effect multiplier in relation to how far from the center of the AoE the enemy is
 		float effectMultiplier = 1.0F - Mathf.Clamp01(distFromCenter / ss.sphereRadius);
-		Debug.Log("AoE multiplier: " + effectMultiplier);
+		// Debug.Log("AoE multiplier: " + effectMultiplier);
 
 		// Calculate the damage and effects with the effect multiplier
 		float aoeDmg = ss.damage * effectMultiplier;
@@ -89,11 +89,11 @@ public class EnemyCombat : NetworkBehaviour {
 		if(ss.morphEnemyToMaterial != null){
 			// Change the material to the material of the arrow
 			smr.material = ss.morphEnemyToMaterial;
-			Debug.Log ("Should change material");
+			// Debug.Log ("Should change material");
 		}
 
 		// Slow over time
-		Debug.Log ("Starting slow over time, aweSlow: " + aoeSlow + " over " + slowTime);
+		// Debug.Log ("Starting slow over time, aweSlow: " + aoeSlow + " over " + slowTime);
 		StartCoroutine(AffectOverSeconds(slowTime, 0, aoeSlow));
 
 		// Unfortunately, right now we can't both slow and damage over time with one method call
