@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class TowerSpawn : NetworkBehaviour {
 
     //objects/script references
-    public GameObject shootingRadiusIndicator;
     public GameObject circleProgressPrefab;
 
     private TouchScript.PixelSenseInputScript PSInputScript;

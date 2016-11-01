@@ -9,6 +9,6 @@ public class PlayerID : NetworkBehaviour {
 	public override void OnStartLocalPlayer(){
 		myNetId = GetComponent<NetworkIdentity> ().netId;
 		GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId = myNetId;
-		Debug.Log ("OnStart Player net ID is: " + GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId.ToString());
+		// Debug.Log ("OnStart Player net ID is: " + GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId.ToString());
 	}
 }

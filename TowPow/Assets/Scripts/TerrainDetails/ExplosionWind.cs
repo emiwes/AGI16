@@ -13,10 +13,7 @@ public class ExplosionWind : MonoBehaviour {
 	void Start () {
 		container = Object.FindObjectOfType<PalmTreeContainer> ();
 		if (container != null) {
-			Debug.Log ("Den hittades");
 			Explosion ();
-		} else {
-			Debug.Log ("Containern kunde inte hittas");
 		}
 	}
 

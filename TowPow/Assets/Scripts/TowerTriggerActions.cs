@@ -11,15 +11,23 @@ public class TowerTriggerActions : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
-		if ((other.gameObject.tag == "Enemy") && (!towerCombat.nearbyEnemies.Contains(other.gameObject)))
-        {
-            towerCombat.addNearbyEnemy(other.gameObject);
-        }
+		if(!towerCombat){
+			return;
+		} else{
+			if ((other.gameObject.tag == "Enemy") && (!towerCombat.nearbyEnemies.Contains(other.gameObject)))
+			{
+				towerCombat.addNearbyEnemy(other.gameObject);
+			}
+		}
 	}
 
 	void OnTriggerStay(Collider other) {
-		if (other.gameObject.tag == "Enemy") {
-			towerCombat.updateClosestEnemy ();
+		if(!towerCombat){
+			return;
+		} else{
+			if (other.gameObject.tag == "Enemy") {
+				towerCombat.updateClosestEnemy ();
+			}
 		}
 	}
 

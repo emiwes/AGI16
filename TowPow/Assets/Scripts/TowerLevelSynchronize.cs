@@ -9,15 +9,10 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 	//	[System.Serializable]
 	public struct TowerLevelInfo {
 		public int level;
-		public float damage;
-		//		public float range;
-		public float speed;
 		public int costToUpgrade;
 
-		public TowerLevelInfo(int l, float d, float s, int c){
+		public TowerLevelInfo(int l, int c){
 			level = l;
-			damage = d;
-			speed = s;
 			costToUpgrade = c;
 		}
 	}
@@ -51,9 +46,10 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 
 	void Start() {
 		// Red Tower Levels
-		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
-		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
-		levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
+		levelInfo.Add (new TowerLevelInfo (1, 100));
+		levelInfo.Add (new TowerLevelInfo (2, 200));
+		levelInfo.Add (new TowerLevelInfo (3, 350));
+		levelInfo.Add (new TowerLevelInfo (4, 500));
 
 		// Set up dictionary for retrieving levels
 		towerLevelLookup.Add ("red", towerRedLevel);
@@ -105,29 +101,37 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 
 	public int GetLevel(string towerTag) {
 		return towerLevelLookup [towerTag];
-//		if (towerTag == "red") {
-//			return towerRedLevel;
-//		} else if (towerTag == "blue") {
-//			return towerBlueLevel;
-//		} else if (towerTag == "white") {
-//			return towerWhiteLevel;
-//		} else if (towerTag == "black") {
-//			return towerBlackLevel;
-//		} else {
-//			Debug.Log ("Couldn't get level for " + towerTag);
-//			return 0;
-//		}
 	}
 
 	void UpdateUI(){
-		redTowerUpgradeText.text = levelInfo [towerLevelLookup ["red"] - 1].costToUpgrade.ToString () + "$";
-		blueTowerUpgradeText.text = levelInfo [towerLevelLookup ["blue"] - 1].costToUpgrade.ToString () + "$";
-		blackTowerUpgradeText.text = levelInfo [towerLevelLookup ["black"] - 1].costToUpgrade.ToString () + "$";
-		whiteTowerUpgradeText.text = levelInfo [towerLevelLookup ["white"] - 1].costToUpgrade.ToString () + "$";
+		if(levelInfo [towerLevelLookup ["red"] - 1].level == levelInfo.Count){
+			redTowerUpgradeText.text = "-";
+			redTowerLevelText.text = "MAX";
+		} else{
+			redTowerUpgradeText.text = levelInfo [towerLevelLookup ["red"] - 1].costToUpgrade.ToString () + "$";
+			redTowerLevelText.text = towerLevelLookup ["red"].ToString ();
+		}
+		if(levelInfo [towerLevelLookup ["black"] - 1].level == levelInfo.Count){
+			blackTowerUpgradeText.text = "-";
+			blackTowerLevelText.text = "MAX";
+		} else{
+			blackTowerUpgradeText.text =levelInfo [towerLevelLookup ["black"] - 1].costToUpgrade.ToString () + "$";
+			blackTowerLevelText.text = towerLevelLookup ["black"].ToString ();
+		}
+		if(levelInfo [towerLevelLookup ["blue"] - 1].level == levelInfo.Count){
+			blueTowerUpgradeText.text = "-";
+			blueTowerLevelText.text = "MAX";
+		} else{
+			blueTowerUpgradeText.text = levelInfo [towerLevelLookup ["blue"] - 1].costToUpgrade.ToString () + "$";
+			blueTowerLevelText.text = towerLevelLookup ["blue"].ToString ();
+		}
+		if(levelInfo [towerLevelLookup ["white"] - 1].level == levelInfo.Count){
+			whiteTowerUpgradeText.text = "-";
+			whiteTowerLevelText.text = "MAX";
+		} else{
+			whiteTowerUpgradeText.text = levelInfo [towerLevelLookup ["white"] - 1].costToUpgrade.ToString () + "$";
+			whiteTowerLevelText.text = towerLevelLookup ["white"].ToString ();
+		}
 
-		redTowerLevelText.text = towerLevelLookup ["red"].ToString ();
-		blueTowerLevelText.text = towerLevelLookup ["blue"].ToString ();
-		blackTowerLevelText.text = towerLevelLookup ["black"].ToString ();
-		whiteTowerLevelText.text = towerLevelLookup ["white"].ToString ();
 	}
 }

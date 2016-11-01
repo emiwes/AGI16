@@ -8,16 +8,19 @@ public class TowerCombat : NetworkBehaviour {
 //	[System.Serializable]
 	public struct TowerLevelInfo {
 		public int level;
-		public float damage;
+		public float damageMultiplier;
 //		public float range;
-		public float speed;
+		public float shootingSpeed;
 		public int costToUpgrade;
+		public float aoeSizeMultiplier, slowEffectMultiplier;
 
-		public TowerLevelInfo(int l, float d, float s, int c){
+		public TowerLevelInfo(int l, float d, float s, int c, float a, float slow){
 			level = l;
-			damage = d;
-			speed = s;
+			damageMultiplier = d;
+			shootingSpeed = s;
 			costToUpgrade = c;
+			aoeSizeMultiplier = a;
+			slowEffectMultiplier = slow;
 		}
 	}
 	
@@ -31,7 +34,7 @@ public class TowerCombat : NetworkBehaviour {
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
 	public GameObject shootingRangeIndicator;
-	public float towerDamage;
+	public float damageMultiplier, aoeSizeMultiplier, slowEffectMultiplier = 1;
 	public float shootingSpeed, timeSinceLastShot = float.MaxValue;
 	private GameObject shootingModule;
 	private TowerSpawn towerSpawn;
@@ -42,9 +45,41 @@ public class TowerCombat : NetworkBehaviour {
 	private AudioSource source;
 
 	void Start() {
-		levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
-		levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
-		levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
+		switch(gameObject.tag){
+			case "black":
+			case "white":
+			{
+				levelInfo.Add (new TowerLevelInfo (1, 1f, 0.8f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (2, 1.5f, 0.6f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (3, 2f, 0.5f, 200, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (4, 3f, 0.3f, 350, 1f, 1f));
+				break;
+			}
+			case "red":
+			{
+				levelInfo.Add (new TowerLevelInfo (1, 1f, 2f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (2, 1.5f, 1.7f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (3, 2.0f, 1.3f, 200, 1.2f, 1f));
+				levelInfo.Add (new TowerLevelInfo (4, 3.0f, 1f, 350, 1.5f, 1f));
+				break;
+			}
+			case "blue":
+			{
+				levelInfo.Add (new TowerLevelInfo (1, 1f, 2.5f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (2, 1.5f, 2f, 100, 1f, 1.5f));
+				levelInfo.Add (new TowerLevelInfo (3, 2.0f, 1.7f, 200, 1f, 2f));
+				levelInfo.Add (new TowerLevelInfo (4, 3.0f, 1.5f, 350, 1f, 3f));
+				break;
+			}
+		}
+		// if(gameObject.tag == "black" || gameObject.tag == "white"){
+		// 	levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
+		// 	levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
+		// 	levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
+		// }
+		// levelInfo.Add (new TowerLevelInfo (1, 15f, 0.6f, 100));
+		// levelInfo.Add (new TowerLevelInfo (2, 20f, 0.5f, 200));
+		// levelInfo.Add (new TowerLevelInfo (3, 30f, 0.3f, 350));
 
 		shootingModule = transform.Find ("Tower/ShootingModule").gameObject;
 		shootingRangeIndicator.SetActive(true);
@@ -126,7 +161,9 @@ public class TowerCombat : NetworkBehaviour {
 		ProjectileDamage projectileDamage = bullet.GetComponent<ProjectileDamage> ();
 		bulletMovement.target = closestEnemy;
 		bulletMovement.speed = 30.0f;
-		projectileDamage.damage = towerDamage;
+		projectileDamage.damage *= damageMultiplier;
+		projectileDamage.areaOfEffectRadius *= aoeSizeMultiplier;
+		projectileDamage.speedMultiplier /= slowEffectMultiplier;
 		//Play sound
 		float vol = Random.Range (0.7f, 1f);
 		source.PlayOneShot(shootSound,vol);
@@ -148,8 +185,10 @@ public class TowerCombat : NetworkBehaviour {
 
 	public void SyncTowerLevel() {
 		level = towerLevelSynchronize.GetLevel (gameObject.tag);
-		towerDamage = levelInfo [level - 1].damage;
-		shootingSpeed = levelInfo [level - 1].speed;
+		damageMultiplier = levelInfo [level - 1].damageMultiplier;
+		shootingSpeed = levelInfo [level - 1].shootingSpeed;
+		aoeSizeMultiplier = levelInfo [level - 1].aoeSizeMultiplier;
+		slowEffectMultiplier = levelInfo [level - 1].slowEffectMultiplier;
 
 		/*Debug.Log ("Tower level set to " + level);
 		Debug.Log ("Tower speed set to " + shootingSpeed);

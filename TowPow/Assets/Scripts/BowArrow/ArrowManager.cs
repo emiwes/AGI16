@@ -184,7 +184,8 @@ public class ArrowManager : MonoBehaviour {
     }
 
     void OnTriggerStay(Collider col) {
-		if (currentArrow != null && col.tag == "Untagged") {
+		// Removed  && col.tag == "Untagged"
+		if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
