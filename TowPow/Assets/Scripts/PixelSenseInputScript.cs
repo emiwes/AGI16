@@ -41,8 +41,6 @@ namespace TouchScript
         Observe that Input handlers only forward if we are not Vive
         */
 
-        bool keyPressedInLastFrame = false;
-
 		struct LastCall{
 			string tag;
 			Vector2 position;
@@ -55,33 +53,9 @@ namespace TouchScript
 
 
 
-        void FixedUpdate()
-        {
-            //DEBUGGING
-            /*Tags black = new Tags("black");
-
-            if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
-            {
-                keyPressedInLastFrame = true;
-                TouchBegin(Input.mousePosition, black);
-                //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
-
-
-            }
-            else if (Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
-            {
-                TouchMove(Input.mousePosition, black);
-
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                TouchEnd(Input.mousePosition, black);
-                keyPressedInLastFrame = false;
-            }*/
+        void FixedUpdate(){
 			addToTimers();
 			checkIfTimerReachedEnd ();
-			
-
         }
 
 		void Start(){
@@ -124,7 +98,7 @@ namespace TouchScript
 		}
 
 		private void touchesBeganHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
 				return; 
 			}
 
@@ -135,7 +109,7 @@ namespace TouchScript
 
         private void touchesMovedHandler(object sender, TouchEventArgs e)
         {
-            if (DeterminePlayerType.isVive)
+            if (DeterminePlayerType.isVive || !isLocalPlayer)
             {
                 return;
             }
@@ -147,7 +121,7 @@ namespace TouchScript
         }
 
         private void touchesEndedHandler(object sender, TouchEventArgs e) {
-			if (DeterminePlayerType.isVive) { 
+			if (DeterminePlayerType.isVive || !isLocalPlayer) { 
 				return; 
 			}
 
@@ -162,6 +136,13 @@ namespace TouchScript
 
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
+
+			// UGLY HACK FOR TESTING WITHOUT PIXELSENSE
+			if (tags.HasTag("Mouse")) {
+				if(Input.GetKey(KeyCode.D)) {
+					tags = new Tags("red");
+				}
+			}
 
 			// Figure out what towertype we are dealing with
 			string towerTag = getTowerTag(tags);
@@ -377,16 +358,12 @@ namespace TouchScript
             {
                 case "blue":
                     return moveTimerBlue;
-                    break;
                 case "black":
                     return moveTimerBlack;
-                    break;
                 case "white":
                     return moveTimerWhite;
-                    break;
                 case "red":
                     return moveTimerRed;
-                    break;
             }
             return 0;
         }

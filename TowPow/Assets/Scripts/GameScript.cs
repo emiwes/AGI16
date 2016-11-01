@@ -116,11 +116,12 @@ public class GameScript : NetworkBehaviour {
     public void EnemyReachedGoal(GameObject enemy){
 
         //GameScriptRef.PlayerHealth -= 1;
-        if ( isServer && PlayerHealth > 0)
+        if ( isServer)
         {
-            PlayerHealth -= 1;
 			NetworkServer.Destroy(enemy);
-
+			if (PlayerHealth > 0) {
+				PlayerHealth -= 1;
+			}
             //Debug.Log("PlayerHealth: " + PlayerHealth);
             //update GUI
         }
@@ -151,6 +152,11 @@ public class GameScript : NetworkBehaviour {
         killCounter = 0;
         moneyCounter = 0;
         PlayerHealth = PlayerStartingHealth;
+		TowerLevelSynchronize towerSync = gameObject.GetComponent<TowerLevelSynchronize> ();
+		towerSync.towerRedLevel = 1;
+		towerSync.towerBlackLevel = 1;
+		towerSync.towerBlueLevel = 1;
+		towerSync.towerWhiteLevel = 1;
     }
 
     void ArcadeSpawn(int newEnemies)
@@ -163,11 +169,13 @@ public class GameScript : NetworkBehaviour {
         }
     }
     void OnWaveChange(int wave){
+		waveNr = wave;
 		WaveNrText.text = wave.ToString();
 		VRWaveNrText.text = wave.ToString();
 		VRWaveNrText2.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
+		killCounter = kills;
 		KillText.text = kills.ToString();
 		VRKillText.text = kills.ToString();
 		VRKillText2.text = kills.ToString();

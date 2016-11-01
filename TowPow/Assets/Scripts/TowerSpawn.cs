@@ -37,7 +37,6 @@ public class TowerSpawn : NetworkBehaviour {
     private float serverDespawnTime = 2f;
     private bool NonValidPlacementIndicatorRunning = false;
 	private bool buildingProgresActive = false;
-    private bool spawnedTower = false;
 
     //Enumerators (who needs to be saved and accessed later
     private IEnumerator fillBuildProgressEnumerator;
