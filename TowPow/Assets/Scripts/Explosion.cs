@@ -8,6 +8,10 @@ public class Explosion : MonoBehaviour
     public ParticleSystem Flash;
     public ParticleSystem[] Debris;
 
+	void Start() {
+		Play ();
+	}
+
     public void Play()
     {
         Main.Play();

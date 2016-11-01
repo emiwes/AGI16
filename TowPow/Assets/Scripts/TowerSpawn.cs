@@ -37,7 +37,6 @@ public class TowerSpawn : NetworkBehaviour {
     private float serverDespawnTime = 2f;
     private bool NonValidPlacementIndicatorRunning = false;
 	private bool buildingProgresActive = false;
-    private bool spawnedTower = false;
 
     //Enumerators (who needs to be saved and accessed later
     private IEnumerator fillBuildProgressEnumerator;
@@ -66,22 +65,13 @@ public class TowerSpawn : NetworkBehaviour {
 			//setup function calls
 			createTowerCanvas();
         }
-
         //initial values 
         isActive = false;
-
         //check intial Position
-
         validPlacement = terrainScript.validTowerPlacement(transform.position);
-        //Debug.Log("validPlacement: " + validPlacement);
-        
-        //Debug.Log("gameObject.tag: " + gameObject.tag);
-        //Debug.Log("(" + PSInputScript.numbersOfActiveTowersWithTag(gameObject.tag) + " == 0)");
-
     }
 
-    void Update () {
-       
+    void FixedUpdate () {
 
         if (!validPlacement)
         {
@@ -89,9 +79,7 @@ public class TowerSpawn : NetworkBehaviour {
             {
                 towerPlacementIndicator.SetActive(true);
 				towerPlacementIndicator.transform.position = topCamera.WorldToScreenPoint(transform.position);
-
                 StartCoroutine(NonValidPlacmentIndicator(0.5f, Color.clear, Color.red));
-
             }
 			if (!NonValidPlacementIndicatorRunning) {
 				NonValidPlacementIndicatorRunning = true;
@@ -115,18 +103,17 @@ public class TowerSpawn : NetworkBehaviour {
             }
             return;
         }
+
 		if (despawning && isActive) {
 			isActive = false;
 			Vector3 endPoint = new Vector3(physicalTower.transform.position.x, physicalTower.transform.position.y - 5, physicalTower.transform.position.z);
-
 			StartCoroutine(MoveOverSeconds(endPoint, spawnDuration));
-
 			if (buildingProgresActive){
 				if (!DeterminePlayerType.isVive && buildProgress.activeSelf) {
-					//Last line in Enumerator calls removeTower();
-					StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
+                    //Last line in Enumerator calls removeTower which later calls PSInputScript.DestroyTowerInSeconds();
+                    StartCoroutine(FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
 				} else {
-					StartCoroutine(PSInputScript.DestroyTower(gameObject, spawnDuration));
+					StartCoroutine(PSInputScript.DestroyTowerInSeconds(gameObject, spawnDuration));
 				}
 			}
 		}
@@ -143,7 +130,6 @@ public class TowerSpawn : NetworkBehaviour {
         startDespawning = false;
 	}
 	public void Despawn() {
-        //Debug.Log("Despawn");
 		isActive = false;
         despawning = true;
 		//Stop all coroutines
@@ -163,7 +149,7 @@ public class TowerSpawn : NetworkBehaviour {
 				//Last line in Enumerator calls removeTower();
 				StartCoroutine (FillBuildProgress (spawnDuration, buildProgress.GetComponent<Image> ().color, Color.red, buildProgress.GetComponent<Image> ().fillAmount, 0f));
 			} else {
-				StartCoroutine(PSInputScript.DestroyTower(gameObject, spawnDuration));
+				StartCoroutine(PSInputScript.DestroyTowerInSeconds(gameObject, spawnDuration));
 			}
 		}
 		else if (NonValidPlacementIndicatorRunning)
@@ -171,10 +157,6 @@ public class TowerSpawn : NetworkBehaviour {
             removeTower();
         }
 
-        
-
-        //Destroy buildProgress Not needed destroys when tower destroys
-        //Destroy(buildProgress, serverDespawnTime);
     }
 
     //Private Functions
@@ -230,11 +212,11 @@ public class TowerSpawn : NetworkBehaviour {
     {
 		if (!NonValidPlacementIndicatorRunning)
         {
-			StartCoroutine(PSInputScript.DestroyTower(gameObject, serverDespawnTime));
+			StartCoroutine(PSInputScript.DestroyTowerInSeconds(gameObject, serverDespawnTime));
         }
         else
         {
-			StartCoroutine(PSInputScript.DestroyTower(gameObject, 0f));
+			StartCoroutine(PSInputScript.DestroyTowerInSeconds(gameObject, 0f));
         }
     }
 

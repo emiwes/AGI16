@@ -10,17 +10,9 @@ public class TerrainSurface : MonoBehaviour {
     private Terrain terrain;
     private TerrainData terrainData;
     private Vector3 terrainPos;
-    private Camera topCamera;
     public Texture2D validTexture;
 
 
-    void Awake()
-    {
-        if (!DeterminePlayerType.isVive)
-        {
-            topCamera = GameObject.FindGameObjectWithTag("TopCamera").GetComponent<Camera>();
-        }
-}
     // Use this for initialization
     void Start()
     {
@@ -29,21 +21,6 @@ public class TerrainSurface : MonoBehaviour {
         terrainData = terrain.terrainData;
         terrainPos = terrain.transform.position;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        /*if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 position = Input.mousePosition;
-            Vector3 worldPoint = topCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, 10f));
-            surfaceIndex = GetMainTexture(worldPoint);
-            Debug.Log("clicked on: " + terrainData.splatPrototypes[surfaceIndex].texture.name);
-            Debug.Log("valid placement: " + validTowerPlacement(worldPoint));
-
-        }*/
-            
     }
 
     public bool validTowerPlacement(Vector3 spawnPosition)
