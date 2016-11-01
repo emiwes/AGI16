@@ -16,13 +16,16 @@ public class ProjectileDamage : NetworkBehaviour {
 	public GameObject projectileAoePrefab;
     public GameObject projectileHitEffectPrefab;
 
+	private int layerNoCollision;
+
 	void Awake(){
 		source = gameObject.GetComponent<AudioSource> ();
+		layerNoCollision = LayerMask.NameToLayer ("noCollision");
 	}
 
 	void OnTriggerEnter(Collider other) {
 
-		if (other.gameObject.tag == "noCollision") {
+		if (other.gameObject.layer == layerNoCollision) {
 			return;
 		}
 
@@ -31,20 +34,6 @@ public class ProjectileDamage : NetworkBehaviour {
             AOE();
         } else if (other.gameObject.tag == "Enemy") {
             other.gameObject.GetComponent<EnemyCombat>().HandleIncomingProjectile(this);
-        }
-
-        //if it has trailing smoke remove it after the removal of the projectile
-        if (gameObject.transform.FindChild("movingSmoke")) {
-            Transform smoke = gameObject.transform.FindChild("movingSmoke");
-            smoke.parent = null;
-            smoke.GetComponent<ParticleSystem>().Stop(true);
-
-            Destroy(smoke.gameObject, 2.0f);
-        }
-
-        //Play sound if arrow (== tag friendly)
-        if (gameObject.tag == "Friendly") {
-            source.PlayOneShot(hitSound, .7f);
         }
 
         // Destroy the projectile
