@@ -132,7 +132,7 @@ namespace TouchScript
 
 		void TouchBegin(Vector2 position, Tags tags) //Detects start of touches 
         {
-			// Debug.Log ("Touch Begin");
+			Debug.Log ("Touch Begin");
 
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
