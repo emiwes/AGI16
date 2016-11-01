@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class ProjectileDamage : MonoBehaviour {
+public class ProjectileDamage : NetworkBehaviour {
 
 	public AudioClip hitSound;
 	private AudioSource source;
@@ -20,6 +21,10 @@ public class ProjectileDamage : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+
+		if (other.gameObject.tag == "noCollision") {
+			return;
+		}
 
         // Create are of effect if we have a defined radius
         if (areaOfEffectRadius > 0) {
@@ -61,9 +66,10 @@ public class ProjectileDamage : MonoBehaviour {
         ss.areaOfEffectExpandTime = areaOfEffectExpandTime;
         ss.projectileAoePrefab = projectileAoePrefab;
 
-        // If there's an explosion effect...
+        // If there's an explosion effect instantiate it locally and on the server
         if (projectileHitEffectPrefab) {
             GameObject explosion = (GameObject)Instantiate(projectileHitEffectPrefab, transform.position, Quaternion.identity);
+			NetworkServer.Spawn (explosion);
         }
     }
 }

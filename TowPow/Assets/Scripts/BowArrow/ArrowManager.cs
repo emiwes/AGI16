@@ -167,6 +167,7 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
+		Debug.Log ("New arrow");
 		if(col.tag == "iceArrowSwitcher"){
 			ChangeToNewArrow (iceArrow);
 		} else if(col.tag == "fireArrowSwitcher"){
@@ -183,7 +184,8 @@ public class ArrowManager : MonoBehaviour {
     }
 
     void OnTriggerStay(Collider col) {
-		if (currentArrow != null && col.tag == "Untagged") {
+		// Removed  && col.tag == "Untagged"
+		if (currentArrow != null) {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
