@@ -176,16 +176,17 @@ public class ArrowManager : MonoBehaviour {
 			ChangeToNewArrow (lightningArrow);
 		} else if(col.tag == "normalArrowSwitcher"){
 			ChangeToNewArrow (normalArrow);
-		} else{
-			if (currentArrow != null) {
-				currentArrow.GetComponent<Arrow>().AttachArrowToBow();
-			}
+		} else if(col.tag == "noCollision"){
+            if (currentArrow != null)
+            {
+                currentArrow.GetComponent<Arrow>().AttachArrowToBow();
+            }
 		}
     }
 
     void OnTriggerStay(Collider col) {
 		// Removed  && col.tag == "Untagged"
-		if (currentArrow != null) {
+		if (currentArrow != null && col.tag == "noCollision") {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
