@@ -41,8 +41,6 @@ namespace TouchScript
         Observe that Input handlers only forward if we are not Vive
         */
 
-        bool keyPressedInLastFrame = false;
-
 		struct LastCall{
 			string tag;
 			Vector2 position;
@@ -55,33 +53,9 @@ namespace TouchScript
 
 
 
-        void FixedUpdate()
-        {
-            //DEBUGGING
-            /*Tags black = new Tags("black");
-
-            if (Input.GetMouseButtonDown(0) && !keyPressedInLastFrame)
-            {
-                keyPressedInLastFrame = true;
-                TouchBegin(Input.mousePosition, black);
-                //CmdInstantiateTower("blue", hit.point, Quaternion.identity);
-
-
-            }
-            else if (Input.GetMouseButtonDown(0) && keyPressedInLastFrame)
-            {
-                TouchMove(Input.mousePosition, black);
-
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                TouchEnd(Input.mousePosition, black);
-                keyPressedInLastFrame = false;
-            }*/
+        void FixedUpdate(){
 			addToTimers();
 			checkIfTimerReachedEnd ();
-			
-
         }
 
 		void Start(){
