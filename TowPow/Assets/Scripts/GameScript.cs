@@ -8,9 +8,11 @@ public class GameScript : NetworkBehaviour {
 
 	public Text WaveNrText;
 	public Text VRWaveNrText;
+	public Text VRWaveNrText2;
 	public Text MoneyText;
 	public Text KillText;
 	public Text VRKillText;
+	public Text VRKillText2;
 
 //    public Slider HealthSlider;
 //	public Image HealthIndicator;
@@ -18,6 +20,8 @@ public class GameScript : NetworkBehaviour {
     public Text HealthText;
 	public Image[] VRhealthIndicators;
 	public Text VRHealthText;
+	public Image[] VRhealthIndicators2;
+	public Text VRHealthText2;
     private spawnEnemy enemySpawner;
 
     public int creepsPerWave;
@@ -168,11 +172,13 @@ public class GameScript : NetworkBehaviour {
 		waveNr = wave;
 		WaveNrText.text = wave.ToString();
 		VRWaveNrText.text = wave.ToString();
+		VRWaveNrText2.text = wave.ToString();
 	}
 	void OnKillChange(int kills){
 		killCounter = kills;
 		KillText.text = kills.ToString();
 		VRKillText.text = kills.ToString();
+		VRKillText2.text = kills.ToString();
         if (ArcadeModeStarted)
         {
             //spawn new enemies.
@@ -188,6 +194,7 @@ public class GameScript : NetworkBehaviour {
     {
         HealthText.text = health.ToString();
 		VRHealthText.text = health.ToString();
+		VRHealthText2.text = health.ToString();
 		float fillAmount;
 		
 		if (health > 0) {
@@ -197,6 +204,7 @@ public class GameScript : NetworkBehaviour {
 			GameOver = true;
 			HealthText.text = "GAME OVER";
 			VRHealthText.text = "GAME OVER";
+			VRHealthText2.text = "GAME OVER";
 		}
 
 		foreach(Image healthIndicator in healthIndicators){
@@ -205,6 +213,9 @@ public class GameScript : NetworkBehaviour {
 		//Same for VR
 		foreach(Image VRhealthIndicator in VRhealthIndicators){
 			VRhealthIndicator.fillAmount = fillAmount;
+		}
+		foreach(Image VRhealthIndicator2 in VRhealthIndicators2){
+			VRhealthIndicator2.fillAmount = fillAmount;
 		}
     }
 }
