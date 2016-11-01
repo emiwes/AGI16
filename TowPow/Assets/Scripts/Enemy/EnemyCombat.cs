@@ -55,7 +55,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 		if(p.speedMultiplier != 1){
 			// Slow down enemy
-			StartCoroutine(AffectOverSeconds(p.speedOverTimeSeconds, p.damageOverTimeSeconds, p.speedMultiplier));
+			StartCoroutine(AffectOverSeconds(p.speedOverTimeSeconds, p.damageOverTimeSeconds, p.speedMultiplier, p.morphEnemyToMaterial));
 		}
 
 		if(p.morphEnemyToMaterial != null){
@@ -94,7 +94,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 		// Slow over time
 		// Debug.Log ("Starting slow over time, aweSlow: " + aoeSlow + " over " + slowTime);
-		StartCoroutine(AffectOverSeconds(slowTime, 0, aoeSlow));
+		StartCoroutine(AffectOverSeconds(slowTime, 0, aoeSlow, ss.morphEnemyToMaterial));
 
 		// Unfortunately, right now we can't both slow and damage over time with one method call
 		// so we have to do the DoT separately
@@ -105,7 +105,7 @@ public class EnemyCombat : NetworkBehaviour {
 
 	// Affects the enemy over time. For instance, slow or damage it over time.
 	// Damage over time currently not done
-	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1) {
+	IEnumerator AffectOverSeconds(float time, float damage = 0, float speedMultiplier = -1, Material morphEnemyToMaterial = null) {
 		float elapsedTime = 0;
 
 		if(speedMultiplier != -1){
@@ -119,6 +119,9 @@ public class EnemyCombat : NetworkBehaviour {
 				// If we have a speed multiplier, change the speed over time
 				if(speedMultiplier != -1){
 					nma.speed = peakSlow + (initialEnemySpeed - (peakSlow)) * (elapsedTime/time);
+					if(morphEnemyToMaterial){
+						smr.material = morphEnemyToMaterial;
+					}
 				}
 
 				elapsedTime += Time.deltaTime;

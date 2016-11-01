@@ -105,18 +105,6 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 
 	public int GetLevel(string towerTag) {
 		return towerLevelLookup [towerTag];
-//		if (towerTag == "red") {
-//			return towerRedLevel;
-//		} else if (towerTag == "blue") {
-//			return towerBlueLevel;
-//		} else if (towerTag == "white") {
-//			return towerWhiteLevel;
-//		} else if (towerTag == "black") {
-//			return towerBlackLevel;
-//		} else {
-//			Debug.Log ("Couldn't get level for " + towerTag);
-//			return 0;
-//		}
 	}
 
 	void UpdateUI(){

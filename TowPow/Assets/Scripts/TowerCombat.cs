@@ -34,7 +34,7 @@ public class TowerCombat : NetworkBehaviour {
 	public GameObject bulletPrefab;
 	public GameObject shootingRange;
 	public GameObject shootingRangeIndicator;
-	public float damageMultiplier, aoeSizeMultiplier, slowEffectMultiplier;
+	public float damageMultiplier, aoeSizeMultiplier, slowEffectMultiplier = 1;
 	public float shootingSpeed, timeSinceLastShot = float.MaxValue;
 	private GameObject shootingModule;
 	private TowerSpawn towerSpawn;
