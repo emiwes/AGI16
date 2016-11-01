@@ -132,7 +132,7 @@ namespace TouchScript
 
 		void TouchBegin(Vector2 position, Tags tags) //Detects start of touches 
         {
-			Debug.Log ("Touch Begin");
+			// Debug.Log ("Touch Begin");
 
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
@@ -141,7 +141,7 @@ namespace TouchScript
             // DEBUG UGLY HACK ZOMG REMOVE
             if(tags.HasTag("Mouse")){
                 if(Input.GetKey(KeyCode.D)){
-                    tags = new Tags("black");
+                    tags = new Tags("red");
                 }
             }
 
@@ -225,7 +225,7 @@ namespace TouchScript
             }
         }
 		void TouchEnd(Vector2 position, Tags tags) {
-			Debug.Log ("TouchEnd");
+			// Debug.Log ("TouchEnd");
 
 			string towerTag = getTowerTag(tags);
 
@@ -414,7 +414,7 @@ namespace TouchScript
 				}
 			}
 			if(towerPrefab == null) {
-				Debug.Log("The fiducial does not represent a tower");
+				// Debug.Log("The fiducial does not represent a tower");
 				return;
 			}
 

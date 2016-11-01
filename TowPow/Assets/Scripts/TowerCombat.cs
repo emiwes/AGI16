@@ -57,7 +57,7 @@ public class TowerCombat : NetworkBehaviour {
 			}
 			case "red":
 			{
-				levelInfo.Add (new TowerLevelInfo (1, 1f, 1f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (1, 1f, 2f, 100, 1f, 1f));
 				levelInfo.Add (new TowerLevelInfo (2, 1.5f, 1.7f, 100, 1f, 1f));
 				levelInfo.Add (new TowerLevelInfo (3, 2.0f, 1.3f, 200, 1.2f, 1f));
 				levelInfo.Add (new TowerLevelInfo (4, 3.0f, 1f, 350, 1.5f, 1f));
@@ -65,7 +65,7 @@ public class TowerCombat : NetworkBehaviour {
 			}
 			case "blue":
 			{
-				levelInfo.Add (new TowerLevelInfo (1, 1f, 1f, 100, 1f, 1f));
+				levelInfo.Add (new TowerLevelInfo (1, 1f, 2.5f, 100, 1f, 1f));
 				levelInfo.Add (new TowerLevelInfo (2, 1.5f, 2f, 100, 1f, 1.5f));
 				levelInfo.Add (new TowerLevelInfo (3, 2.0f, 1.7f, 200, 1f, 2f));
 				levelInfo.Add (new TowerLevelInfo (4, 3.0f, 1.5f, 350, 1f, 3f));
