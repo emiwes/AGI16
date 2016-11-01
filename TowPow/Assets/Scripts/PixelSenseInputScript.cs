@@ -384,16 +384,12 @@ namespace TouchScript
             {
                 case "blue":
                     return moveTimerBlue;
-                    break;
                 case "black":
                     return moveTimerBlack;
-                    break;
                 case "white":
                     return moveTimerWhite;
-                    break;
                 case "red":
                     return moveTimerRed;
-                    break;
             }
             return 0;
         }
