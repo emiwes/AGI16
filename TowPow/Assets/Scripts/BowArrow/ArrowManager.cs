@@ -176,7 +176,8 @@ public class ArrowManager : MonoBehaviour {
 			ChangeToNewArrow (lightningArrow);
 		} else if(col.tag == "normalArrowSwitcher"){
 			ChangeToNewArrow (normalArrow);
-		} else if(col.tag == "noCollision"){
+		} else if(col.tag == "bowNotchPoint")
+        {
             if (currentArrow != null)
             {
                 currentArrow.GetComponent<Arrow>().AttachArrowToBow();
@@ -186,7 +187,7 @@ public class ArrowManager : MonoBehaviour {
 
     void OnTriggerStay(Collider col) {
 		// Removed  && col.tag == "Untagged"
-		if (currentArrow != null && col.tag == "noCollision") {
+		if (currentArrow != null && col.tag == "bowNotchPoint") {
             currentArrow.GetComponent<Arrow>().AttachArrowToBow();
         }
     }
