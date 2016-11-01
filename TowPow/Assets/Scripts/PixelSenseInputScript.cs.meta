@@ -1,21 +1,20 @@
 fileFormatVersion: 2
 guid: 5738bdbc69fc7f041b0a15ad6382f0f5
-timeCreated: 1473956524
+timeCreated: 1478006327
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - RedPrefab: {fileID: 1000012927956310, guid: bb7aa3176f096408aa3f4343e7e11d1e,
+  - RedPrefab: {fileID: 1000011343074898, guid: a62c4d61d58215240b0fd3ab68cc450d,
       type: 2}
-  - WhitePrefab: {fileID: 1000012927956310, guid: c378a8736070d664397091acaf6fcebb,
+  - WhitePrefab: {fileID: 1000011343074898, guid: 16165a2ea710baa4cb369031e157f22f,
       type: 2}
-  - BluePrefab: {fileID: 1000012927956310, guid: 2aa8eef0e29862f40b9b2fb597f4011a,
+  - BluePrefab: {fileID: 1000011343074898, guid: 117dee93c0b4acb419b121db9383ce81,
       type: 2}
-  - BlackPrefab: {fileID: 1000012927956310, guid: 0a3e1304e33eafa4bb2d7605258e659b,
+  - BlackPrefab: {fileID: 1000013403485574, guid: f70d78faf1f6643489d0601732b76591,
       type: 2}
   - BulletPrefab: {fileID: 1000010222061832, guid: 2c095e2950a8edb4682447c59e22c8b3,
       type: 2}
-  - topCamera: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

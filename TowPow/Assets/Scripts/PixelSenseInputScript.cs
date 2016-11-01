@@ -163,6 +163,22 @@ namespace TouchScript
 			Vector3 touchPositionInWorld = topCamera.ScreenToWorldPoint(position);
             touchPositionInWorld.y = 16f;
 
+
+            // DEBUG UGLY HACK ZOMG REMOVE
+            if(tags.HasTag("Mouse")){
+                if(Input.GetKey(KeyCode.D)){
+                    tags = new Tags("black");
+                }
+            }
+
+
+            // DEBUG UGLY HACK ZOMG REMOVE
+            if(tags.HasTag("Mouse")){
+                if(Input.GetKey(KeyCode.B)){
+                    tags = new Tags("blue");
+                }
+            }
+
 			// Figure out what towertype we are dealing with
 			string towerTag = getTowerTag(tags);
 			

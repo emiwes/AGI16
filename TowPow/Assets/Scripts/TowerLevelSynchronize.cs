@@ -65,8 +65,12 @@ public class TowerLevelSynchronize : NetworkBehaviour {
 	}
 
 	public void LevelUp(string tag){
+		// Get the tower we want to upgrade
+		GameObject tower = GameObject.FindGameObjectWithTag (tag);
+		TowerCombat tc = tower.GetComponent<TowerCombat>();
+
 		GameObject localPlayer = ClientScene.FindLocalObject (GameObject.Find ("LocalPlayerNetId").GetComponent<LocalPlayerNetId> ().netId);
-		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (levelInfo [towerLevelLookup [tag] - 1].costToUpgrade);
+		localPlayer.GetComponent<CoinHandler> ().CmdDecrementMoney (tc.levelInfo [towerLevelLookup [tag] - 1].costToUpgrade);
 		localPlayer.GetComponent<TowerHandler> ().CmdLevelUp (tag);
 	}
 
