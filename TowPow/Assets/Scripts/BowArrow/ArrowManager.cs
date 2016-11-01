@@ -167,7 +167,6 @@ public class ArrowManager : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider col) {
-		Debug.Log ("New arrow");
 		if(col.tag == "iceArrowSwitcher"){
 			ChangeToNewArrow (iceArrow);
 		} else if(col.tag == "fireArrowSwitcher"){
